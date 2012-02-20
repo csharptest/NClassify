@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<NClassify xsi:noNamespaceSchemaLocation="NClassifyConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <settings>
+    <namespace>NClassify.Generator</namespace>
+  </settings>
+
+  <value name="callback_id" base="uint64">
+    <validation>
+      <range min="1" />
+    </validation>
+  </value>
+
+  <value name="event_type" base="string">
+    <validation>
+      <predefined>
+        <value>all</value>
+        <value>category</value>
+        <value>category.create</value>
+        <value>category.delete</value>
+        <value>category.update</value>
+        <value>client</value>
+        <value>client.create</value>
+        <value>client.delete</value>
+        <value>client.update</value>
+        <value>estimate</value>
+        <value>estimate.create</value>
+        <value>estimate.delete</value>
+        <value>estimate.sendByEmail</value>
+        <value>estimate.update</value>
+        <value>expense</value>
+        <value>expense.create</value>
+        <value>expense.delete</value>
+        <value>expense.update</value>
+        <value>invoice</value>
+        <value>invoice.create</value>
+        <value>invoice.delete</value>
+        <value>invoice.dispute</value>
+        <value>invoice.pastdue.1</value>
+        <value>invoice.pastdue.2</value>
+        <value>invoice.pastdue.3</value>
+        <value>invoice.sendByEmail</value>
+        <value>invoice.sendBySnailMail</value>
+        <value>invoice.update</value>
+        <value>item</value>
+        <value>item.create</value>
+        <value>item.delete</value>
+        <value>item.update</value>
+        <value>payment</value>
+        <value>payment.create</value>
+        <value>payment.delete</value>
+        <value>payment.update</value>
+        <value>project</value>
+        <value>project.create</value>
+        <value>project.delete</value>
+        <value>project.update</value>
+        <value>recurring</value>
+        <value>recurring.create</value>
+        <value>recurring.delete</value>
+        <value>recurring.update</value>
+        <value>staff</value>
+        <value>staff.create</value>
+        <value>staff.delete</value>
+        <value>staff.update</value>
+        <value>task</value>
+        <value>task.create</value>
+        <value>task.delete</value>
+        <value>task.update</value>
+        <value>time_entry</value>
+        <value>time_entry.create</value>
+        <value>time_entry.delete</value>
+        <value>time_entry.update</value>
+      </predefined>
+    </validation>
+  </value>
+
+  <type name="Callback">
+    <fields>
+      <simple name="callback_id" type="callback_id" ordinal="1" />
+      <primitive name="uri" type="uri" ordinal="2" />
+      <simple name="event" type="event_type" ordinal="3" />
+      <primitive name="verified" type="bool" ordinal="4" />
+    </fields>
+  </type>
+
+  <type name="CallbackRequest">
+    <fields>
+      <complex type="Callback" name="callback" ordinal="1" use="required"/>
+    </fields>
+  </type>
+
+  <type name="CallbackVerify">
+    <fields>
+      <simple name="callback_id" type="callback_id" ordinal="1" />
+      <primitive name="verifier" type="string" ordinal="2" />
+    </fields>
+  </type>
+
+  <type name="CallbackVerifyRequest">
+    <fields>
+      <complex type="CallbackVerify" name="callback" ordinal="1" use="required"/>
+    </fields>
+  </type>
+
+  <type name="Callbacks">
+    <fields>
+      <complex type="Callback" name="callback" ordinal="1" array="true" />
+    </fields>
+  </type>
+
+  <type name="CallbacksResponse">
+    <fields>
+      <complex type="Callbacks" name="callbacks" ordinal="1" use="required" />
+    </fields>
+  </type>
+
+  <type name="CallbacksRequest">
+    <fields>
+      <primitive name="page" type="int32" ordinal="1" />
+      <primitive name="per_page" type="int32" ordinal="2" />
+      <simple name="event" type="event_type" ordinal="3" />
+      <primitive name="uri" type="string" ordinal="4" />
+    </fields>
+  </type>
+
+  <service name="CallbackService">
+    <method name="Create" argument="CallbackRequest" returns="CallbackIdentity" />
+    <method name="Verify" argument="CallbackVerifyRequest" />
+    <method name="ResendToken" argument="CallbackIdentity" />
+    <method name="List" argument="CallbacksRequest" returns="CallbacksResponse" />
+    <method name="Delete" argument="CallbackIdentity" returns="EmptyResponse" />
+  </service>
+
+</NClassify>

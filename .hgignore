@@ -21,3 +21,6 @@ Release
 *.zip
 *.mdf
 *.snk
+
+
+depend/CSharpTest.Net.Library
