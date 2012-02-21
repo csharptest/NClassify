@@ -54,7 +54,7 @@ namespace NClassify.Generator
     public abstract partial class BaseType : RootItem
     {
         [XmlAttribute("name", DataType = "NCName")]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         internal BaseType[] ChildTypes { get; set; }
     }
@@ -130,6 +130,9 @@ namespace NClassify.Generator
         [XmlAttribute("use"), DefaultValue(FieldUse.Optional)]
         public FieldUse FieldUse { get; set; }
 
+        [XmlAttribute("default"), DefaultValue(null)]
+        public string DefaultValue;
+
         [XmlIgnore]
         internal ValidationRule[] Validation { get; set; }
 
@@ -141,9 +144,6 @@ namespace NClassify.Generator
     {
         [XmlAttribute("type")]
         public new FieldType Type { get { return base.Type; } set { base.Type = value; } }
-
-        [XmlAttribute("default"), DefaultValue(null)]
-        public string DefaultValue;
 
         [XmlArray("validation")]
         [XmlArrayItem("length", Type = typeof(LengthConstraint))]
@@ -262,6 +262,7 @@ namespace NClassify.Generator
     {
         [XmlEnum("optional")] Optional,
         [XmlEnum("required")] Required,
+        [XmlEnum("obsolete")] Obsolete,
         [XmlEnum("prohibited")] Prohibited,
     }
 

@@ -16,15 +16,13 @@
 using System;
 using System.CodeDom.Compiler;
 using System.IO;
-using System.Reflection;
 using System.Text;
-using CSharpTest.Net.Collections;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
+using CSharpTest.Net.Collections;
 
-namespace NClassify.Generator
+namespace NClassify.Generator.CodeWriters
 {
-    public class CsWriter : IndentedTextWriter
+    public abstract class CodeWriter : IndentedTextWriter
     {
         private static readonly Regex NonAlphaNumeric = new Regex(@"[^a-zA-Z0-9]+");
         private static readonly Regex LowerCaseAfterNonAlpha = new Regex(@"[^a-zA-Z][a-z]");
@@ -32,23 +30,28 @@ namespace NClassify.Generator
         private static readonly Regex Alpha = new Regex(@"[a-zA-Z]");
 
         private readonly DisposingList _open;
+        private readonly string _beginBlock, _endBlock;
 
-        public CsWriter() : this(new StringWriter()) { }
-        public CsWriter(TextWriter writer) : base(writer)
+        protected CodeWriter(TextWriter writer, string beginBlock, string endBlock)
+            : base(writer)
         {
+            _beginBlock = beginBlock;
+            _endBlock = endBlock;
             _open = new DisposingList();
         }
 
         protected override void Dispose(bool disposing)
         {
             _open.Dispose();
-            base.Dispose(disposing);
+            //base.Dispose(disposing);
         }
 
         public override string ToString()
         {
             return InnerWriter.ToString();
         }
+
+        #region Static Helpers
 
         public static string RemoveNonAlphaNumeric(string input)
         {
@@ -84,21 +87,21 @@ namespace NClassify.Generator
             return name;
         }
 
-        public static string CombineNames(params string[] names)
+        public static string CombineNames(string dividor, params string[] names)
         {
             StringBuilder sb = new StringBuilder();
             foreach(string name in names)
             {
-                string tmp = name.Trim('.');
+                string tmp = (name ?? String.Empty).Trim();
                 if (tmp.Length == 0) continue;
                 if (sb.Length > 0)
-                    sb.Append('.');
+                    sb.Append(dividor);
                 sb.Append(tmp);
             }
             return sb.ToString();
         }
 
-		public static string MakeString(string data)
+		public static string MakeCppString(string data)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append('"');
@@ -124,51 +127,23 @@ namespace NClassify.Generator
             return sb.ToString();
 		}
 
-        public void AddNamespaces(params string[] namespaces)
-        {
-            foreach (string ns in namespaces)
-                WriteLine("using {0};", ns);
-        }
+        #endregion
 
-        public IDisposable WriteNamespace(string ns) 
-        {
-            if (String.IsNullOrEmpty(ns))
-                return new DisposingList();//just some IDisposable... ignored.
+        public abstract string MakeString(string data);
 
-            return WriteBlock("namespace {0}", ns);
-        }
+        public abstract IDisposable WriteNamespace(string[] ns);
 
-        public void WriteSummaryXml(string content, params object[] args)
-        {
-            if (args != null && args.Length > 0)
-                content = String.Format(content, args);
-            string line;
-            WriteLine("/// <summary>");
-            using (StringReader sr = new StringReader(content))
-                while (null != (line = sr.ReadLine()))
-                    WriteLine("/// {0}", System.Web.HttpUtility.HtmlEncode(line));
-            WriteLine("/// </summary>");
-        }
+        public abstract IDisposable DeclareEnum(CodeAccess access, string name);
+        public abstract void WriteEnumValue(string name, uint value);
 
-        public void WriteClassPreamble()
-        {
-            Assembly generator = Assembly.GetCallingAssembly() ?? Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? GetType().Assembly;
-            WriteLine("[global::System.Diagnostics.DebuggerStepThroughAttribute()]");
-            WriteLine("[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]");
-            WriteLine("[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
-            WriteLine("[global::System.CodeDom.Compiler.GeneratedCodeAttribute(\"{0}\", \"{1}\")]", generator.GetName().Name, generator.GetName().Version);
-        }
-
-        public IDisposable WriteClass(string format, params object[] args)
-        {
-            WriteClassPreamble();
-            return WriteBlock(format, args);
-        }
-
-        public IDisposable WriteBlock(string format, params object[] args)
+        public abstract void DeclareStruct(CodeAccess access, string name, PropertyInfo prop);
+        public abstract void DeclareClass(CodeAccess access, string name, string[] inherits, PropertyInfo[] prop);
+        
+        protected IDisposable WriteBlock(string format, params object[] args)
         {
             if (args != null && args.Length > 0)
                 format = String.Format(format, args);
+
             if (!String.IsNullOrEmpty(format))
             {
                 string line;
@@ -176,27 +151,28 @@ namespace NClassify.Generator
                     while (null != (line = r.ReadLine()))
                         WriteLine(line);
             }
+
             return WriteBlock();
         }
 
-		public IDisposable WriteBlock() { return new Braces(this); }
+		protected IDisposable WriteBlock() { return new CodeBlock(this); }
+        protected void WriteStartBlock() { base.WriteLine(_beginBlock); Indent++; }
+        protected void WriteEndBlock() { Indent--; base.WriteLine(_endBlock); }
 
-        private class Braces : IDisposable
+        private class CodeBlock : IDisposable
         {
-            private CsWriter _wtr;
-            public Braces(CsWriter wtr)
+            private CodeWriter _wtr;
+            public CodeBlock(CodeWriter wtr)
             {
                 _wtr = wtr;
-                _wtr.WriteLine("{");
-                _wtr.Indent++;
+                _wtr.WriteStartBlock();
                 _wtr._open.Add(this);
             }
             void IDisposable.Dispose()
             {
                 if (_wtr != null && _wtr._open.Remove(this))
                 {
-                    _wtr.Indent--;
-                    _wtr.WriteLine("}");
+                    _wtr.WriteEndBlock();
                     _wtr = null;
                 }
             }

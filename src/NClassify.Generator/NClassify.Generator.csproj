@@ -51,7 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CsWriter.cs" />
+    <Compile Include="CodeGenerators\BaseGenerator.cs" />
+    <Compile Include="CodeGenerators\CsCodeGenerator.cs" />
+    <Compile Include="CodeWriters\PropertyInfo.cs" />
+    <Compile Include="CodeWriters\CodeAccess.cs" />
+    <Compile Include="CodeWriters\CodeWriter.cs" />
+    <Compile Include="CodeWriters\CsWriter.cs" />
     <Compile Include="NClassifyConfig.cs">
       <Generator>CmdTool</Generator>
       <LastGenOutput>NClassifyConfig.xsd</LastGenOutput>

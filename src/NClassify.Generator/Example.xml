@@ -11,6 +11,12 @@
     </validation>
   </value>
 
+  <enum name="asdf">
+    <value name="asdf" ordinal="1"/>
+    <value name="fdsa" ordinal="2"/>
+    <value name="sdfa" ordinal="3"/>
+  </enum>
+
   <value name="event_type" base="string">
     <validation>
       <predefined>
@@ -123,12 +129,18 @@
     </fields>
   </type>
 
+  <type name="CallbackIdentity">
+    <fields>
+      <simple name="callback_id" type="callback_id" ordinal="1" />
+    </fields>
+  </type>
+
   <service name="CallbackService">
     <method name="Create" argument="CallbackRequest" returns="CallbackIdentity" />
     <method name="Verify" argument="CallbackVerifyRequest" />
     <method name="ResendToken" argument="CallbackIdentity" />
     <method name="List" argument="CallbacksRequest" returns="CallbacksResponse" />
-    <method name="Delete" argument="CallbackIdentity" returns="EmptyResponse" />
+    <method name="Delete" argument="CallbackIdentity" />
   </service>
 
 </NClassify>
