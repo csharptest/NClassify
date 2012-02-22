@@ -3,9 +3,6 @@
 #region Designer generated code
 namespace NClassify.Generator
 {
-    /// <summary>
-    /// Enumerated type asdf
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("asdf")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
@@ -24,66 +21,53 @@ namespace NClassify.Generator
         /// </summary>
         [global::System.Xml.Serialization.XmlEnum("sdfa")] Sdfa = 3,
     }
-    /// <summary>
-    /// Value type callback_id
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("callback_id")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
     public partial struct CallbackId : System.IEquatable<CallbackId>, System.IComparable<CallbackId>
     {
+        private bool __has_value;
+        private ulong __value;
         [global::System.CLSCompliant(false)]
-        public CallbackId(System.UInt64 value) : this()
+        public CallbackId(ulong value) : this()
         {
             this.Value = value;
         }
-        private bool __has_value;
-        private System.UInt64 __value;
-        private bool SetValue(System.UInt64 value)
-        {
-            if (value < 1) return false;
-            __value = value;
-            return __has_value = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasValue")]
         public bool HasValue
         {
             get
             {
                 return __has_value;
             }
-            private set
-            {
-                if (value) throw new System.ArgumentOutOfRangeException("HasValue");
-                __has_value = false;
-                __value = default(System.UInt64);
-            }
         }
-        /// <summary>
-        /// System.UInt64 value
-        /// </summary>
-        [global::System.CLSCompliant(false)]
-        public System.UInt64 Value
+        private bool SetValue(ulong value)
+        {
+            __value = value;
+            __has_value = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("value")]
+        public ulong Value
         {
             get
             {
-                return (__value);
+                if (!__has_value) throw new global::System.InvalidOperationException();
+                return __value;
             }
             private set
             {
-                if (!SetValue(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Value");
-                }
+                if (!SetValue(value)) throw new global::System.ArgumentOutOfRangeException("Value");
             }
         }
         public override string ToString()
         {
-            return __value.ToString();
+            return __has_value ? __value.ToString() : null;
         }
         public override int GetHashCode()
         {
-            return __value.GetHashCode();
+            return __has_value ? __value.GetHashCode() : 0;
         }
         public override bool Equals(object obj)
         {
@@ -91,89 +75,78 @@ namespace NClassify.Generator
         }
         public bool Equals(CallbackId other)
         {
-            return __value.Equals(other.__value);
+            return __has_value && other.__has_value ? __value.Equals(other.__value) : __has_value == other.__has_value;
         }
         public int CompareTo(CallbackId other)
         {
-            return __value.CompareTo(other.__value);
+            return __has_value && other.__has_value ? __value.CompareTo(other.__value) : __has_value ? 1 : __has_value ? -1 : 0;
         }
         [global::System.CLSCompliant(false)]
-        public static explicit operator CallbackId(System.UInt64 value)
+        public static explicit operator CallbackId(ulong value)
         {
             return new CallbackId(value);
         }
         [global::System.CLSCompliant(false)]
-        public static explicit operator System.UInt64(CallbackId value)
+        public static explicit operator ulong(CallbackId value)
         {
             return value.Value;
         }
         public static bool operator ==(CallbackId x, CallbackId y)
         {
-            return x.__value.Equals(y.__value);
+            return x.Equals(y);
         }
         public static bool operator !=(CallbackId x, CallbackId y)
         {
-            return !x.__value.Equals(y.__value);
+            return !x.Equals(y);
         }
     }
-    /// <summary>
-    /// Value type event_type
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("event_type")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
     public partial struct EventType : System.IEquatable<EventType>, System.IComparable<EventType>
     {
-        public EventType(System.String value) : this()
+        private bool __has_value;
+        private string __value;
+        public EventType(string value) : this()
         {
             this.Value = value;
         }
-        private bool __has_value;
-        private System.String __value;
-        private bool SetValue(System.String value)
-        {
-            if (null == value) return false;
-            __value = value;
-            return __has_value = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasValue")]
         public bool HasValue
         {
             get
             {
                 return __has_value;
             }
-            private set
-            {
-                if (value) throw new System.ArgumentOutOfRangeException("HasValue");
-                __has_value = false;
-                __value = default(System.String);
-            }
         }
-        /// <summary>
-        /// System.String value
-        /// </summary>
-        public System.String Value
+        private bool SetValue(string value)
+        {
+            if (null == value) return false;
+            __value = value;
+            __has_value = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("value")]
+        public string Value
         {
             get
             {
-                return (__value);
+                if (!__has_value) throw new global::System.InvalidOperationException();
+                return __value;
             }
             private set
             {
-                if (!SetValue(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Value");
-                }
+                if (!SetValue(value)) throw new global::System.ArgumentOutOfRangeException("Value");
             }
         }
         public override string ToString()
         {
-            return __value.ToString();
+            return __has_value ? __value.ToString() : null;
         }
         public override int GetHashCode()
         {
-            return __value.GetHashCode();
+            return __has_value ? __value.GetHashCode() : 0;
         }
         public override bool Equals(object obj)
         {
@@ -181,32 +154,29 @@ namespace NClassify.Generator
         }
         public bool Equals(EventType other)
         {
-            return __value.Equals(other.__value);
+            return __has_value && other.__has_value ? __value.Equals(other.__value) : __has_value == other.__has_value;
         }
         public int CompareTo(EventType other)
         {
-            return __value.CompareTo(other.__value);
+            return __has_value && other.__has_value ? __value.CompareTo(other.__value) : __has_value ? 1 : __has_value ? -1 : 0;
         }
-        public static explicit operator EventType(System.String value)
+        public static explicit operator EventType(string value)
         {
             return new EventType(value);
         }
-        public static explicit operator System.String(EventType value)
+        public static explicit operator string(EventType value)
         {
             return value.Value;
         }
         public static bool operator ==(EventType x, EventType y)
         {
-            return x.__value.Equals(y.__value);
+            return x.Equals(y);
         }
         public static bool operator !=(EventType x, EventType y)
         {
-            return !x.__value.Equals(y.__value);
+            return !x.Equals(y);
         }
     }
-    /// <summary>
-    /// Value type Callback
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("Callback")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -214,13 +184,14 @@ namespace NClassify.Generator
     public partial class Callback
     {
         private bool __has_callbackId;
-        private System.UInt64 __callbackId;
-        [global::System.CLSCompliant(false)]
-        protected bool SetCallbackId(System.UInt64 value)
-        {
-            __callbackId = value;
-            return __has_callbackId = true;
-        }
+        private ulong __callbackId;
+        private bool __has_uri;
+        private global::System.Uri __uri;
+        private bool __has_event;
+        private string __event;
+        private bool __has_verified;
+        private bool __verified;
+        [global::System.Xml.Serialization.XmlElement("hasCallbackId")]
         public bool HasCallbackId
         {
             get
@@ -229,36 +200,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallbackId");
+                if (value) throw new global::System.InvalidOperationException();
+                __callbackId = 0ul;
                 __has_callbackId = false;
-                __callbackId = default(System.UInt64);
             }
         }
-        /// <summary>
-        /// System.UInt64 callback_id
-        /// </summary>
-        [global::System.CLSCompliant(false)]
-        public NClassify.Generator.CallbackId CallbackId
+        private bool SetCallbackId(ulong value)
+        {
+            __callbackId = value;
+            __has_callbackId = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback_id")]
+        public global::NClassify.Generator.CallbackId CallbackId
         {
             get
             {
-                return new NClassify.Generator.CallbackId(__callbackId);
+                return (global::NClassify.Generator.CallbackId)__callbackId;
             }
             set
             {
-                if (!SetCallbackId(value.Value))
-                {
-                    throw new System.ArgumentOutOfRangeException("CallbackId");
-                }
+                if (!SetCallbackId((ulong)value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
             }
         }
-        private bool __has_uri;
-        private global::System.Uri __uri;
-        protected bool SetUri(global::System.Uri value)
-        {
-            __uri = value;
-            return __has_uri = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasUri")]
         public bool HasUri
         {
             get
@@ -267,36 +232,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasUri");
-                __has_uri = false;
+                if (value) throw new global::System.InvalidOperationException();
                 __uri = default(global::System.Uri);
+                __has_uri = false;
             }
         }
-        /// <summary>
-        /// global::System.Uri uri
-        /// </summary>
+        private bool SetUri(global::System.Uri value)
+        {
+            __uri = value;
+            __has_uri = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("uri")]
         public global::System.Uri Uri
         {
             get
             {
-                return (__uri);
+                return __uri;
             }
             set
             {
-                if (!SetUri(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Uri");
-                }
+                if (!SetUri(value)) throw new global::System.ArgumentOutOfRangeException("Uri");
             }
         }
-        private bool __has_event;
-        private System.String __event;
-        protected bool SetEvent(System.String value)
-        {
-            if (null == value) return false;
-            __event = value;
-            return __has_event = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasEvent")]
         public bool HasEvent
         {
             get
@@ -305,35 +264,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasEvent");
+                if (value) throw new global::System.InvalidOperationException();
+                __event = "";
                 __has_event = false;
-                __event = default(System.String);
             }
         }
-        /// <summary>
-        /// System.String event
-        /// </summary>
-        public NClassify.Generator.EventType Event
+        private bool SetEvent(string value)
+        {
+            __event = value;
+            __has_event = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("event")]
+        public global::NClassify.Generator.EventType Event
         {
             get
             {
-                return new NClassify.Generator.EventType(__event);
+                return (global::NClassify.Generator.EventType)__event;
             }
             set
             {
-                if (!SetEvent(value.Value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Event");
-                }
+                if (!SetEvent((string)value)) throw new global::System.ArgumentOutOfRangeException("Event");
             }
         }
-        private bool __has_verified;
-        private System.Boolean __verified;
-        protected bool SetVerified(System.Boolean value)
-        {
-            __verified = value;
-            return __has_verified = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasVerified")]
         public bool HasVerified
         {
             get
@@ -342,32 +296,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasVerified");
+                if (value) throw new global::System.InvalidOperationException();
+                __verified = false;
                 __has_verified = false;
-                __verified = default(System.Boolean);
             }
         }
-        /// <summary>
-        /// System.Boolean verified
-        /// </summary>
-        public System.Boolean Verified
+        private bool SetVerified(bool value)
+        {
+            __verified = value;
+            __has_verified = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("verified")]
+        public bool Verified
         {
             get
             {
-                return (__verified);
+                return __verified;
             }
             set
             {
-                if (!SetVerified(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Verified");
-                }
+                if (!SetVerified(value)) throw new global::System.ArgumentOutOfRangeException("Verified");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbackRequest
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbackRequest")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -375,13 +327,8 @@ namespace NClassify.Generator
     public partial class CallbackRequest
     {
         private bool __has_callback;
-        private NClassify.Generator.Callback __callback;
-        protected bool SetCallback(NClassify.Generator.Callback value)
-        {
-            if (null == value) return false;
-            __callback = value;
-            return __has_callback = true;
-        }
+        private global::NClassify.Generator.Callback __callback;
+        [global::System.Xml.Serialization.XmlElement("hasCallback")]
         public bool HasCallback
         {
             get
@@ -390,32 +337,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallback");
+                if (value) throw new global::System.InvalidOperationException();
+                __callback = new global::NClassify.Generator.Callback();
                 __has_callback = false;
-                __callback = default(NClassify.Generator.Callback);
             }
         }
-        /// <summary>
-        /// NClassify.Generator.Callback callback
-        /// </summary>
-        public NClassify.Generator.Callback Callback
+        private bool SetCallback(global::NClassify.Generator.Callback value)
+        {
+            if (null == value) return false;
+            __callback = value;
+            __has_callback = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback")]
+        public global::NClassify.Generator.Callback Callback
         {
             get
             {
-                return (__callback);
+                return __callback;
             }
             set
             {
-                if (!SetCallback(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Callback");
-                }
+                if (!SetCallback(value)) throw new global::System.ArgumentOutOfRangeException("Callback");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbackVerify
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbackVerify")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -423,13 +369,10 @@ namespace NClassify.Generator
     public partial class CallbackVerify
     {
         private bool __has_callbackId;
-        private System.UInt64 __callbackId;
-        [global::System.CLSCompliant(false)]
-        protected bool SetCallbackId(System.UInt64 value)
-        {
-            __callbackId = value;
-            return __has_callbackId = true;
-        }
+        private ulong __callbackId;
+        private bool __has_verifier;
+        private string __verifier;
+        [global::System.Xml.Serialization.XmlElement("hasCallbackId")]
         public bool HasCallbackId
         {
             get
@@ -438,37 +381,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallbackId");
+                if (value) throw new global::System.InvalidOperationException();
+                __callbackId = 0ul;
                 __has_callbackId = false;
-                __callbackId = default(System.UInt64);
             }
         }
-        /// <summary>
-        /// System.UInt64 callback_id
-        /// </summary>
-        [global::System.CLSCompliant(false)]
-        public NClassify.Generator.CallbackId CallbackId
+        private bool SetCallbackId(ulong value)
+        {
+            __callbackId = value;
+            __has_callbackId = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback_id")]
+        public global::NClassify.Generator.CallbackId CallbackId
         {
             get
             {
-                return new NClassify.Generator.CallbackId(__callbackId);
+                return (global::NClassify.Generator.CallbackId)__callbackId;
             }
             set
             {
-                if (!SetCallbackId(value.Value))
-                {
-                    throw new System.ArgumentOutOfRangeException("CallbackId");
-                }
+                if (!SetCallbackId((ulong)value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
             }
         }
-        private bool __has_verifier;
-        private System.String __verifier;
-        protected bool SetVerifier(System.String value)
-        {
-            if (null == value) return false;
-            __verifier = value;
-            return __has_verifier = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasVerifier")]
         public bool HasVerifier
         {
             get
@@ -477,32 +413,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasVerifier");
+                if (value) throw new global::System.InvalidOperationException();
+                __verifier = "";
                 __has_verifier = false;
-                __verifier = default(System.String);
             }
         }
-        /// <summary>
-        /// System.String verifier
-        /// </summary>
-        public System.String Verifier
+        private bool SetVerifier(string value)
+        {
+            if (null == value) return false;
+            __verifier = value;
+            __has_verifier = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("verifier")]
+        public string Verifier
         {
             get
             {
-                return (__verifier);
+                return __verifier;
             }
             set
             {
-                if (!SetVerifier(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Verifier");
-                }
+                if (!SetVerifier(value)) throw new global::System.ArgumentOutOfRangeException("Verifier");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbackVerifyRequest
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbackVerifyRequest")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -510,13 +445,8 @@ namespace NClassify.Generator
     public partial class CallbackVerifyRequest
     {
         private bool __has_callback;
-        private NClassify.Generator.CallbackVerify __callback;
-        protected bool SetCallback(NClassify.Generator.CallbackVerify value)
-        {
-            if (null == value) return false;
-            __callback = value;
-            return __has_callback = true;
-        }
+        private global::NClassify.Generator.CallbackVerify __callback;
+        [global::System.Xml.Serialization.XmlElement("hasCallback")]
         public bool HasCallback
         {
             get
@@ -525,32 +455,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallback");
+                if (value) throw new global::System.InvalidOperationException();
+                __callback = new global::NClassify.Generator.CallbackVerify();
                 __has_callback = false;
-                __callback = default(NClassify.Generator.CallbackVerify);
             }
         }
-        /// <summary>
-        /// NClassify.Generator.CallbackVerify callback
-        /// </summary>
-        public NClassify.Generator.CallbackVerify Callback
+        private bool SetCallback(global::NClassify.Generator.CallbackVerify value)
+        {
+            if (null == value) return false;
+            __callback = value;
+            __has_callback = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback")]
+        public global::NClassify.Generator.CallbackVerify Callback
         {
             get
             {
-                return (__callback);
+                return __callback;
             }
             set
             {
-                if (!SetCallback(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Callback");
-                }
+                if (!SetCallback(value)) throw new global::System.ArgumentOutOfRangeException("Callback");
             }
         }
     }
-    /// <summary>
-    /// Value type Callbacks
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("Callbacks")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -558,13 +487,8 @@ namespace NClassify.Generator
     public partial class Callbacks
     {
         private bool __has_callback;
-        private NClassify.Generator.Callback __callback;
-        protected bool SetCallback(NClassify.Generator.Callback value)
-        {
-            if (null == value) return false;
-            __callback = value;
-            return __has_callback = true;
-        }
+        private global::NClassify.Generator.Callback __callback;
+        [global::System.Xml.Serialization.XmlElement("hasCallback")]
         public bool HasCallback
         {
             get
@@ -573,32 +497,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallback");
+                if (value) throw new global::System.InvalidOperationException();
+                __callback = new global::NClassify.Generator.Callback();
                 __has_callback = false;
-                __callback = default(NClassify.Generator.Callback);
             }
         }
-        /// <summary>
-        /// NClassify.Generator.Callback callback
-        /// </summary>
-        public NClassify.Generator.Callback Callback
+        private bool SetCallback(global::NClassify.Generator.Callback value)
+        {
+            if (null == value) return false;
+            __callback = value;
+            __has_callback = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback")]
+        public global::NClassify.Generator.Callback Callback
         {
             get
             {
-                return (__callback);
+                return __callback;
             }
             set
             {
-                if (!SetCallback(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Callback");
-                }
+                if (!SetCallback(value)) throw new global::System.ArgumentOutOfRangeException("Callback");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbacksResponse
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbacksResponse")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -606,13 +529,8 @@ namespace NClassify.Generator
     public partial class CallbacksResponse
     {
         private bool __has_callbacks;
-        private NClassify.Generator.Callbacks __callbacks;
-        protected bool SetCallbacks(NClassify.Generator.Callbacks value)
-        {
-            if (null == value) return false;
-            __callbacks = value;
-            return __has_callbacks = true;
-        }
+        private global::NClassify.Generator.Callbacks __callbacks;
+        [global::System.Xml.Serialization.XmlElement("hasCallbacks")]
         public bool HasCallbacks
         {
             get
@@ -621,32 +539,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallbacks");
+                if (value) throw new global::System.InvalidOperationException();
+                __callbacks = new global::NClassify.Generator.Callbacks();
                 __has_callbacks = false;
-                __callbacks = default(NClassify.Generator.Callbacks);
             }
         }
-        /// <summary>
-        /// NClassify.Generator.Callbacks callbacks
-        /// </summary>
-        public NClassify.Generator.Callbacks Callbacks
+        private bool SetCallbacks(global::NClassify.Generator.Callbacks value)
+        {
+            if (null == value) return false;
+            __callbacks = value;
+            __has_callbacks = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callbacks")]
+        public global::NClassify.Generator.Callbacks Callbacks
         {
             get
             {
-                return (__callbacks);
+                return __callbacks;
             }
             set
             {
-                if (!SetCallbacks(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Callbacks");
-                }
+                if (!SetCallbacks(value)) throw new global::System.ArgumentOutOfRangeException("Callbacks");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbacksRequest
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbacksRequest")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -654,12 +571,14 @@ namespace NClassify.Generator
     public partial class CallbacksRequest
     {
         private bool __has_page;
-        private System.Int32 __page;
-        protected bool SetPage(System.Int32 value)
-        {
-            __page = value;
-            return __has_page = true;
-        }
+        private int __page;
+        private bool __has_perPage;
+        private int __perPage;
+        private bool __has_event;
+        private string __event;
+        private bool __has_uri;
+        private string __uri;
+        [global::System.Xml.Serialization.XmlElement("hasPage")]
         public bool HasPage
         {
             get
@@ -668,35 +587,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasPage");
+                if (value) throw new global::System.InvalidOperationException();
+                __page = 0;
                 __has_page = false;
-                __page = default(System.Int32);
             }
         }
-        /// <summary>
-        /// System.Int32 page
-        /// </summary>
-        public System.Int32 Page
+        private bool SetPage(int value)
+        {
+            __page = value;
+            __has_page = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("page")]
+        public int Page
         {
             get
             {
-                return (__page);
+                return __page;
             }
             set
             {
-                if (!SetPage(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Page");
-                }
+                if (!SetPage(value)) throw new global::System.ArgumentOutOfRangeException("Page");
             }
         }
-        private bool __has_perPage;
-        private System.Int32 __perPage;
-        protected bool SetPerPage(System.Int32 value)
-        {
-            __perPage = value;
-            return __has_perPage = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasPerPage")]
         public bool HasPerPage
         {
             get
@@ -705,36 +619,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasPerPage");
+                if (value) throw new global::System.InvalidOperationException();
+                __perPage = 0;
                 __has_perPage = false;
-                __perPage = default(System.Int32);
             }
         }
-        /// <summary>
-        /// System.Int32 per_page
-        /// </summary>
-        public System.Int32 PerPage
+        private bool SetPerPage(int value)
+        {
+            __perPage = value;
+            __has_perPage = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("per_page")]
+        public int PerPage
         {
             get
             {
-                return (__perPage);
+                return __perPage;
             }
             set
             {
-                if (!SetPerPage(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("PerPage");
-                }
+                if (!SetPerPage(value)) throw new global::System.ArgumentOutOfRangeException("PerPage");
             }
         }
-        private bool __has_event;
-        private System.String __event;
-        protected bool SetEvent(System.String value)
-        {
-            if (null == value) return false;
-            __event = value;
-            return __has_event = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasEvent")]
         public bool HasEvent
         {
             get
@@ -743,36 +651,30 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasEvent");
+                if (value) throw new global::System.InvalidOperationException();
+                __event = "";
                 __has_event = false;
-                __event = default(System.String);
             }
         }
-        /// <summary>
-        /// System.String event
-        /// </summary>
-        public NClassify.Generator.EventType Event
+        private bool SetEvent(string value)
+        {
+            __event = value;
+            __has_event = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("event")]
+        public global::NClassify.Generator.EventType Event
         {
             get
             {
-                return new NClassify.Generator.EventType(__event);
+                return (global::NClassify.Generator.EventType)__event;
             }
             set
             {
-                if (!SetEvent(value.Value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Event");
-                }
+                if (!SetEvent((string)value)) throw new global::System.ArgumentOutOfRangeException("Event");
             }
         }
-        private bool __has_uri;
-        private System.String __uri;
-        protected bool SetUri(System.String value)
-        {
-            if (null == value) return false;
-            __uri = value;
-            return __has_uri = true;
-        }
+        [global::System.Xml.Serialization.XmlElement("hasUri")]
         public bool HasUri
         {
             get
@@ -781,32 +683,31 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasUri");
+                if (value) throw new global::System.InvalidOperationException();
+                __uri = "";
                 __has_uri = false;
-                __uri = default(System.String);
             }
         }
-        /// <summary>
-        /// System.String uri
-        /// </summary>
-        public System.String Uri
+        private bool SetUri(string value)
+        {
+            if (null == value) return false;
+            __uri = value;
+            __has_uri = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("uri")]
+        public string Uri
         {
             get
             {
-                return (__uri);
+                return __uri;
             }
             set
             {
-                if (!SetUri(value))
-                {
-                    throw new System.ArgumentOutOfRangeException("Uri");
-                }
+                if (!SetUri(value)) throw new global::System.ArgumentOutOfRangeException("Uri");
             }
         }
     }
-    /// <summary>
-    /// Value type CallbackIdentity
-    /// </summary>
     [global::System.Xml.Serialization.XmlType("CallbackIdentity")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -814,13 +715,8 @@ namespace NClassify.Generator
     public partial class CallbackIdentity
     {
         private bool __has_callbackId;
-        private System.UInt64 __callbackId;
-        [global::System.CLSCompliant(false)]
-        protected bool SetCallbackId(System.UInt64 value)
-        {
-            __callbackId = value;
-            return __has_callbackId = true;
-        }
+        private ulong __callbackId;
+        [global::System.Xml.Serialization.XmlElement("hasCallbackId")]
         public bool HasCallbackId
         {
             get
@@ -829,27 +725,27 @@ namespace NClassify.Generator
             }
             set
             {
-                if (value) throw new System.ArgumentOutOfRangeException("HasCallbackId");
+                if (value) throw new global::System.InvalidOperationException();
+                __callbackId = 0ul;
                 __has_callbackId = false;
-                __callbackId = default(System.UInt64);
             }
         }
-        /// <summary>
-        /// System.UInt64 callback_id
-        /// </summary>
-        [global::System.CLSCompliant(false)]
-        public NClassify.Generator.CallbackId CallbackId
+        private bool SetCallbackId(ulong value)
+        {
+            __callbackId = value;
+            __has_callbackId = true;
+            return true;
+        }
+        [global::System.Xml.Serialization.XmlElement("callback_id")]
+        public global::NClassify.Generator.CallbackId CallbackId
         {
             get
             {
-                return new NClassify.Generator.CallbackId(__callbackId);
+                return (global::NClassify.Generator.CallbackId)__callbackId;
             }
             set
             {
-                if (!SetCallbackId(value.Value))
-                {
-                    throw new System.ArgumentOutOfRangeException("CallbackId");
-                }
+                if (!SetCallbackId((ulong)value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
             }
         }
     }

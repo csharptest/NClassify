@@ -90,10 +90,11 @@ namespace NClassify.Generator.CodeWriters
         public static string CombineNames(string dividor, params string[] names)
         {
             StringBuilder sb = new StringBuilder();
-            foreach(string name in names)
+            foreach (string name in names)
             {
                 string tmp = (name ?? String.Empty).Trim();
-                if (tmp.Length == 0) continue;
+                if (tmp.Length == 0)
+                    continue;
                 if (sb.Length > 0)
                     sb.Append(dividor);
                 sb.Append(tmp);
@@ -101,7 +102,7 @@ namespace NClassify.Generator.CodeWriters
             return sb.ToString();
         }
 
-		public static string MakeCppString(string data)
+        public static string MakeCppString(string data)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append('"');
@@ -114,32 +115,53 @@ namespace NClassify.Generator.CodeWriters
                     sb.Append(ch);
                     continue;
                 }
-                if (ch == '\r') { sb.Append("\\r"); continue; }
-                if (ch == '\n') { sb.Append("\\n"); continue; }
-                if (ch == '\t') { sb.Append("\\t"); continue; }
+                if (ch == '\r')
+                {
+                    sb.Append("\\r");
+                    continue;
+                }
+                if (ch == '\n')
+                {
+                    sb.Append("\\n");
+                    continue;
+                }
+                if (ch == '\t')
+                {
+                    sb.Append("\\t");
+                    continue;
+                }
 
                 sb.Append('\\');
-                sb.Append((char)('0' + ((ch >> 6) & 3)));
-                sb.Append((char)('0' + ((ch >> 3) & 7)));
-                sb.Append((char)('0' + (ch & 7)));
+                sb.Append((char) ('0' + ((ch >> 6) & 3)));
+                sb.Append((char) ('0' + ((ch >> 3) & 7)));
+                sb.Append((char) ('0' + (ch & 7)));
             }
             sb.Append('"');
             return sb.ToString();
-		}
+        }
 
         #endregion
+
+        public abstract GeneratorLanguage Language { get; }
+
+        public abstract string GetTypeName(FieldType type);
 
         public abstract string MakeString(string data);
 
         public abstract IDisposable WriteNamespace(string[] ns);
 
-        public abstract IDisposable DeclareEnum(CodeAccess access, string name);
-        public abstract void WriteEnumValue(string name, uint value);
+        public void WriteLineIf(bool cond, string format, params object[] args)
+        {
+            if (cond)
+            {
+                if (args.Length > 0) 
+                    WriteLine(format, args);
+                else
+                    WriteLine(format);
+            }
+        }
 
-        public abstract void DeclareStruct(CodeAccess access, string name, PropertyInfo prop);
-        public abstract void DeclareClass(CodeAccess access, string name, string[] inherits, PropertyInfo[] prop);
-        
-        protected IDisposable WriteBlock(string format, params object[] args)
+        public IDisposable WriteBlock(string format, params object[] args)
         {
             if (args != null && args.Length > 0)
                 format = String.Format(format, args);
@@ -155,19 +177,34 @@ namespace NClassify.Generator.CodeWriters
             return WriteBlock();
         }
 
-		protected IDisposable WriteBlock() { return new CodeBlock(this); }
-        protected void WriteStartBlock() { base.WriteLine(_beginBlock); Indent++; }
-        protected void WriteEndBlock() { Indent--; base.WriteLine(_endBlock); }
+        public IDisposable WriteBlock()
+        {
+            return new CodeBlock(this);
+        }
+
+        public void WriteStartBlock()
+        {
+            base.WriteLine(_beginBlock);
+            Indent++;
+        }
+
+        public void WriteEndBlock()
+        {
+            Indent--;
+            base.WriteLine(_endBlock);
+        }
 
         private class CodeBlock : IDisposable
         {
             private CodeWriter _wtr;
+
             public CodeBlock(CodeWriter wtr)
             {
                 _wtr = wtr;
                 _wtr.WriteStartBlock();
                 _wtr._open.Add(this);
             }
+
             void IDisposable.Dispose()
             {
                 if (_wtr != null && _wtr._open.Remove(this))
@@ -176,6 +213,26 @@ namespace NClassify.Generator.CodeWriters
                     _wtr = null;
                 }
             }
+        }
+
+        public abstract string MakeConstant(FieldType type, string value);
+
+        public abstract IDisposable DeclareEnum(CodeItem info);
+        public abstract void WriteEnumValue(string name, uint value);
+
+        public abstract IDisposable DeclareClass(CodeItem info, string[] implements);
+        public abstract IDisposable DeclareStruct(CodeItem info, string[] implements);
+
+        public abstract void DeclareField(CodeItem info, string type, string defaultValue);
+        public virtual void DeclareField(CodeItem info, FieldType type, string defaultValue)
+        {
+            DeclareField(info, GetTypeName(type), defaultValue == null ? null : MakeConstant(type, defaultValue));
+        }
+
+        public abstract IDisposable DeclareProperty(CodeItem info, string type);
+        public virtual IDisposable DeclareProperty(CodeItem info, FieldType type)
+        {
+            return DeclareProperty(info, GetTypeName(type));
         }
     }
 }

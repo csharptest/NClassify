@@ -64,13 +64,19 @@ namespace NClassify.Generator
         public IEnumerable<ComplexType> GetComplexTypes(BaseType parent) { return _defineTypes.OfType<ComplexType>().Where(t => t.ParentType == parent); }
         public IEnumerable<ServiceInfo> GetServices(BaseType parent) { return _defineTypes.OfType<ServiceInfo>().Where(t => t.ParentType == parent); }
 
-        public CodeAccess DefaultAccess { get { return CodeAccess.Public; } }
+        public FieldAccess DefaultAccess { get { return FieldAccess.Public; } }
 
         private void SetTypeHeirarchy(IEnumerable<BaseType> types, BaseType parent)
         {
             foreach(BaseType t in types)
             {
                 t.ParentType = parent;
+                if (t.Fields != null)
+                {
+                    foreach (FieldInfo fld in t.Fields)
+                        fld.DeclaringType = t;
+                }
+
                 if (t.ChildTypes != null)
                     SetTypeHeirarchy(t.ChildTypes, t);
             }
@@ -234,6 +240,11 @@ namespace NClassify.Generator
         internal virtual string Namespace { get { return ParentType.QualifiedName; } }
         internal virtual string QualifiedName { get { return CodeWriter.CombineNames(".", Namespace, PascalName); } }
         internal virtual string PascalName { get { return CodeWriter.ToPascalCase(Name); } }
+    }
+
+    public abstract partial class FieldInfo
+    {
+        internal BaseType DeclaringType;
     }
 
     public sealed class NamespaceType : BaseType

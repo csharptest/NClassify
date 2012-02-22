@@ -52,11 +52,49 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGenerators\BaseGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />
+    <Compile Include="CodeGenerators\Constraints\NotNullConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\ListConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\MatchConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\RangeConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\LengthConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\CsCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\IMemberGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\BaseFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\FieldFactory.cs" />
+    <Compile Include="CodeGenerators\Fields\BaseNumericFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\BaseUnsignedFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\ComplexFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\BaseTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\ComplexTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\EnumTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\ServiceTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\SimpleTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\UriFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\TimeSpanFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\UInt32FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\Int64FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\UInt64FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\FloatFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\DoubleFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\StringFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\GuidFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\SimpleFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\BooleanFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\BytesFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\Int8FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\UInt8FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\Int16FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\UInt16FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\Int32FieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\DateTimeFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\EnumFieldGenerator.cs" />
     <Compile Include="CodeWriters\PropertyInfo.cs" />
-    <Compile Include="CodeWriters\CodeAccess.cs" />
     <Compile Include="CodeWriters\CodeWriter.cs" />
-    <Compile Include="CodeWriters\CsWriter.cs" />
+    <Compile Include="CodeWriters\CsCodeWriter.cs" />
+    <Compile Include="CodeWriters\CodeItem.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="NClassifyConfig.cs">
       <Generator>CmdTool</Generator>
       <LastGenOutput>NClassifyConfig.xsd</LastGenOutput>

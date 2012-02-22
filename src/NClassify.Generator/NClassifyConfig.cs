@@ -56,13 +56,16 @@ namespace NClassify.Generator
         [XmlAttribute("name", DataType = "NCName")]
         public virtual string Name { get; set; }
 
+        [XmlIgnore]
+        internal FieldInfo[] Fields { get; set; }
+        [XmlIgnore]
         internal BaseType[] ChildTypes { get; set; }
     }
 
     public sealed class EnumType : BaseType
     {
         [XmlElement("value")]
-        public Item[] Values;
+        public Item[] Values { get; set; }
 
         public sealed class Item
         {
@@ -94,7 +97,7 @@ namespace NClassify.Generator
         [XmlArrayItem("complex", Type = typeof(ComplexTypeRef))]
         [XmlArrayItem("simple", Type = typeof(SimpleTypeRef))]
         [XmlArrayItem("enum", Type = typeof(EnumTypeRef))]
-        public FieldInfo[] Fields;
+        public new FieldInfo[] Fields { get { return base.Fields; } set { base.Fields = value; } }
 
         [XmlElement("enum", Type = typeof(EnumType))]
         [XmlElement("type", Type = typeof(ComplexType))]
@@ -104,7 +107,7 @@ namespace NClassify.Generator
 
     #region Fields
 
-    public abstract class FieldInfo
+    public abstract partial class FieldInfo
     {
         [XmlAttribute("name", DataType = "NCName")]
         public string Name { get; set; }
@@ -155,7 +158,7 @@ namespace NClassify.Generator
 
     public sealed class ComplexTypeRef : FieldInfo
     {
-        public ComplexTypeRef() { Type = FieldType.None; }
+        public ComplexTypeRef() { Type = FieldType.Complex; }
 
         [XmlAttribute("type", DataType = "NCName")]
         public string TypeName { get; set; }
@@ -163,7 +166,7 @@ namespace NClassify.Generator
 
     public sealed class SimpleTypeRef : FieldInfo
     {
-        public SimpleTypeRef() { Type = FieldType.Value; }
+        public SimpleTypeRef() { Type = FieldType.Simple; }
 
         [XmlAttribute("type", DataType = "NCName")]
         public string TypeName { get; set; }
@@ -189,10 +192,10 @@ namespace NClassify.Generator
     public sealed class LengthConstraint : ValidationRule
     {
         [XmlAttribute("min"), DefaultValue(typeof(uint), "0")]
-        public uint MinLengh { get; set; }
+        public uint MinLength { get; set; }
 
         [XmlAttribute("max"), DefaultValue(typeof(uint), "4294967295")]
-        public uint MaxLengh { get; set; }
+        public uint MaxLength { get; set; }
     }
 
     public sealed class RangeConstraint : ValidationRule
@@ -228,9 +231,10 @@ namespace NClassify.Generator
 
     public enum FieldType
     {
-        [XmlIgnore] None = 0,
-        [XmlIgnore] Enum = 1,
-        [XmlIgnore] Value = 2,
+        [XmlIgnore, Obsolete] Undefined = 0,
+        [XmlIgnore] Complex = 1,
+        [XmlIgnore] Enum = 2,
+        [XmlIgnore] Simple = 4,
         [XmlEnum("bool")] Boolean,
         [XmlEnum("bytes")] Bytes,
         [XmlEnum("int8")] Int8,
@@ -248,29 +252,29 @@ namespace NClassify.Generator
         [XmlEnum("timeSpan")] TimeSpan,
         [XmlEnum("string")] String,
         [XmlEnum("uri")] Uri,
-        [XmlEnum("email")] EMail,
     }
 
     public enum FieldAccess
     {
-        [XmlEnum("public")] Public,
-        [XmlEnum("private")] Private,
-        [XmlEnum("protected")] Protected,
+        [XmlEnum("public")] Public = 1,
+        [XmlEnum("private")] Private = 2,
+        [XmlEnum("protected")] Protected = 3,
     }
 
+    [Flags]
     public enum FieldUse
     {
-        [XmlEnum("optional")] Optional,
-        [XmlEnum("required")] Required,
-        [XmlEnum("obsolete")] Obsolete,
-        [XmlEnum("prohibited")] Prohibited,
+        [XmlEnum("optional")] Optional = 0,
+        [XmlEnum("required")] Required = 1,
+        [XmlEnum("obsolete")] Obsolete = 2,
+        [XmlEnum("prohibited")] Prohibited = 4,
     }
 
     public enum FieldDirection
     {
-        [XmlEnum("read-write")] Bidirectional,
-        [XmlEnum("read-only")] ReadOnly,
-        [XmlEnum("write-only")] WriteOnly,
+        [XmlEnum("read-write")] Bidirectional = 0,
+        [XmlEnum("read-only")] ReadOnly = 1,
+        [XmlEnum("write-only")] WriteOnly = 2,
     }
 
     public enum GeneratorLanguage

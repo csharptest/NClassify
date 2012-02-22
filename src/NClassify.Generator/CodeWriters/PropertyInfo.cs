@@ -4,8 +4,8 @@ namespace NClassify.Generator.CodeWriters
 {
     public class PropertyInfo
     {
-        public CodeAccess Access;
-        public PropertyAccessors ReadWrite;
+        public FieldAccess Access;
+        public FieldDirection ReadWrite;
         public uint Ordinal;
         public string Type;
         public string PseudoType;
