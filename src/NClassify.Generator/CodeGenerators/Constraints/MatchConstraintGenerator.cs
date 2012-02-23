@@ -19,15 +19,14 @@ namespace NClassify.Generator.CodeGenerators.Constraints
         {
             code.WriteLine("private static readonly " +
                 CsCodeWriter.Global + "System.Text.RegularExpressions.Regex __valid_{0} = " + "new " +
-                CsCodeWriter.Global + "System.Text.RegularExpressions.Regex({1}, (" +
-                CsCodeWriter.Global + "System.Text.RegularExpressions.RegexOptions){2});",
-                _field.CamelName, _rule.Pattern, 
+                CsCodeWriter.Global + "System.Text.RegularExpressions.Regex({1}, {2});",
+                _field.CamelName, code.MakeConstant(FieldType.String, _rule.Pattern), 
                     (_rule.Multiline 
                     ? CsCodeWriter.Global + "System.Text.RegularExpressions.RegexOptions.Multiline"
                     : CsCodeWriter.Global + "System.Text.RegularExpressions.RegexOptions.Singleline")
                     +
                     (_rule.IgnoreCase 
-                    ? CsCodeWriter.Global + " | System.Text.RegularExpressions.RegexOptions.IgnoreCase"
+                    ? " | " + CsCodeWriter.Global + "System.Text.RegularExpressions.RegexOptions.IgnoreCase"
                     : "")
                 );
         }

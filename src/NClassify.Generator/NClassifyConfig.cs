@@ -87,6 +87,7 @@ namespace NClassify.Generator
         [XmlArrayItem("range", Type = typeof(RangeConstraint))]
         [XmlArrayItem("match", Type = typeof(MatchConstraint))]
         [XmlArrayItem("predefined", Type = typeof(PredefinedValue))]
+        [XmlArrayItem("code", Type = typeof(CodedConstraint))]
         public ValidationRule[] Validation { get; set; }
     }
 
@@ -153,7 +154,8 @@ namespace NClassify.Generator
         [XmlArrayItem("range", Type = typeof(RangeConstraint))]
         [XmlArrayItem("match", Type = typeof(MatchConstraint))]
         [XmlArrayItem("predefined", Type = typeof(PredefinedValue))]
-        public new ValidationRule[] Validation { get; set; }
+        [XmlArrayItem("code", Type = typeof(CodedConstraint))]
+        public new ValidationRule[] Validation { get { return base.Validation; } set { base.Validation = value; } }
     }
 
     public sealed class ComplexTypeRef : FieldInfo
@@ -225,6 +227,16 @@ namespace NClassify.Generator
         public string[] Values;
     }
 
+    public sealed class CodedConstraint : ValidationRule
+    {
+        [XmlAttribute("language")]
+        public GeneratorLanguage Language;
+        [XmlAttribute("test")]
+        public string Code;
+        [XmlElement("method"), DefaultValue(null)]
+        public string MethodBody;
+    }
+
     #endregion
 
     #region Enumerations
@@ -232,9 +244,10 @@ namespace NClassify.Generator
     public enum FieldType
     {
         [XmlIgnore, Obsolete] Undefined = 0,
-        [XmlIgnore] Complex = 1,
-        [XmlIgnore] Enum = 2,
-        [XmlIgnore] Simple = 4,
+        [XmlIgnore] Array = 2,
+        [XmlIgnore] Complex = 3,
+        [XmlIgnore] Enum = 4,
+        [XmlIgnore] Simple = 5,
         [XmlEnum("bool")] Boolean,
         [XmlEnum("bytes")] Bytes,
         [XmlEnum("int8")] Int8,
@@ -251,7 +264,7 @@ namespace NClassify.Generator
         [XmlEnum("dateTime")] DateTime,
         [XmlEnum("timeSpan")] TimeSpan,
         [XmlEnum("string")] String,
-        [XmlEnum("uri")] Uri,
+        //[XmlEnum("uri")] Uri,
     }
 
     public enum FieldAccess
@@ -282,5 +295,14 @@ namespace NClassify.Generator
         [XmlEnum("C#")] CSharp,
     }
 
+    public enum XmlAttributeType
+    {
+        None = 0,
+        Type,
+        Element,
+        Attribute,
+        Text,
+        Ignore,
+    };
     #endregion
 }

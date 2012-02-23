@@ -12,7 +12,8 @@ namespace NClassify.Generator.CodeGenerators.Types
         public ComplexTypeGenerator(ComplexType type)
             : base(type)
         { }
-        public override void WriteMember(CsCodeWriter code)
+
+        public override void DeclareType(CsCodeWriter code)
         {
             string[] derives = new string[0];
             using (code.DeclareClass(
@@ -23,9 +24,15 @@ namespace NClassify.Generator.CodeGenerators.Types
                     }, 
                     derives))
             {
-                Fields.ForAll(x => x.DeclareStaticData(code));
-                Fields.ForAll(x => x.DeclareInstanceData(code));
-                Fields.ForAll(x => x.WriteMember(code));
+                WriteChildren(code, Type.ChildTypes);
+                Fields.ForAll(x => x.DeclareTypes(code));
+
+                using (code.CodeRegion("Static Data"))
+                    Fields.ForAll(x => x.DeclareStaticData(code));
+                using (code.CodeRegion("Instance Fields"))
+                    Fields.ForAll(x => x.DeclareInstanceData(code));
+                using (code.CodeRegion("Instance Members"))
+                    Fields.ForAll(x => x.WriteMember(code));
             }
         }
     }

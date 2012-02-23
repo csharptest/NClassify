@@ -17,7 +17,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
 
         public override void DeclareStaticData(CsCodeWriter code)
         {
-            code.Write("private static readonly {0}[] __in_{1} = new [] {{", _field.GetStorageType(code), _field.CamelName);
+            code.Write("private static readonly {0}[] __in_{1} = new {0}[] {{", _field.GetStorageType(code), _field.CamelName);
             int ix = 0;
             string[] list = (string[]) _rule.Values.Clone();
             Array.Sort(list);

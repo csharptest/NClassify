@@ -54,15 +54,18 @@
     <Compile Include="CodeGenerators\BaseGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />
+    <Compile Include="CodeGenerators\Constraints\CodeConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\SimplyTypeConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\NotNullConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ListConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\MatchConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\RangeConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\LengthConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\CsCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\Fields\ArrayFieldGenerator.cs" />
     <Compile Include="CodeGenerators\IMemberGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\BaseFieldGenerator.cs" />
-    <Compile Include="CodeGenerators\FieldFactory.cs" />
+    <Compile Include="CodeGenerators\Fields\FieldFactory.cs" />
     <Compile Include="CodeGenerators\Fields\BaseNumericFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\BaseUnsignedFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\ComplexFieldGenerator.cs" />
@@ -71,7 +74,6 @@
     <Compile Include="CodeGenerators\Types\EnumTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\ServiceTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\SimpleTypeGenerator.cs" />
-    <Compile Include="CodeGenerators\Fields\UriFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\TimeSpanFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\UInt32FieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\Int64FieldGenerator.cs" />
@@ -90,7 +92,6 @@
     <Compile Include="CodeGenerators\Fields\Int32FieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\DateTimeFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\EnumFieldGenerator.cs" />
-    <Compile Include="CodeWriters\PropertyInfo.cs" />
     <Compile Include="CodeWriters\CodeWriter.cs" />
     <Compile Include="CodeWriters\CsCodeWriter.cs" />
     <Compile Include="CodeWriters\CodeItem.cs" />
@@ -112,7 +113,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NClassifyConfig.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

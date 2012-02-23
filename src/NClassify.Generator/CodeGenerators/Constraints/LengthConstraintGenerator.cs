@@ -23,9 +23,9 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                 case FieldType.Bytes:
                 case FieldType.String:
                     break;
-                case FieldType.Uri:
-                    accessor = ".AbsoluteUri.Length";
-                    break;
+                //case FieldType.Uri:
+                //    accessor = ".AbsoluteUri.Length";
+                //    break;
                 default:
                     throw new ArgumentOutOfRangeException("Length constraint does not apply to fields of type " + _field.FieldType);
             }

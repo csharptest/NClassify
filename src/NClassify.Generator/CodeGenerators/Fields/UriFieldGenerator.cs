@@ -11,5 +11,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             : base(fld)
         {
         }
+
+        public override bool IsNullable { get { return true; } }
     }
 }

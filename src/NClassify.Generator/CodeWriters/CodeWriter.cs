@@ -106,7 +106,7 @@ namespace NClassify.Generator.CodeWriters
         {
             StringBuilder sb = new StringBuilder();
             sb.Append('"');
-            foreach (char ch in data)
+            foreach (char ch in data ?? String.Empty)
             {
                 if (ch >= 32 && ch < 128)
                 {
@@ -161,6 +161,9 @@ namespace NClassify.Generator.CodeWriters
             }
         }
 
+        public virtual IDisposable CodeRegion(string format, params object[] args)
+        { return new ClosingBlock(this, null); }
+
         public IDisposable WriteBlock(string format, params object[] args)
         {
             if (args != null && args.Length > 0)
@@ -179,7 +182,8 @@ namespace NClassify.Generator.CodeWriters
 
         public IDisposable WriteBlock()
         {
-            return new CodeBlock(this);
+            WriteStartBlock();
+            return new ClosingBlock(this, x => WriteEndBlock());
         }
 
         public void WriteStartBlock()
@@ -194,14 +198,15 @@ namespace NClassify.Generator.CodeWriters
             base.WriteLine(_endBlock);
         }
 
-        private class CodeBlock : IDisposable
+        protected class ClosingBlock : IDisposable
         {
             private CodeWriter _wtr;
+            private readonly Action<CodeWriter> _onClose;
 
-            public CodeBlock(CodeWriter wtr)
+            public ClosingBlock(CodeWriter wtr, Action<CodeWriter> onClose)
             {
                 _wtr = wtr;
-                _wtr.WriteStartBlock();
+                _onClose = onClose;
                 _wtr._open.Add(this);
             }
 
@@ -209,7 +214,8 @@ namespace NClassify.Generator.CodeWriters
             {
                 if (_wtr != null && _wtr._open.Remove(this))
                 {
-                    _wtr.WriteEndBlock();
+                    if(_onClose != null)
+                        _onClose(_wtr);
                     _wtr = null;
                 }
             }

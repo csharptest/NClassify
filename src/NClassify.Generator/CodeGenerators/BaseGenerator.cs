@@ -32,7 +32,7 @@ namespace NClassify.Generator.CodeGenerators
 
         protected virtual void GenerateChildren(TWriter code, BaseType parent)
         {
-            List<object> types = new List<object>();
+            List<BaseTypeGenerator> types = new List<BaseTypeGenerator>();
             Config.GetEnumerations(parent).ForAll(x => types.Add(new EnumTypeGenerator(x)));
             Config.GetSimpleTypes(parent).ForAll(x => types.Add(new SimpleTypeGenerator(x)));
             Config.GetComplexTypes(parent).ForAll(x => types.Add(new ComplexTypeGenerator(x)));
@@ -42,7 +42,7 @@ namespace NClassify.Generator.CodeGenerators
                 .ForAll(x => x.DeclareStaticData(code));
 
             types.OfType<IMemberGenerator<TWriter>>()
-                .ForAll(x => x.WriteMember(code));
+                .ForAll(x => x.DeclareTypes(code));
         }
 
         protected abstract TWriter OpenWriter(TextWriter writer);

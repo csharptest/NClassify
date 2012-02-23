@@ -17,6 +17,20 @@
     <value name="sdfa" ordinal="3"/>
   </enum>
 
+  <value name="web_uri" base="string">
+    <validation>
+      <length min="8" max="2048" />
+      <match ignoreCase="true" pattern="^(https?\://.+" />
+      <code language="C#" test="IsValidUri(value)">
+        <!--signature is: bool IsValidUri(string value) {-->
+        <method>
+          global::System.Uri tmp;
+          return global::System.Uri.TryCreate(value, global::System.UriKind.Absolute, out tmp);
+        </method>
+      </code>
+    </validation>
+  </value>
+
   <value name="event_type" base="string">
     <validation>
       <predefined>
@@ -83,7 +97,7 @@
   <type name="Callback">
     <fields>
       <simple name="callback_id" type="callback_id" ordinal="1" />
-      <primitive name="uri" type="uri" ordinal="2" />
+      <simple name="uri" type="web_uri" ordinal="2" />
       <simple name="event" type="event_type" ordinal="3" />
       <primitive name="verified" type="bool" ordinal="4" />
     </fields>
@@ -125,7 +139,7 @@
       <primitive name="page" type="int32" ordinal="1" />
       <primitive name="per_page" type="int32" ordinal="2" />
       <simple name="event" type="event_type" ordinal="3" />
-      <primitive name="uri" type="string" ordinal="4" />
+      <simple name="uri" type="web_uri" ordinal="4" />
     </fields>
   </type>
 

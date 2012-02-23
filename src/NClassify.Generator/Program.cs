@@ -4,6 +4,7 @@ using CSharpTest.Net.Commands;
 using NClassify.Generator.CodeGenerators;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
+using System.ComponentModel;
 
 namespace NClassify.Generator
 {

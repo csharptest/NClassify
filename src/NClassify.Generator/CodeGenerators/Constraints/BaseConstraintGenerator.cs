@@ -7,8 +7,8 @@ namespace NClassify.Generator.CodeGenerators.Constraints
     {
         #region IMemberGenerator<CsWriter> Members
 
+        public virtual void DeclareTypes(CsCodeWriter code) { }
         public virtual void DeclareStaticData(CsCodeWriter code) { }
-        public virtual void DeclareInstanceData(CsCodeWriter code) { }
         public virtual void WriteMember(CsCodeWriter code) { }
 
         public abstract void WriteChecks(CsCodeWriter code);

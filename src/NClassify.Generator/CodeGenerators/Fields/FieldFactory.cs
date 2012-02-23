@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NClassify.Generator.CodeGenerators.Fields;
 
-namespace NClassify.Generator.CodeGenerators
+namespace NClassify.Generator.CodeGenerators.Fields
 {
     class FieldFactory
     {
@@ -30,7 +29,7 @@ namespace NClassify.Generator.CodeGenerators
                     {FieldType.DateTime, f => new DateTimeFieldGenerator(f)},
                     {FieldType.TimeSpan, f => new TimeSpanFieldGenerator(f)},
                     {FieldType.String, f => new StringFieldGenerator(f)},
-                    {FieldType.Uri, f => new UriFieldGenerator(f)},
+                    //{FieldType.Uri, f => new UriFieldGenerator(f)},
                 };
 
         public static BaseFieldGenerator Create(FieldInfo field)
@@ -38,6 +37,9 @@ namespace NClassify.Generator.CodeGenerators
             FactoryMethod factory;
             if (!Fields.TryGetValue(field.Type, out factory))
                 throw new ApplicationException("Unknown field type " + field.Type);
+
+            if (field.IsArray)
+                return new ArrayFieldGenerator(field, factory(field));
 
             return factory(field);
         }

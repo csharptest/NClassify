@@ -16,15 +16,11 @@ namespace NClassify.Generator.CodeWriters
         public string XmlName;
         public string Description;
 
+        public string DefaultValue;
+
         public bool Obsolete;
         public bool ClsCompliant;
 
         public XmlAttributeType XmlAttribute;
-        public enum XmlAttributeType
-        {
-            Element,
-            Attribute,
-            Text,
-        };
     }
 }

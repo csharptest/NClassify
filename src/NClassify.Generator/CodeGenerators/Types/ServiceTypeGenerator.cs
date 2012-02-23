@@ -12,8 +12,7 @@ namespace NClassify.Generator.CodeGenerators.Types
             : base(type)
         { }
 
-        public override void WriteMember(CsCodeWriter code)
-        {
-        }
+        public override void DeclareType(CsCodeWriter code)
+        { }
     }
 }

@@ -90,6 +90,20 @@ namespace NClassify.Generator.CodeWriters
             WriteLine("/// </summary>");
         }
 
+        public override IDisposable CodeRegion(string format, params object[] args)
+        {
+            if(args.Length > 0)
+                format = String.Format(format, args);
+            WriteLine("#region " + format);
+            return new ClosingBlock(this, x => WriteLine("#endregion"));
+        }
+
+        public void SetClsCompliant(bool isCompliant)
+        {
+            if (!isCompliant)
+                WriteLine("[global::System.CLSCompliant(false)]");
+        }
+
         public void WriteNonUserCode()
         {
             WriteLine("[" + Global + "System.Diagnostics.DebuggerNonUserCodeAttribute()]");
@@ -101,144 +115,7 @@ namespace NClassify.Generator.CodeWriters
             WriteLine("[" + Global + "System.Runtime.CompilerServices.CompilerGeneratedAttribute()]");
             WriteLine("[" + Global + "System.CodeDom.Compiler.GeneratedCodeAttribute(\"{0}\", \"{1}\")]", _generateName, _generatorVersion);
         }
-#if false
-        public override void DeclareStruct(FieldAccess access, string name, PropertyInfo prop)
-        {
-            WriteSummaryXml("Value type {0}", name);
-            WriteLine("[" + Global + "System.Xml.Serialization.XmlType({0})]", MakeString(name));
-            WriteNonUserCode();
-            using (WriteBlock("{0}partial struct {1} : System.IEquatable<{1}>, System.IComparable<{1}>", 
-                access == FieldAccess.Public ? "public " : "", 
-                ToPascalCase(name)))
-            {
-                if (!prop.IsClsCompliant)
-                    WriteLine("[global::System.CLSCompliant(false)]");
-                using (WriteBlock("public {0}({1} value) : this()", ToPascalCase(name), prop.Type))
-                    WriteLine("this.Value = value;");
 
-                WriteProperty(true, prop);
-                using (WriteBlock("public override string ToString()"))
-                    WriteLine("return __value.ToString();");
-                using (WriteBlock("public override int GetHashCode()"))
-                    WriteLine("return __value.GetHashCode();");
-                using (WriteBlock("public override bool Equals(object obj)"))
-                    WriteLine("return obj is {0} ? Equals(({0})obj) : base.Equals(obj);", ToPascalCase(name));
-
-                using (WriteBlock("public bool Equals({0} other)", ToPascalCase(name)))
-                    WriteLine("return __value.Equals(other.__value);");
-                using (WriteBlock("public int CompareTo({0} other)", ToPascalCase(name)))
-                    WriteLine("return __value.CompareTo(other.__value);");
-
-                if (!prop.IsClsCompliant)
-                    WriteLine("[global::System.CLSCompliant(false)]");
-                using (WriteBlock("public static explicit operator {0}({1} value)", ToPascalCase(name), prop.Type))
-                {
-                    WriteLine("return new {0}(value);", ToPascalCase(name));
-                }
-                if (!prop.IsClsCompliant)
-                    WriteLine("[global::System.CLSCompliant(false)]");
-                using (WriteBlock("public static explicit operator {0}({1} value)", prop.Type, ToPascalCase(name)))
-                {
-                    WriteLine("return value.Value;");
-                }
-
-                using (WriteBlock("public static bool operator ==({0} x, {0} y)", ToPascalCase(name)))
-                    WriteLine("return x.__value.Equals(y.__value);");
-                using (WriteBlock("public static bool operator !=({0} x, {0} y)", ToPascalCase(name)))
-                    WriteLine("return !x.__value.Equals(y.__value);");
-            }
-        }
-
-        public override void DeclareClass(FieldAccess access, string name, string[] inherits, PropertyInfo[] props)
-        {
-            WriteSummaryXml("Value type {0}", name);
-            WriteLine("[" + Global + "System.Xml.Serialization.XmlType({0})]", MakeString(name));
-            WriteNonUserCode();
-            using (WriteBlock("{0}partial class {1}", access == FieldAccess.Public ? "public " : "", ToPascalCase(name)))
-            {
-                foreach (PropertyInfo prop in props)
-                    WriteProperty(false, prop);
-            }
-        }
-
-        private void WriteProperty(bool isSealed, PropertyInfo prop)
-        {
-            WriteLine("private bool __has_{0}{1};", ToCamelCase(prop.Name), prop.Default != null ? " = " + MakeConstant(prop.Type, prop.Default) : "");
-            WriteLine("private {1} __{0};", ToCamelCase(prop.Name), prop.Type);
-            if (prop.Expression != null)
-                WriteLine("private static readonly " + 
-                    Global + "System.Text.RegularExpressions.Regex __valid_{0} = " + "new " + 
-                    Global + "System.Text.RegularExpressions.Regex({1}, (" + 
-                    Global + "System.Text.RegularExpressions.RegexOptions){2});", 
-                    ToCamelCase(prop.Name), MakeString(prop.Expression), (int)prop.ExpOptions);
-
-            isSealed = isSealed || prop.Access == FieldAccess.Private;
-            if (!isSealed && !prop.IsClsCompliant)
-                WriteLine("[global::System.CLSCompliant(false)]");
-
-            using (WriteBlock("{2} bool Set{0}({1} value)", ToPascalCase(prop.Name), prop.Type, isSealed ? "private" : "protected"))
-            {
-                if (prop.Prohibited)
-                    WriteLine("return false;");
-                if (!prop.IsValueType)
-                    WriteLine("if (null == value) return false;");
-                if (prop.MinLength.HasValue && prop.MinLength.Value > 0)
-                    WriteLine("if (value.Length < {0}) return false;", prop.MinLength.Value);
-                if (prop.MaxLength.HasValue && prop.MaxLength.Value < uint.MaxValue)
-                    WriteLine("if (value.Length > {0}) return false;", prop.MaxLength.Value);
-                if (prop.MinValue != null)
-                    WriteLine("if (value < {0}) return false;", MakeConstant(prop.Type, prop.MinValue));
-                if (prop.MaxValue != null)
-                    WriteLine("if (value > {0}) return false;", MakeConstant(prop.Type, prop.MaxValue));
-                if (prop.Expression != null)
-                    WriteLine("if (__valid_{0}.IsMatch(value.ToString())) return false;", ToCamelCase(prop.Name));
-
-                WriteLine("__{0} = value;", ToCamelCase(prop.Name));
-                WriteLine("return __has_{0} = true;", ToCamelCase(prop.Name));
-            }
-
-            if(prop.Obsolete)
-                WriteLine("[" + Global + "System.ObsoleteAttribute()]");
-
-            string restrictGet = prop.ReadWrite == FieldDirection.ReadOnly ? "private " : "";
-            string restrictSet = prop.ReadWrite == FieldDirection.WriteOnly ? "private " : "";
-            using (WriteBlock("{0} bool Has{1}", prop.Access.ToString().ToLower(), ToPascalCase(prop.Name)))
-            {
-                using (WriteBlock(restrictGet + "get"))
-                    WriteLine("return __has_{0};", ToCamelCase(prop.Name));
-
-                using (WriteBlock(restrictSet + "set"))
-                {
-                    WriteLine("if (value) throw new System.ArgumentOutOfRangeException({0});", MakeString("Has" + ToPascalCase(prop.Name)));
-                    WriteLine("__has_{0} = false;", ToCamelCase(prop.Name));
-                    WriteLine("__{0} = {1};", ToCamelCase(prop.Name), MakeConstant(prop.Type, prop.Default));
-                }
-            }
-
-            WriteSummaryXml("{0} {1}", prop.Type, prop.Name);
-            if (prop.Obsolete)
-                WriteLine("[" + Global + "System.ObsoleteAttribute()]");
-            if (prop.Access != FieldAccess.Private && !prop.IsClsCompliant)
-                WriteLine("[global::System.CLSCompliant(false)]");
-
-            using (WriteBlock("{0} {1} {2}", prop.Access.ToString().ToLower(), prop.PseudoType ?? prop.Type, ToPascalCase(prop.Name)))
-            {
-                using (WriteBlock(restrictGet + "get"))
-                {
-                    WriteLine("return {1}(__{0});", ToCamelCase(prop.Name),
-                        prop.PseudoType != null ? "new " + prop.PseudoType : "");
-                }
-
-                using (WriteBlock(restrictSet + "set"))
-                using (WriteBlock("if (!Set{0}(value{1}))", ToPascalCase(prop.Name), prop.PseudoType != null ? ".Value" : ""))
-                {
-                    WriteLine("throw new System.ArgumentOutOfRangeException({0});", MakeString(ToPascalCase(prop.Name)));
-                }
-            }
-        }
-
-        public string MakeConstant(string type, string value) { return null; }
-#endif
         public override string MakeConstant(FieldType type, string value)
         {
             try
@@ -319,15 +196,15 @@ namespace NClassify.Generator.CodeWriters
                             return String.Format("new {0}System.TimeSpan.Parse({1})", Global, MakeString(value));
                         }
 
-                    case FieldType.Uri:
-                        {
-                            if (String.IsNullOrEmpty(value))
-                                return "default(" + Global + "System.Uri)";
-
-                            var test = new Uri(value, UriKind.Absolute);
-                            return String.Format("new {0}System.Uri({1}, {0}System.UriKind.Absolute)", Global,
-                                                 MakeString(value));
-                        }
+                    //case FieldType.Uri:
+                    //    {
+                    //        if (String.IsNullOrEmpty(value))
+                    //            return "null";
+                            
+                    //        var test = new Uri(value, UriKind.Absolute);
+                    //        return String.Format("new {0}System.Uri({1}, {0}System.UriKind.Absolute)", Global,
+                    //                             MakeString(value));
+                    //    }
                     default:
                         throw new ArgumentOutOfRangeException("value");
                 }
@@ -358,7 +235,7 @@ namespace NClassify.Generator.CodeWriters
                 case FieldType.Guid: return Global + "System.Guid";
                 case FieldType.DateTime: return Global + "System.DateTime";
                 case FieldType.TimeSpan: return Global + "System.TimeSpan";
-                case FieldType.Uri: return Global + "System.Uri";
+                //case FieldType.Uri: return Global + "System.Uri";
                 default:
                     throw new ArgumentOutOfRangeException("type", "Invalid field type: " + type);
             }
@@ -410,10 +287,19 @@ namespace NClassify.Generator.CodeWriters
         {
             WriteSummaryXml(info.Description);
             WriteLineIf(info.Obsolete, "[" + Global + "System.Obsolete]");
-            WriteLineIf(info.XmlName != null, "[" + Global + "System.Xml.Serialization.Xml{1}({0})]", 
-                info.XmlAttribute == CodeItem.XmlAttributeType.Text ? null : MakeString(info.XmlName), 
-                info.XmlAttribute);
-
+            WriteLineIf(info.DefaultValue != null, "[" + Global + "System.ComponentModel.DefaultValueAttribute({0})]", info.DefaultValue);
+            
+            if (info.Access == FieldAccess.Public)
+            {
+                WriteLineIf(info.XmlAttribute != XmlAttributeType.None,
+                            "[" + Global + "System.Xml.Serialization.Xml{1}({0})]",
+                            info.XmlName != null && (info.XmlAttribute == XmlAttributeType.Type
+                                                     || info.XmlAttribute == XmlAttributeType.Element ||
+                                                     info.XmlAttribute == XmlAttributeType.Attribute)
+                                ? MakeString(info.XmlName)
+                                : null,
+                            info.XmlAttribute);
+            }
             return WriteBlock("{0} {1} {2}",
                 info.Access.ToString().ToLower(),
                 type, info.Name
