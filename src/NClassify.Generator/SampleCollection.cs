@@ -2,10 +2,6 @@
 
 namespace NClassify.Generator
 {
-    internal class System
-    {
-    }
-
     partial class CallbacksSample
     {
         public partial class CallbackList : global::System.Collections.Generic.IList<Callback>

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 #pragma warning disable 1591
 
-namespace NClassify.Interfaces
+namespace NClassify.Library
 {
     public interface IValidate
     {

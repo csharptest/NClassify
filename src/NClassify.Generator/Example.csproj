@@ -8,7 +8,7 @@
     <ProjectGuid>{C26AC98A-D488-4357-9699-D9B20ABCC76C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Example</RootNamespace>
+    <RootNamespace>NClassify</RootNamespace>
     <AssemblyName>Example</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Example.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Example.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example.cs" />
-    <Compile Include="NClassify.Interfaces.cs" />
+    <Compile Include="Library\Interfaces.cs" />
+    <Compile Include="Library\XmlReading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SampleCollection.cs" />
+    <Content Include="SampleCollection.cs" />
+    <Compile Include="System.cs" />
     <Compile Include="TestExample.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

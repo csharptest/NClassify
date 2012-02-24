@@ -11,16 +11,28 @@ namespace Example
     {
         static void Main()
         {
-            Callback cb = new Callback();
-            ReadXml("Callback",
+            CallbacksResponse cb = new CallbacksResponse();
+            NClassify.Library.XmlReading.ReadXml("CallbacksResponse",
                 new XmlTextReader(
                     new StringReader(
                         @"
-<Callback verified='0'>
+<CallbacksResponse>
+<callbacks>
+<callback verified='0'>
   <callback_id>5</callback_id>
   <uri/>
   <event></event>
-</Callback>
+  <unk>asdf
+<bla>
+BAD
+<br/>
+</bla>
+<!-- comment -->
+1234</unk>
+</callback>
+<callback/>
+</callbacks>
+</CallbacksResponse>
 ")));
             
             using(XmlWriter w = XmlWriter.Create(Console.Out, new XmlWriterSettings() {Indent = true, CloseOutput = false}))
@@ -30,34 +42,6 @@ namespace Example
         }
 
 
-        public static void ReadXml(string localName, global::System.Xml.XmlReader reader)
-        {
-            while (reader.NodeType != global::System.Xml.XmlNodeType.Element && reader.Read())
-            { }
-
-            if (reader.NodeType != global::System.Xml.XmlNodeType.Element || reader.LocalName != localName)
-                throw new global::System.FormatException();
-
-            if (reader.MoveToFirstAttribute())
-            {
-                do
-                {
-                    Console.WriteLine("{0} = {1}", reader.LocalName, reader.Value);
-                } while (reader.MoveToNextAttribute());
-                reader.MoveToElement();
-            }
-            global::System.Xml.XmlReader me = reader.ReadSubtree();
-            me.ReadStartElement(localName);
-            while(true)
-            {
-                while (me.NodeType != global::System.Xml.XmlNodeType.Element && me.Read())
-                { }
-                if (me.NodeType != global::System.Xml.XmlNodeType.Element)
-                    break;
-
-                Console.WriteLine("{0} = {1}", me.LocalName, me.ReadElementString());
-            }
-        }
     }
 }
 
