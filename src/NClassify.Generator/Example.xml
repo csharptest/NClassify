@@ -96,9 +96,9 @@
 
   <type name="Callback">
     <fields>
-      <simple name="callback_id" type="callback_id" ordinal="1" />
-      <simple name="uri" type="web_uri" ordinal="2" />
-      <simple name="event" type="event_type" ordinal="3" />
+      <simple name="callback_id" type="callback_id" ordinal="1" default="0" />
+      <simple name="uri" type="web_uri" ordinal="2" default="" />
+      <simple name="event" type="event_type" ordinal="3" default="all" />
       <primitive name="verified" type="bool" ordinal="4" />
     </fields>
   </type>

@@ -63,23 +63,14 @@ namespace NClassify.Generator.CodeGenerators.Fields
                         CsCodeWriter.Global + "System.ICloneable",
                     }))
             {
-                using(code.WriteBlock("private static {0} ValidateItem({0} value)", itemType))
+                using(code.WriteBlock("private static T AssertNotNull<T>(T value) where T : class"))
                 {
-                    if (_generator.HasValidator)
-                        code.WriteLine("if (!IsValid{0}(value)) throw new {1}System.ArgumentOutOfRangeException(\"{2}\");",
-                            _generator.PropertyName, CsCodeWriter.Global, _generator.PropertyName);
+                    code.WriteLine("if (null == value) throw new {0}System.ArgumentNullException({1});",
+                        CsCodeWriter.Global, code.MakeString(PropertyName)); 
                     code.WriteLine("return value;");
                 }
-                using (code.WriteBlock("private static {0} ValidateItems({0} items)", 
-                    String.Format("{0}System.Collections.Generic.IList<{1}>", CsCodeWriter.Global, itemType)))
-                {
-                    code.WriteLine("if (null == items) throw new {0}System.ArgumentNullException(\"{1}\");",
-                        CsCodeWriter.Global, _generator.PropertyName);
-                    using(code.WriteBlock("foreach ({0} item in items)", itemType))
-                        code.WriteLine("ValidateItem(item);");
-                    code.WriteLine("return items;");
-                }
 
+                string value = _generator.IsNullable ? "AssertNotNull(value)" : "value";
                 code.WriteLine("private readonly bool _readOnly;");
                 code.WriteLine("private readonly {0}System.Collections.Generic.IList<{1}> _contents;", CsCodeWriter.Global, itemType);
 
@@ -91,7 +82,9 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 using (code.WriteBlock("public {0}({1}System.Collections.Generic.IList<{2}> contents, bool readOnly)", collection, CsCodeWriter.Global, itemType))
                 {
                     code.WriteLine("_readOnly = readOnly;");
-                    code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>(ValidateItems(contents));", CsCodeWriter.Global, itemType);
+                    if (_generator.IsNullable)
+                        code.WriteLine("foreach ({0} item in AssertNotNull(contents)) AssertNotNull(item);", _generator.GetPublicType(code));
+                    code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>(AssertNotNull(contents));", CsCodeWriter.Global, itemType);
                 }
                 _generator.Constraints.ForAll(x => x.WriteMember(code));
                 using (code.WriteBlock("public {0} AsReadOnly()", collection))
@@ -104,12 +97,12 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 using (code.WriteBlock("public {0} this[int index]", itemType))
                 {
                     code.WriteLine("get { return _contents[index]; }");
-                    code.WriteLine("set { Modify[index] = ValidateItem(value); }");
+                    code.WriteLine("set {{ Modify[index] = {0}; }}", value);
                 }
                 code.WriteLine("public int Count { get { return _contents.Count; } }");
                 code.WriteLine("public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }");
-                code.WriteLine("public void Add({0} item) {{ Modify.Add(ValidateItem(item)); }}", itemType);
-                code.WriteLine("public void Insert(int index, {0} item) {{ Modify.Insert(index, ValidateItem(item)); }}", itemType);
+                code.WriteLine("public void Add({0} value) {{ Modify.Add({1}); }}", itemType, value);
+                code.WriteLine("public void Insert(int index, {0} value) {{ Modify.Insert(index, {1}); }}", itemType, value);
                 code.WriteLine("public bool Remove({0} item) {{ return Modify.Remove(item); }}", itemType);
                 code.WriteLine("public void RemoveAt(int index) { Modify.RemoveAt(index); }");
                 code.WriteLine("public void Clear() { Modify.Clear(); }");

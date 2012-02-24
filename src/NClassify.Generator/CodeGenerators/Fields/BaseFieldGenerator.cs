@@ -257,8 +257,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                         XmlAttribute = XmlAttributeType.Ignore,
                     }, FieldType.Boolean))
             {
-                using (code.WriteBlock("get"))
-                    code.WriteLine("return {0};", HasBackingName);
+                code.WriteLine("get {{ return {0}; }}", HasBackingName);
                 if (!IsReadOnly)
                 {
                     using (code.WriteBlock("set"))
@@ -290,16 +289,15 @@ namespace NClassify.Generator.CodeGenerators.Fields
             {
                 using (code.WriteBlock(IsWriteOnly && FieldAccess != FieldAccess.Private ? "private get" : "get"))
                 {
-                    if (IsReadOnly && Default == null)
-                        code.WriteLine("if (!{0}) throw new global::System.InvalidOperationException();", HasBackingName);
-
+                    if (IsStructure) // Since a structure can not initalize defaults, return the constant
+                        code.WriteLine("if (!{0}) return {1};", HasBackingName, MakeConstant(code, Default));
                     code.WriteLine("return {0};", ToPublicType(code, FieldBackingName));
                 }
                 using (code.WriteBlock(IsReadOnly && FieldAccess != FieldAccess.Private ? "private set" : "set"))
                 {
-                    if (HasValidator)
-                        code.WriteLine("if (!IsValid{0}(value)) throw new {1}System.ArgumentOutOfRangeException({2});",
-                                       PropertyName, CsCodeWriter.Global, code.MakeString(PropertyName));
+                    if (IsNullable)
+                        code.WriteLine("if (null == value) throw new {0}System.ArgumentNullException({1});", 
+                            CsCodeWriter.Global, code.MakeString(PropertyName));
 
                     code.WriteLine("{0} = {1};", FieldBackingName, ToStorageType(code, "value"));
                     code.WriteLine("{0} = true;", HasBackingName);
@@ -326,10 +324,17 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)
         {
+            System.Xml.XmlWriter writer;
+
             if (XmlAttribute == XmlAttributeType.Attribute)
                 code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
             else if (XmlAttribute == XmlAttributeType.Element)
+            {
                 code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
+                //code.WriteLine("writer.WriteStartElement(\"{0}\");", XmlName);
+                //code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
+                //code.WriteLine("writer.WriteFullEndElement();");
+            }
             else if (XmlAttribute == XmlAttributeType.Text)
                 code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
         }
@@ -339,7 +344,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             return String.Format("{0}System.Xml.XmlConvert.ToString({1})", CsCodeWriter.Global, name);
         }
 
-     public virtual void WriteXmlInput(CsCodeWriter code)
+        public virtual void WriteXmlInput(CsCodeWriter code)
         { }
 
         #endregion
