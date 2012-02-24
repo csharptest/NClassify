@@ -66,6 +66,11 @@ namespace NClassify.Generator
                 __has_value = true;
             }
         }
+        public bool IsValid()
+        {
+            if (!__has_value || !IsValidValue(__value)) return false;
+             return true;
+        }
         #endregion
         #region Operators and Comparisons
         public override string ToString()
@@ -117,7 +122,7 @@ namespace NClassify.Generator
     public partial struct WebUri : global::System.IEquatable<WebUri>, global::System.IComparable<WebUri>
     {
         #region Instance Fields and Members
-        private static readonly global::System.Text.RegularExpressions.Regex __valid_value = new global::System.Text.RegularExpressions.Regex("^(https?\\://.+", global::System.Text.RegularExpressions.RegexOptions.Singleline | global::System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        private static readonly global::System.Text.RegularExpressions.Regex __valid_value = new global::System.Text.RegularExpressions.Regex("^https?\\://.+", global::System.Text.RegularExpressions.RegexOptions.Singleline | global::System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         private static bool IsValidUri(string value)
         {
             global::System.Uri tmp;
@@ -128,7 +133,7 @@ namespace NClassify.Generator
             if (null == value) return false;
             if (value.Length < 8) return false;
             if (value.Length > 2048) return false;
-            if (__valid_value.IsMatch(value.ToString())) return false;
+            if (!__valid_value.IsMatch(value.ToString())) return false;
             if (!(IsValidUri(value))) return false;
             return true;
         }
@@ -160,6 +165,11 @@ namespace NClassify.Generator
                 __value = value;
                 __has_value = true;
             }
+        }
+        public bool IsValid()
+        {
+            if (!__has_value || !IsValidValue(__value)) return false;
+             return true;
         }
         #endregion
         #region Operators and Comparisons
@@ -246,6 +256,11 @@ namespace NClassify.Generator
                 __has_value = true;
             }
         }
+        public bool IsValid()
+        {
+            if (!__has_value || !IsValidValue(__value)) return false;
+             return true;
+        }
         #endregion
         #region Operators and Comparisons
         public override string ToString()
@@ -292,38 +307,32 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class Callback
+    public partial class Callback : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
-        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId testValue)
+        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId value)
         {
-            if (!testValue.HasValue) return false;
-            ulong value = (ulong)testValue;
-            if (!NClassify.Generator.CallbackId.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
-        public static bool IsValidUri(global::NClassify.Generator.WebUri testValue)
+        public static bool IsValidUri(global::NClassify.Generator.WebUri value)
         {
-            if (!testValue.HasValue) return false;
-            string value = (string)testValue;
-            if (!NClassify.Generator.WebUri.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
-        public static bool IsValidEvent(global::NClassify.Generator.EventType testValue)
+        public static bool IsValidEvent(global::NClassify.Generator.EventType value)
         {
-            if (!testValue.HasValue) return false;
-            string value = (string)testValue;
-            if (!NClassify.Generator.EventType.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
         #region Instance Fields
         private bool __has_callbackId;
-        private ulong __callbackId;
+        private global::NClassify.Generator.CallbackId __callbackId;
         private bool __has_uri;
-        private string __uri;
+        private global::NClassify.Generator.WebUri __uri;
         private bool __has_event;
-        private string __event;
+        private global::NClassify.Generator.EventType __event;
         private bool __has_verified;
         private bool __verified;
         #endregion
@@ -338,7 +347,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __callbackId = 0ul;
+                __callbackId = new global::NClassify.Generator.CallbackId(0ul);
                 __has_callbackId = false;
             }
         }
@@ -348,12 +357,12 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.CallbackId)__callbackId;
+                return __callbackId;
             }
             set
             {
                 if (!IsValidCallbackId(value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
-                __callbackId = (ulong)value;
+                __callbackId = value;
                 __has_callbackId = true;
             }
         }
@@ -367,7 +376,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __uri = "";
+                __uri = new global::NClassify.Generator.WebUri("");
                 __has_uri = false;
             }
         }
@@ -377,12 +386,12 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.WebUri)__uri;
+                return __uri;
             }
             set
             {
                 if (!IsValidUri(value)) throw new global::System.ArgumentOutOfRangeException("Uri");
-                __uri = (string)value;
+                __uri = value;
                 __has_uri = true;
             }
         }
@@ -396,7 +405,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __event = "";
+                __event = new global::NClassify.Generator.EventType("");
                 __has_event = false;
             }
         }
@@ -406,12 +415,12 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.EventType)__event;
+                return __event;
             }
             set
             {
                 if (!IsValidEvent(value)) throw new global::System.ArgumentOutOfRangeException("Event");
-                __event = (string)value;
+                __event = value;
                 __has_event = true;
             }
         }
@@ -443,6 +452,69 @@ namespace NClassify.Generator
                 __has_verified = true;
             }
         }
+        public bool IsValid()
+        {
+            if (__has_callbackId && !IsValidCallbackId(__callbackId)) return false;
+            if (__has_uri && !IsValidUri(__uri)) return false;
+            if (__has_event && !IsValidEvent(__event)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callbackId = true;
+            __has_uri = true;
+            __has_event = true;
+            __has_verified = true;
+        }
+        public void Clear()
+        {
+            __has_callbackId = false;
+            __callbackId = new global::NClassify.Generator.CallbackId(0ul);
+            __has_uri = false;
+            __uri = new global::NClassify.Generator.WebUri("");
+            __has_event = false;
+            __event = new global::NClassify.Generator.EventType("");
+            __has_verified = false;
+            __verified = false;
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public Callback Clone()
+        {
+            Callback value = (Callback)this.MemberwiseClone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("Callback", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callbackId)
+            {
+                writer.WriteElementString("callback_id", global::System.Xml.XmlConvert.ToString(__callbackId.Value));
+            }
+            if (__has_uri)
+            {
+                writer.WriteElementString("uri", __uri.Value);
+            }
+            if (__has_event)
+            {
+                writer.WriteElementString("event", __event.Value);
+            }
+            if (__has_verified)
+            {
+                writer.WriteElementString("verified", global::System.Xml.XmlConvert.ToString(__verified));
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -451,12 +523,13 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbackRequest
+    public partial class CallbackRequest : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
         public static bool IsValidCallback(global::NClassify.Generator.Callback value)
         {
             if (null == value) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
@@ -493,6 +566,47 @@ namespace NClassify.Generator
                 __has_callback = true;
             }
         }
+        public bool IsValid()
+        {
+            if (!__has_callback || !IsValidCallback(__callback)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callback = true;
+        }
+        public void Clear()
+        {
+            __has_callback = false;
+            __callback = new global::NClassify.Generator.Callback();
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbackRequest Clone()
+        {
+            CallbackRequest value = (CallbackRequest)this.MemberwiseClone();
+            value.__callback = value.__callback.Clone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbackRequest", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callback)
+            {
+                __callback.WriteXml("callback", writer);
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -501,14 +615,12 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbackVerify
+    public partial class CallbackVerify : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
-        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId testValue)
+        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId value)
         {
-            if (!testValue.HasValue) return false;
-            ulong value = (ulong)testValue;
-            if (!NClassify.Generator.CallbackId.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         public static bool IsValidVerifier(string value)
@@ -519,7 +631,7 @@ namespace NClassify.Generator
         #endregion
         #region Instance Fields
         private bool __has_callbackId;
-        private ulong __callbackId;
+        private global::NClassify.Generator.CallbackId __callbackId;
         private bool __has_verifier;
         private string __verifier = "";
         #endregion
@@ -534,7 +646,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __callbackId = 0ul;
+                __callbackId = new global::NClassify.Generator.CallbackId(0ul);
                 __has_callbackId = false;
             }
         }
@@ -544,12 +656,12 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.CallbackId)__callbackId;
+                return __callbackId;
             }
             set
             {
                 if (!IsValidCallbackId(value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
-                __callbackId = (ulong)value;
+                __callbackId = value;
                 __has_callbackId = true;
             }
         }
@@ -581,6 +693,54 @@ namespace NClassify.Generator
                 __has_verifier = true;
             }
         }
+        public bool IsValid()
+        {
+            if (__has_callbackId && !IsValidCallbackId(__callbackId)) return false;
+            if (__has_verifier && !IsValidVerifier(__verifier)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callbackId = true;
+            __has_verifier = true;
+        }
+        public void Clear()
+        {
+            __has_callbackId = false;
+            __callbackId = new global::NClassify.Generator.CallbackId(0ul);
+            __has_verifier = false;
+            __verifier = "";
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbackVerify Clone()
+        {
+            CallbackVerify value = (CallbackVerify)this.MemberwiseClone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbackVerify", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callbackId)
+            {
+                writer.WriteElementString("callback_id", global::System.Xml.XmlConvert.ToString(__callbackId.Value));
+            }
+            if (__has_verifier)
+            {
+                writer.WriteElementString("verifier", __verifier);
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -589,12 +749,13 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbackVerifyRequest
+    public partial class CallbackVerifyRequest : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
         public static bool IsValidCallback(global::NClassify.Generator.CallbackVerify value)
         {
             if (null == value) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
@@ -631,6 +792,47 @@ namespace NClassify.Generator
                 __has_callback = true;
             }
         }
+        public bool IsValid()
+        {
+            if (!__has_callback || !IsValidCallback(__callback)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callback = true;
+        }
+        public void Clear()
+        {
+            __has_callback = false;
+            __callback = new global::NClassify.Generator.CallbackVerify();
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbackVerifyRequest Clone()
+        {
+            CallbackVerifyRequest value = (CallbackVerifyRequest)this.MemberwiseClone();
+            value.__callback = value.__callback.Clone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbackVerifyRequest", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callback)
+            {
+                __callback.WriteXml("callback", writer);
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -639,13 +841,13 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class Callbacks
+    public partial class Callbacks : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region _CallbackList
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-        partial class _CallbackList : global::System.Collections.Generic.IList<global::NClassify.Generator.Callback>
+        partial class _CallbackList : global::System.Collections.Generic.IList<global::NClassify.Generator.Callback>, global::System.ICloneable
         {
             private static global::NClassify.Generator.Callback ValidateItem(global::NClassify.Generator.Callback value)
             {
@@ -697,6 +899,11 @@ namespace NClassify.Generator
             public bool Contains(global::NClassify.Generator.Callback item) { return _contents.Contains(item); }
             public int IndexOf(global::NClassify.Generator.Callback item) { return _contents.IndexOf(item); }
             public void CopyTo(global::NClassify.Generator.Callback[] array, int arrayIndex) { _contents.CopyTo(array, arrayIndex); }
+            object global::System.ICloneable.Clone() { return Clone(); }
+            public _CallbackList Clone()
+            {
+                return new _CallbackList(this, false);
+            }
             public global::System.Collections.Generic.IEnumerator<global::NClassify.Generator.Callback> GetEnumerator()
             { return _contents.GetEnumerator(); }
             global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator()
@@ -707,6 +914,7 @@ namespace NClassify.Generator
         public static bool IsValidCallback(global::NClassify.Generator.Callback value)
         {
             if (null == value) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
@@ -726,6 +934,48 @@ namespace NClassify.Generator
                 __callback = new _CallbackList(value, false);
             }
         }
+        public bool IsValid()
+        {
+            foreach (global::NClassify.Generator.Callback item in __callback)
+            {
+                if (!IsValidCallback(item)) return false;
+            }
+             return true;
+        }
+        public void Initialize()
+        {
+        }
+        public void Clear()
+        {
+            __callback = new _CallbackList();
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public Callbacks Clone()
+        {
+            Callbacks value = (Callbacks)this.MemberwiseClone();
+            value.__callback = value.__callback.Clone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("Callbacks", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            foreach (global::NClassify.Generator.Callback item in __callback)
+            {
+                item.WriteXml("callback", writer);
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -734,12 +984,13 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbacksResponse
+    public partial class CallbacksResponse : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
         public static bool IsValidCallbacks(global::NClassify.Generator.Callbacks value)
         {
             if (null == value) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
@@ -776,6 +1027,47 @@ namespace NClassify.Generator
                 __has_callbacks = true;
             }
         }
+        public bool IsValid()
+        {
+            if (!__has_callbacks || !IsValidCallbacks(__callbacks)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callbacks = true;
+        }
+        public void Clear()
+        {
+            __has_callbacks = false;
+            __callbacks = new global::NClassify.Generator.Callbacks();
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbacksResponse Clone()
+        {
+            CallbacksResponse value = (CallbacksResponse)this.MemberwiseClone();
+            value.__callbacks = value.__callbacks.Clone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbacksResponse", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callbacks)
+            {
+                __callbacks.WriteXml("callbacks", writer);
+            }
+            writer.WriteEndElement();
+        }
         #endregion
     }
     #endregion
@@ -784,21 +1076,17 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbacksRequest
+    public partial class CallbacksRequest : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
-        public static bool IsValidEvent(global::NClassify.Generator.EventType testValue)
+        public static bool IsValidEvent(global::NClassify.Generator.EventType value)
         {
-            if (!testValue.HasValue) return false;
-            string value = (string)testValue;
-            if (!NClassify.Generator.EventType.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
-        public static bool IsValidUri(global::NClassify.Generator.WebUri testValue)
+        public static bool IsValidUri(global::NClassify.Generator.WebUri value)
         {
-            if (!testValue.HasValue) return false;
-            string value = (string)testValue;
-            if (!NClassify.Generator.WebUri.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
@@ -808,9 +1096,9 @@ namespace NClassify.Generator
         private bool __has_perPage;
         private int __perPage;
         private bool __has_event;
-        private string __event;
+        private global::NClassify.Generator.EventType __event;
         private bool __has_uri;
-        private string __uri;
+        private global::NClassify.Generator.WebUri __uri;
         #endregion
         #region Instance Members
         [global::System.Xml.Serialization.XmlIgnore()]
@@ -879,7 +1167,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __event = "";
+                __event = new global::NClassify.Generator.EventType("");
                 __has_event = false;
             }
         }
@@ -889,12 +1177,12 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.EventType)__event;
+                return __event;
             }
             set
             {
                 if (!IsValidEvent(value)) throw new global::System.ArgumentOutOfRangeException("Event");
-                __event = (string)value;
+                __event = value;
                 __has_event = true;
             }
         }
@@ -908,7 +1196,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __uri = "";
+                __uri = new global::NClassify.Generator.WebUri("");
                 __has_uri = false;
             }
         }
@@ -918,14 +1206,76 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.WebUri)__uri;
+                return __uri;
             }
             set
             {
                 if (!IsValidUri(value)) throw new global::System.ArgumentOutOfRangeException("Uri");
-                __uri = (string)value;
+                __uri = value;
                 __has_uri = true;
             }
+        }
+        public bool IsValid()
+        {
+            if (__has_event && !IsValidEvent(__event)) return false;
+            if (__has_uri && !IsValidUri(__uri)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_page = true;
+            __has_perPage = true;
+            __has_event = true;
+            __has_uri = true;
+        }
+        public void Clear()
+        {
+            __has_page = false;
+            __page = 0;
+            __has_perPage = false;
+            __perPage = 0;
+            __has_event = false;
+            __event = new global::NClassify.Generator.EventType("");
+            __has_uri = false;
+            __uri = new global::NClassify.Generator.WebUri("");
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbacksRequest Clone()
+        {
+            CallbacksRequest value = (CallbacksRequest)this.MemberwiseClone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbacksRequest", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_page)
+            {
+                writer.WriteElementString("page", global::System.Xml.XmlConvert.ToString(__page));
+            }
+            if (__has_perPage)
+            {
+                writer.WriteElementString("per_page", global::System.Xml.XmlConvert.ToString(__perPage));
+            }
+            if (__has_event)
+            {
+                writer.WriteElementString("event", __event.Value);
+            }
+            if (__has_uri)
+            {
+                writer.WriteElementString("uri", __uri.Value);
+            }
+            writer.WriteEndElement();
         }
         #endregion
     }
@@ -935,20 +1285,18 @@ namespace NClassify.Generator
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
-    public partial class CallbackIdentity
+    public partial class CallbackIdentity : global::System.ICloneable, global::System.Xml.Serialization.IXmlSerializable
     {
         #region Static Data
-        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId testValue)
+        public static bool IsValidCallbackId(global::NClassify.Generator.CallbackId value)
         {
-            if (!testValue.HasValue) return false;
-            ulong value = (ulong)testValue;
-            if (!NClassify.Generator.CallbackId.IsValidValue(value)) return false;
+            if (!value.IsValid()) return false;
             return true;
         }
         #endregion
         #region Instance Fields
         private bool __has_callbackId;
-        private ulong __callbackId;
+        private global::NClassify.Generator.CallbackId __callbackId;
         #endregion
         #region Instance Members
         [global::System.Xml.Serialization.XmlIgnore()]
@@ -961,7 +1309,7 @@ namespace NClassify.Generator
             set
             {
                 if (value) throw new global::System.InvalidOperationException();
-                __callbackId = 0ul;
+                __callbackId = new global::NClassify.Generator.CallbackId(0ul);
                 __has_callbackId = false;
             }
         }
@@ -971,14 +1319,54 @@ namespace NClassify.Generator
         {
             get
             {
-                return (global::NClassify.Generator.CallbackId)__callbackId;
+                return __callbackId;
             }
             set
             {
                 if (!IsValidCallbackId(value)) throw new global::System.ArgumentOutOfRangeException("CallbackId");
-                __callbackId = (ulong)value;
+                __callbackId = value;
                 __has_callbackId = true;
             }
+        }
+        public bool IsValid()
+        {
+            if (__has_callbackId && !IsValidCallbackId(__callbackId)) return false;
+             return true;
+        }
+        public void Initialize()
+        {
+            __has_callbackId = true;
+        }
+        public void Clear()
+        {
+            __has_callbackId = false;
+            __callbackId = new global::NClassify.Generator.CallbackId(0ul);
+        }
+        object global::System.ICloneable.Clone() { return Clone(); }
+        public CallbackIdentity Clone()
+        {
+            CallbackIdentity value = (CallbackIdentity)this.MemberwiseClone();
+            return value;
+        }
+        global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
+        {
+            return null;
+        }
+        public void ReadXml(global::System.Xml.XmlReader reader)
+        {
+        }
+        public void WriteXml(global::System.Xml.XmlWriter writer)
+        {
+            WriteXml("CallbackIdentity", writer);
+        }
+        public void WriteXml(string localName, global::System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement(localName);
+            if (__has_callbackId)
+            {
+                writer.WriteElementString("callback_id", global::System.Xml.XmlConvert.ToString(__callbackId.Value));
+            }
+            writer.WriteEndElement();
         }
         #endregion
     }

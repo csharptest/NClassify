@@ -13,5 +13,10 @@ namespace NClassify.Generator.CodeGenerators.Fields
         }
 
         public override bool IsNullable { get { return true; } }
+
+        public override string ToXmlString(NClassify.Generator.CodeWriters.CsCodeWriter code, string name)
+        {
+            return name;
+        }
     }
 }

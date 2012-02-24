@@ -11,29 +11,16 @@ namespace Example
     {
         static void Main()
         {
-            new XmlSerializer(typeof (CallbacksResponse));
+            Callback cb = new Callback();
+            cb.CallbackId = new CallbackId(5);
+            cb.Initialize();
+            cb.Uri = new WebUri("http://asdf");
+            cb.HasEvent = false;
+            
+            using(XmlWriter w = XmlWriter.Create(Console.Out, new XmlWriterSettings() {Indent = true, CloseOutput = false}))
+                cb.WriteXml(w);
 
-            foreach (Type t in typeof(TestExample).Assembly.GetExportedTypes())
-            {
-                if (t.GetCustomAttributes(typeof(System.Xml.Serialization.XmlTypeAttribute), false).Length == 0)
-                    continue;
-                Console.WriteLine("Testing {0}", t);
-                
-                XmlSerializer ser = new XmlSerializer(t);
-                object copy, obj = t.IsEnum ? Enum.GetValues(t).GetValue(0) : Activator.CreateInstance(t);
-                StringWriter writer = new StringWriter();
-                using (XmlWriter w = XmlWriter.Create(writer, new XmlWriterSettings { CloseOutput = false, Indent = true }))
-                    ser.Serialize(w, obj);
-
-                string xml = writer.ToString();
-                Console.WriteLine(xml);
-
-                using (XmlReader r = XmlReader.Create(new StringReader(xml), new XmlReaderSettings { CloseInput = false }))
-                    copy = ser.Deserialize(r);
-
-                if (copy.GetType() != obj.GetType())
-                    throw new ApplicationException();
-            }
+            Console.ReadLine();
         }
     }
 }

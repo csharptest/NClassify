@@ -63,6 +63,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                         code.WriteLine("this.Value = value;");
 
                     field.WriteMember(code);
+                    WriteMembers(code, new[] {field});
                 }
                 using (code.CodeRegion("Operators and Comparisons"))
                 {

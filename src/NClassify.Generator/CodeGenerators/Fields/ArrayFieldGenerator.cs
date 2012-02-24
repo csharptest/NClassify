@@ -26,6 +26,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             _generator = gen;
         }
 
+        public override string HasBackingName { get { return null; } }
         public override bool HasValidator { get { return false; } }
         public override bool IsArray { get { return true; } }
         public override bool IsNullable { get { return true; } }
@@ -56,7 +57,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
             using (code.CodeRegion(collection))
             using (code.DeclareClass(
                 new CodeItem(collection) { Access = FieldAccess.Private },
-                new[] { CsCodeWriter.Global + "System.Collections.Generic.IList<" + _generator.GetPublicType(code) + ">" }))
+                new[]
+                    {
+                        CsCodeWriter.Global + "System.Collections.Generic.IList<" + _generator.GetPublicType(code) + ">",
+                        CsCodeWriter.Global + "System.ICloneable",
+                    }))
             {
                 using(code.WriteBlock("private static {0} ValidateItem({0} value)", itemType))
                 {
@@ -111,6 +116,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 code.WriteLine("public bool Contains({0} item) {{ return _contents.Contains(item); }}", itemType);
                 code.WriteLine("public int IndexOf({0} item) {{ return _contents.IndexOf(item); }}", itemType);
                 code.WriteLine("public void CopyTo({0}[] array, int arrayIndex) {{ _contents.CopyTo(array, arrayIndex); }}", itemType);
+                code.WriteLine("object {0}System.ICloneable.Clone() {{ return Clone(); }}", CsCodeWriter.Global);
+                using (code.WriteBlock("public {0} Clone()", collection))
+                {
+                    code.WriteLine("return new {0}(this, false);", collection);
+                }
                 code.WriteLine("public {0}System.Collections.Generic.IEnumerator<{1}> GetEnumerator()", CsCodeWriter.Global, itemType);
                 code.WriteLine("{ return _contents.GetEnumerator(); }");
                 code.WriteLine("{0}System.Collections.IEnumerator {0}System.Collections.IEnumerable.GetEnumerator()", CsCodeWriter.Global);
@@ -155,6 +165,26 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     code.WriteLine("{0} = new {1}(value, false);", FieldBackingName, GetStorageType(code));
                 }
             }
+        }
+
+        public override void WriteValidation(CsCodeWriter code)
+        {
+            if (_generator.HasValidator)
+            {
+                using(code.WriteBlock("foreach ({0} item in {1})", _generator.GetPublicType(code), FieldBackingName))
+                    code.WriteLine("if (!IsValid{0}(item)) return false;", _generator.PropertyName);
+            }
+        }
+
+        public override void WriteClone(CsCodeWriter code)
+        {
+            code.WriteLine("value.{0} = value.{0}.Clone();", FieldBackingName);
+        }
+
+        public override void WriteXmlOutput(CsCodeWriter code, string name)
+        {
+            using (code.WriteBlock("foreach ({0} item in {1})", _generator.GetPublicType(code), name))
+                _generator.WriteXmlOutput(code, "item");
         }
     }
 }

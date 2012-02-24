@@ -20,7 +20,7 @@
   <value name="web_uri" base="string">
     <validation>
       <length min="8" max="2048" />
-      <match ignoreCase="true" pattern="^(https?\://.+" />
+      <match ignoreCase="true" pattern="^https?\://.+" />
       <code language="C#" test="IsValidUri(value)">
         <!--signature is: bool IsValidUri(string value) {-->
         <method>

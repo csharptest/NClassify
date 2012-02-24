@@ -34,10 +34,11 @@ namespace NClassify.Generator.CodeGenerators.Types
         public FieldAccess Access { get; set; }
 
         public string Name { get { return Type.Name; } }
+        public virtual string XmlName { get { return Type.Name; } }
         public string CamelName { get { return CodeWriter.ToCamelCase(Type.Name); } }
         public string PascalName { get { return CodeWriter.ToPascalCase(Type.Name); } }
 
-        protected void WriteChildren<TWriter>(TWriter code, BaseType[] children) where TWriter : CodeWriter
+        protected virtual void WriteChildren<TWriter>(TWriter code, BaseType[] children) where TWriter : CodeWriter
         {
             if (children != null && children.Length > 0)
             {
@@ -51,6 +52,16 @@ namespace NClassify.Generator.CodeGenerators.Types
 
                 types.OfType<IMemberGenerator<TWriter>>()
                     .ForAll(x => x.DeclareTypes(code));
+            }
+        }
+
+        protected virtual void WriteMembers(CsCodeWriter code, ICollection<BaseFieldGenerator> fields)
+        {
+            using (code.WriteBlock("public bool IsValid()"))
+            {
+                foreach (var fld in fields)
+                    fld.WriteValidation(code);
+                code.WriteLine(" return true;");
             }
         }
 

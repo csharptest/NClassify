@@ -33,7 +33,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
 
         public override void WriteChecks(CsCodeWriter code)
         {
-            code.WriteLine("if (__valid_{0}.IsMatch(value.ToString())) return false;", _field.CamelName);
+            code.WriteLine("if (!__valid_{0}.IsMatch(value.ToString())) return false;", _field.CamelName);
         }
     }
 }

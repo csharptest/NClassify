@@ -55,7 +55,7 @@
     <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />
     <Compile Include="CodeGenerators\Constraints\CodeConstraintGenerator.cs" />
-    <Compile Include="CodeGenerators\Constraints\SimplyTypeConstraintGenerator.cs" />
+    <Compile Include="CodeGenerators\Constraints\IsValidConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\NotNullConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ListConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\MatchConstraintGenerator.cs" />

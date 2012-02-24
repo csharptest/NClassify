@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace NClassify.Generator.CodeGenerators.Fields
 {
-    abstract class BaseFieldGenerator : IMemberGenerator<CsCodeWriter>
+    internal abstract class BaseFieldGenerator : IMemberGenerator<CsCodeWriter>
     {
         private readonly FieldInfo _field;
         private IList<BaseConstraintGenerator> _constraints;
@@ -18,43 +18,143 @@ namespace NClassify.Generator.CodeGenerators.Fields
             XmlAttribute = XmlAttributeType.Element;
         }
 
-        protected FieldInfo Field { get { return _field; } }
-        public virtual FieldType FieldType { get { return _field.Type; } }
+        protected FieldInfo Field
+        {
+            get { return _field; }
+        }
 
-        public virtual FieldAccess FieldAccess { get { return Field.Access; } }
-        public virtual FieldAccess ReadAccess { get { return IsWriteOnly ? FieldAccess.Private : Field.Access; } }
-        public virtual FieldAccess WriteAccess { get { return IsReadOnly ? FieldAccess.Private : Field.Access; } }
+        public virtual FieldType FieldType
+        {
+            get { return _field.Type; }
+        }
 
-        public FieldDirection Direction { get { return Field.FieldDirection; } }
-        public bool IsReadOnly { get { return Direction == FieldDirection.ReadOnly; } }
-        public bool IsWriteOnly { get { return Direction == FieldDirection.WriteOnly; } }
+        public virtual FieldAccess FieldAccess
+        {
+            get { return Field.Access; }
+        }
 
-        public uint Ordinal { get { return Field.FieldId; } }
+        public virtual FieldAccess ReadAccess
+        {
+            get { return IsWriteOnly ? FieldAccess.Private : Field.Access; }
+        }
 
-        public string Name { get { return Field.Name; } }
-        public string CamelName { get { return CodeWriter.ToCamelCase(Field.Name); } }
-        public string PascalName { get { return CodeWriter.ToPascalCase(Field.Name); } }
-        public virtual string PropertyName { get { return Field.PropertyName ?? PascalName; } }
+        public virtual FieldAccess WriteAccess
+        {
+            get { return IsReadOnly ? FieldAccess.Private : Field.Access; }
+        }
 
-        public string HasBackingName { get { return "__has_" + CamelName; } }
-        public string FieldBackingName { get { return "__" + CamelName; } }
+        public FieldDirection Direction
+        {
+            get { return Field.FieldDirection; }
+        }
 
-        public virtual bool HasDefault { get { return (Field.DefaultValue != null || IsNullable) && !IsStructure; } }
-        public virtual string Default { get { return Field.DefaultValue; } }
+        public bool IsReadOnly
+        {
+            get { return Direction == FieldDirection.ReadOnly; }
+        }
 
-        public bool Required { get { return (Field.FieldUse & FieldUse.Required) == FieldUse.Required; } }
-        public bool Obsolete { get { return (Field.FieldUse & FieldUse.Obsolete) == FieldUse.Obsolete; } }
-        public bool Prohibited { get { return (Field.FieldUse & FieldUse.Prohibited) == FieldUse.Prohibited; } }
+        public bool IsWriteOnly
+        {
+            get { return Direction == FieldDirection.WriteOnly; }
+        }
+
+        public uint Ordinal
+        {
+            get { return Field.FieldId; }
+        }
+
+        public string Name
+        {
+            get { return Field.Name; }
+        }
+
+        public string XmlName
+        {
+            get { return Field.Name; }
+        }
+
+        public string CamelName
+        {
+            get { return CodeWriter.ToCamelCase(Field.Name); }
+        }
+
+        public string PascalName
+        {
+            get { return CodeWriter.ToPascalCase(Field.Name); }
+        }
+
+        public virtual string PropertyName
+        {
+            get { return Field.PropertyName ?? PascalName; }
+        }
+
+        public virtual string HasBackingName
+        {
+            get { return "__has_" + CamelName; }
+        }
+
+        public virtual string FieldBackingName
+        {
+            get { return "__" + CamelName; }
+        }
+
+        public virtual bool HasDefault
+        {
+            get { return (Field.DefaultValue != null || IsNullable) && !IsStructure; }
+        }
+
+        public virtual string Default
+        {
+            get { return Field.DefaultValue; }
+        }
+
+        public bool Required
+        {
+            get { return (Field.FieldUse & FieldUse.Required) == FieldUse.Required; }
+        }
+
+        public bool Obsolete
+        {
+            get { return (Field.FieldUse & FieldUse.Obsolete) == FieldUse.Obsolete; }
+        }
+
+        public bool Prohibited
+        {
+            get { return (Field.FieldUse & FieldUse.Prohibited) == FieldUse.Prohibited; }
+        }
 
         public bool IsStructure { get; set; }
-        public XmlAttributeType XmlAttribute { get; set; }
+        public virtual XmlAttributeType XmlAttribute { get; set; }
 
-        public virtual bool HasValidator { get { return Prohibited || Constraints.Count > 0; } }
-        public virtual bool IsArray { get { return false; } }
-        public virtual bool IsNullable { get { return false; } }
-        public virtual bool IsNumeric { get { return false; } }
-        public virtual bool IsUnsigned { get { return false; } }
-        public virtual bool IsClsCompliant { get { return !IsNumeric || !IsUnsigned; } }
+        public virtual bool HasValidator
+        {
+            get { return Prohibited || Constraints.Count > 0; }
+        }
+
+        public virtual bool IsArray
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsNullable
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsNumeric
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsUnsigned
+        {
+            get { return false; }
+        }
+
+        public virtual bool IsClsCompliant
+        {
+            get { return !IsNumeric || !IsUnsigned; }
+        }
 
         public IList<BaseConstraintGenerator> Constraints
         {
@@ -78,7 +178,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual string GetPublicType(CodeWriter code)
         {
-            return code.GetTypeName(Field.Type);
+            return GetStorageType(code);
         }
 
         #region CSharp
@@ -88,16 +188,28 @@ namespace NClassify.Generator.CodeGenerators.Fields
             return code.MakeConstant(FieldType, value);
         }
 
-        public virtual bool IsPseudoTyped(CodeWriter code) { return false; }
+        public virtual bool IsPseudoTyped(CodeWriter code)
+        {
+            return false;
+        }
+
         public virtual string ToStorageType(CsCodeWriter code, string valueName)
-        { return valueName; }
+        {
+            return valueName;
+        }
+
         public virtual string ToPublicType(CsCodeWriter code, string valueName)
-        { return valueName; }
+        {
+            return valueName;
+        }
+
         public virtual void ChecksBeforeTypeConvert(CsCodeWriter code, string valueName)
-        { }
+        {
+        }
 
         public virtual void DeclareTypes(CsCodeWriter code)
-        { }
+        {
+        }
 
         public virtual void DeclareStaticData(CsCodeWriter code)
         {
@@ -107,7 +219,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             {
                 bool pseudoTyped = IsPseudoTyped(code);
                 using (code.WriteBlock("public static bool IsValid{0}({1} {2})", PropertyName, GetPublicType(code),
-                                    pseudoTyped ? "testValue" : "value"))
+                                       pseudoTyped ? "testValue" : "value"))
                 {
                     if (Prohibited)
                         code.WriteLine("throw new " + CsCodeWriter.Global + "System.InvalidOperationException();");
@@ -127,9 +239,9 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void DeclareInstanceData(CsCodeWriter code)
         {
-            code.DeclareField(new CodeItem(HasBackingName) { Access = FieldAccess.Private }, FieldType.Boolean, null);
-            code.DeclareField(new CodeItem(FieldBackingName) { Access = FieldAccess.Private }, GetStorageType(code), 
-                !HasDefault ? null : MakeConstant(code, Default));
+            code.DeclareField(new CodeItem(HasBackingName) {Access = FieldAccess.Private}, FieldType.Boolean, null);
+            code.DeclareField(new CodeItem(FieldBackingName) {Access = FieldAccess.Private}, GetStorageType(code),
+                              !HasDefault ? null : MakeConstant(code, Default));
         }
 
         public virtual void WriteMember(CsCodeWriter code)
@@ -137,7 +249,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             Constraints.ForAll(x => x.WriteMember(code));
 
             using (code.DeclareProperty(
-                new CodeItem("Has" +  PropertyName)
+                new CodeItem("Has" + PropertyName)
                     {
                         Access = FieldAccess,
                         Obsolete = Obsolete,
@@ -186,14 +298,50 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 using (code.WriteBlock(IsReadOnly && FieldAccess != FieldAccess.Private ? "private set" : "set"))
                 {
                     if (HasValidator)
-                        code.WriteLine("if (!IsValid{0}(value)) throw new {1}System.ArgumentOutOfRangeException({2});", 
-                            PropertyName, CsCodeWriter.Global, code.MakeString(PropertyName));
+                        code.WriteLine("if (!IsValid{0}(value)) throw new {1}System.ArgumentOutOfRangeException({2});",
+                                       PropertyName, CsCodeWriter.Global, code.MakeString(PropertyName));
 
                     code.WriteLine("{0} = {1};", FieldBackingName, ToStorageType(code, "value"));
                     code.WriteLine("{0} = true;", HasBackingName);
                 }
             }
         }
+
+        public virtual void WriteValidation(CsCodeWriter code)
+        {
+            if (HasValidator)
+            {
+                if (Field.FieldUse == FieldUse.Required)
+                    code.WriteLine("if (!{0} || !IsValid{1}({2})) return false;",
+                                   HasBackingName, PropertyName, FieldBackingName);
+                else
+                    code.WriteLine("if ({0} && !IsValid{1}({2})) return false;",
+                                   HasBackingName, PropertyName, FieldBackingName);
+            }
+        }
+
+        public virtual void WriteClone(CsCodeWriter code)
+        {
+        }
+
+        public virtual void WriteXmlOutput(CsCodeWriter code, string name)
+        {
+            if (XmlAttribute == XmlAttributeType.Attribute)
+                code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
+            else if (XmlAttribute == XmlAttributeType.Element)
+                code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
+            else if (XmlAttribute == XmlAttributeType.Text)
+                code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
+        }
+
+        public virtual string ToXmlString(CsCodeWriter code, string name)
+        {
+            return String.Format("{0}System.Xml.XmlConvert.ToString({1})", CsCodeWriter.Global, name);
+        }
+
+     public virtual void WriteXmlInput(CsCodeWriter code)
+        { }
+
         #endregion
     }
 }

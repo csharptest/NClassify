@@ -11,6 +11,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
     class SimpleFieldGenerator : BaseFieldGenerator
     {
         private SimpleType _primitive;
+        private SimpleTypeGenerator _generator;
 
         public SimpleFieldGenerator(FieldInfo fld)
             : base(fld)
@@ -18,6 +19,8 @@ namespace NClassify.Generator.CodeGenerators.Fields
             _primitive = fld.DeclaringType.ParentConfig.ResolveName<SimpleType>(
                 fld.DeclaringType, ((SimpleTypeRef) fld).TypeName
                 );
+
+            _generator = new SimpleTypeGenerator(_primitive);
         }
 
         public override FieldType FieldType
@@ -28,47 +31,29 @@ namespace NClassify.Generator.CodeGenerators.Fields
             }
         }
 
-        public override bool IsPseudoTyped(CodeWriter code) { return true; }
-
-        public override string ToStorageType(CsCodeWriter code, string valueName)
-        {
-            return String.Format("({0}){1}", GetStorageType(code), valueName);
-        }
-        public override string ToPublicType(CsCodeWriter code, string valueName)
-        {
-            return String.Format("({0}){1}", GetPublicType(code), valueName);
-        }
-        public override void ChecksBeforeTypeConvert(CsCodeWriter code, string valueName)
-        {
-            code.WriteLine("if (!{0}.HasValue) return false;", valueName);
-        }
-
         protected override IList<BaseConstraintGenerator> CreateConstraints()
         {
-            if (new SimpleTypeGenerator(_primitive).ValueField.HasValidator == false)
-                return base.CreateConstraints();
-
             List<BaseConstraintGenerator> constraints = new List<BaseConstraintGenerator>(
                     base.CreateConstraints()
                 );
 
-            constraints.Add(new SimplyTypeConstraintGenerator(_primitive));
+            constraints.Add(new IsValidConstraintGenerator());
             return constraints.AsReadOnly();
         }
 
         public override string GetStorageType(CodeWriter code)
-        {
-            return code.GetTypeName(_primitive.Type);
-        }
-
-        public override string GetPublicType(CodeWriter code)
         {
             return CsCodeWriter.Global + _primitive.QualifiedName;
         }
 
         public override string MakeConstant(CsCodeWriter code, string value)
         {
-            return code.MakeConstant(FieldType, value);
+            return String.Format("new {0}({1})", GetPublicType(code), code.MakeConstant(FieldType, value));
+        }
+
+        public override string ToXmlString(CsCodeWriter code, string name)
+        {
+            return _generator.ValueField.ToXmlString(code, name + ".Value");
         }
     }
 }

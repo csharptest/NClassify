@@ -52,8 +52,8 @@ namespace NClassify.Generator
 
             int errors = 0;
             Compile(code, e => { Console.Error.WriteLine(e); errors++; });
-            if (errors > 0)
-                throw new ApplicationException(errors + " error(s) compiling code.");
+            //if (errors > 0)
+            //    throw new ApplicationException(errors + " error(s) compiling code.");
         }
 
         private void Compile(string code, Action<string> error)
