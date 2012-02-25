@@ -2,22 +2,44 @@
 <NClassify xsi:noNamespaceSchemaLocation="NClassifyConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <settings>
-    <namespace>NClassify.Generator</namespace>
+    <namespace>NClassify.Example</namespace>
   </settings>
 
-  <value name="callback_id" base="uint64">
+  <value name="SimpleInt32" base="int32">
     <validation>
       <range min="1" />
     </validation>
   </value>
 
-  <enum name="asdf">
-    <value name="asdf" ordinal="1"/>
-    <value name="fdsa" ordinal="2"/>
-    <value name="sdfa" ordinal="3"/>
+  <enum name="SampleEnum">
+    <value name="one" ordinal="1"/>
+    <value name="two" ordinal="2"/>
+    <value name="three" ordinal="3"/>
   </enum>
 
-  <value name="web_uri" base="string">
+  <value name="SimpleBytes" base="bytes">
+    <validation>
+      <length min="1" max="255" />
+    </validation>
+  </value>
+
+  <value name="SimpleText" base="string">
+    <validation>
+      <predefined>
+        <value>abc</value>
+        <value>def</value>
+        <value>ghi</value>
+        <value>jkl</value>
+        <value>mno</value>
+        <value>pqr</value>
+        <value>stu</value>
+        <value>vwx</value>
+        <value>yz</value>
+      </predefined>
+    </validation>
+  </value>
+  
+  <value name="simple_uri" base="string">
     <validation>
       <length min="8" max="2048" />
       <match ignoreCase="true" pattern="^https?\://.+" />
@@ -31,130 +53,85 @@
     </validation>
   </value>
 
-  <value name="event_type" base="string">
-    <validation>
-      <predefined>
-        <value>all</value>
-        <value>category</value>
-        <value>category.create</value>
-        <value>category.delete</value>
-        <value>category.update</value>
-        <value>client</value>
-        <value>client.create</value>
-        <value>client.delete</value>
-        <value>client.update</value>
-        <value>estimate</value>
-        <value>estimate.create</value>
-        <value>estimate.delete</value>
-        <value>estimate.sendByEmail</value>
-        <value>estimate.update</value>
-        <value>expense</value>
-        <value>expense.create</value>
-        <value>expense.delete</value>
-        <value>expense.update</value>
-        <value>invoice</value>
-        <value>invoice.create</value>
-        <value>invoice.delete</value>
-        <value>invoice.dispute</value>
-        <value>invoice.pastdue.1</value>
-        <value>invoice.pastdue.2</value>
-        <value>invoice.pastdue.3</value>
-        <value>invoice.sendByEmail</value>
-        <value>invoice.sendBySnailMail</value>
-        <value>invoice.update</value>
-        <value>item</value>
-        <value>item.create</value>
-        <value>item.delete</value>
-        <value>item.update</value>
-        <value>payment</value>
-        <value>payment.create</value>
-        <value>payment.delete</value>
-        <value>payment.update</value>
-        <value>project</value>
-        <value>project.create</value>
-        <value>project.delete</value>
-        <value>project.update</value>
-        <value>recurring</value>
-        <value>recurring.create</value>
-        <value>recurring.delete</value>
-        <value>recurring.update</value>
-        <value>staff</value>
-        <value>staff.create</value>
-        <value>staff.delete</value>
-        <value>staff.update</value>
-        <value>task</value>
-        <value>task.create</value>
-        <value>task.delete</value>
-        <value>task.update</value>
-        <value>time_entry</value>
-        <value>time_entry.create</value>
-        <value>time_entry.delete</value>
-        <value>time_entry.update</value>
-      </predefined>
-    </validation>
-  </value>
-
-  <type name="Callback">
+  <type name="SampleMsg">
     <fields>
-      <simple name="callback_id" type="callback_id" ordinal="1" default="0" />
-      <simple name="uri" type="web_uri" ordinal="2" default="" />
-      <simple name="event" type="event_type" ordinal="3" default="all" />
-      <primitive name="verified" type="bool" ordinal="4" />
+      <simple ordinal="1" name="Id" type="SimpleInt32" default="0" />
+      <simple ordinal="2" name="uri" type="simple_uri" default="" />
+      <simple ordinal="3" name="alpha_group" type="SimpleText" use="required" default="abc" />
+      <enum ordinal="4" name="enum" type="SampleEnum" default="1" />
+      <simple ordinal="5" name="bytes" type="SimpleBytes" />
+
+      <primitive ordinal="10" name="verified" type="bool" />
+      <primitive ordinal="11" name="errors" type="string" array="true" direction="read-only" property="readErrors" access="protected">
+        <validation>
+          <length max="0"/>
+        </validation>
+      </primitive>
+      
+      <complex ordinal="20" name="children" type="SampleMsg" array="true" />
     </fields>
   </type>
 
-  <type name="CallbackRequest">
+  <type name="SingleFields">
     <fields>
-      <complex type="Callback" name="callback" ordinal="1" use="required"/>
+      <!-- The following are all valid types types of non-array fields -->
+      <primitive ordinal="11" name="bool" type="bool" default="1" />
+      <primitive ordinal="12" name="bytes" type="bytes" default="asdf" />
+      <primitive ordinal="13" name="int8" type="int8" default="1" />
+      <primitive ordinal="14" name="uint8" type="uint8" default="1" />
+      <primitive ordinal="15" name="int16" type="int16" default="1" />
+      <primitive ordinal="16" name="uint16" type="uint16" default="1" />
+      <primitive ordinal="17" name="int32" type="int32" default="1" />
+      <primitive ordinal="18" name="uint32" type="uint32" default="1" />
+      <primitive ordinal="19" name="int64" type="int64" default="1" />
+      <primitive ordinal="20" name="uint64" type="uint64" default="1" />
+      <primitive ordinal="21" name="float" type="float" default="1" />
+      <primitive ordinal="22" name="double" type="double" default="1" />
+      <primitive ordinal="23" name="guid" type="guid" default="new()" />
+      <primitive ordinal="24" name="dateTime" type="dateTime" default="now()" />
+      <primitive ordinal="25" name="timeSpan" type="timeSpan" default="1:00" />
+      <primitive ordinal="26" name="string" type="string" default="1" />
+      <enum      ordinal="27" name="enum" type="SampleEnum" default="2" />
+      <simple    ordinal="28" name="simple_int32" type="SimpleInt32" default="2" />
+      <simple    ordinal="29" name="simple_uri" type="simple_uri" default="http://example.uri" />
+      <simple    ordinal="30" name="simple_text" type="SimpleText" use="required" default="def" />
+      <simple    ordinal="31" name="simple_bytes" type="SimpleBytes" default="AsdF12==" />
+      <complex   ordinal="32" name="sample_msg" type="SampleMsg" />
     </fields>
   </type>
 
-  <type name="CallbackVerify">
+  <type name="ArrayFields">
     <fields>
-      <simple name="callback_id" type="callback_id" ordinal="1" />
-      <primitive name="verifier" type="string" ordinal="2" />
-    </fields>
-  </type>
-
-  <type name="CallbackVerifyRequest">
-    <fields>
-      <complex type="CallbackVerify" name="callback" ordinal="1" use="required"/>
-    </fields>
-  </type>
-
-  <type name="Callbacks">
-    <fields>
-      <complex type="Callback" name="callback" ordinal="1" array="true" />
-    </fields>
-  </type>
-
-  <type name="CallbacksResponse">
-    <fields>
-      <complex type="Callbacks" name="callbacks" ordinal="1" use="required" />
-    </fields>
-  </type>
-
-  <type name="CallbacksRequest">
-    <fields>
-      <primitive name="page" type="int32" ordinal="1" />
-      <primitive name="per_page" type="int32" ordinal="2" />
-      <simple name="event" type="event_type" ordinal="3" />
-      <simple name="uri" type="web_uri" ordinal="4" />
-    </fields>
-  </type>
-
-  <type name="CallbackIdentity">
-    <fields>
-      <simple name="callback_id" type="callback_id" ordinal="1" />
+      <!-- The following are all valid types types of array fields -->
+      <primitive ordinal="11" name="bool" type="bool" array="true" />
+      <primitive ordinal="12" name="bytes" type="bytes" array="true" />
+      <primitive ordinal="13" name="int8" type="int8" array="true" />
+      <primitive ordinal="14" name="uint8" type="uint8" array="true" />
+      <primitive ordinal="15" name="int16" type="int16" array="true" />
+      <primitive ordinal="16" name="uint16" type="uint16" array="true" />
+      <primitive ordinal="17" name="int32" type="int32" array="true" />
+      <primitive ordinal="18" name="uint32" type="uint32" array="true" />
+      <primitive ordinal="19" name="int64" type="int64" array="true" />
+      <primitive ordinal="20" name="uint64" type="uint64" array="true" />
+      <primitive ordinal="21" name="float" type="float" array="true" />
+      <primitive ordinal="22" name="double" type="double" array="true" />
+      <primitive ordinal="23" name="guid" type="guid" array="true" />
+      <primitive ordinal="24" name="dateTime" type="dateTime" array="true" />
+      <primitive ordinal="25" name="timeSpan" type="timeSpan" array="true" />
+      <primitive ordinal="26" name="string" type="string" array="true" />
+      <enum      ordinal="27" name="enum" type="SampleEnum" array="true" />
+      <simple    ordinal="28" name="simple_int32" type="SimpleInt32" array="true" />
+      <simple    ordinal="29" name="simple_uri" type="simple_uri" array="true" />
+      <simple    ordinal="30" name="simple_text" type="SimpleText" use="required" array="true" />
+      <simple    ordinal="31" name="simple_bytes" type="SimpleBytes" array="true" />
+      <complex   ordinal="32" name="sample_msg" type="SampleMsg" array="true" />
     </fields>
   </type>
 
   <service name="CallbackService">
-    <method name="Create" argument="CallbackRequest" returns="CallbackIdentity" />
-    <method name="Verify" argument="CallbackVerifyRequest" />
-    <method name="ResendToken" argument="CallbackIdentity" />
-    <method name="List" argument="CallbacksRequest" returns="CallbacksResponse" />
-    <method name="Delete" argument="CallbackIdentity" />
+    <method name="Get" returns="SampleMsg" />
+    <method name="Put" argument="SampleMsg" returns="SampleMsg" />
+    <method name="Delete" argument="SampleMsg" />
   </service>
 
 </NClassify>

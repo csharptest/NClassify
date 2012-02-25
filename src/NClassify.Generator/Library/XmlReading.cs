@@ -1,69 +1,23 @@
-﻿namespace NClassify.Library
+﻿#pragma warning disable 1591
+namespace NClassify.Library
 {
-    class XmlReading
+    public static class MessageExtensions
     {
-        public static void ReadXml(string localName, global::System.Xml.XmlReader reader)
+        public static string ToXml(this IMessage msg, string name)
         {
-            reader.MoveToContent();
-            if (!reader.IsStartElement(localName))
-                throw new global::System.FormatException();
-
-            if (reader.MoveToFirstAttribute())
-                MergeFrom(reader);
-
-            bool empty = reader.IsEmptyElement;
-            reader.ReadStartElement(localName);
-            if(!empty)
-            {
-                MergeFrom(reader);
-                reader.ReadEndElement();
-            }
+            global::System.IO.StringWriter xml = new global::System.IO.StringWriter();
+            using (global::System.Xml.XmlWriter w = global::System.Xml.XmlWriter.Create(
+                xml, new global::System.Xml.XmlWriterSettings() { Indent = true, CloseOutput = false }))
+                msg.WriteXml(name, w);
+            return xml.ToString();
         }
-        public static void MergeFrom(global::System.Xml.XmlReader reader)
+
+        public static void ReadXml(this IMessage msg, string name, string xml)
         {
-            int depth = reader.Depth;
-            string[] fields = new string[] { "callback", "callbacks" };
-            bool[] isMessage = new bool[] { true, true };
-            while (!reader.EOF && reader.Depth >= depth)
-            {
-                bool isElement = reader.NodeType == global::System.Xml.XmlNodeType.Element;
-                bool isAttribute = reader.NodeType == global::System.Xml.XmlNodeType.Attribute;
-                if(!isElement && !isAttribute)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                int field = global::System.Array.BinarySearch(fields, reader.LocalName);
-                if (isElement && field >= 0 && isMessage[field])
-                {
-                    ReadXml(reader.LocalName, reader);
-                }
-                else
-                {
-                    global::System.Text.StringBuilder value = new global::System.Text.StringBuilder();
-                    string name = reader.LocalName;
-                    if(isAttribute)
-                    {
-                        value.Append(reader.Value);
-                        if (!reader.MoveToNextAttribute())
-                            reader.MoveToElement();
-                    }
-                    else
-                    {
-                        int stop = reader.Depth;
-                        while (reader.Read() && reader.Depth > stop)
-                        {
-                            while (reader.IsStartElement())
-                                reader.Skip();
-                            if(((1 << (int)reader.NodeType) & 0x6018) != 0)
-                                value.Append(reader.Value);
-                        }
-                    }
-
-                    global::System.Console.WriteLine("{0} = {1}", name, value);
-                }
-            }
+            using (global::System.Xml.XmlReader r = global::System.Xml.XmlReader.Create(
+                new global::System.IO.StringReader(xml), 
+                new global::System.Xml.XmlReaderSettings() { CloseInput = false }))
+                msg.ReadXml(name, r);
         }
     }
 }

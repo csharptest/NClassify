@@ -96,6 +96,8 @@
     <Compile Include="CodeWriters\CsCodeWriter.cs" />
     <Compile Include="CodeWriters\CodeItem.cs" />
     <Compile Include="Extensions.cs" />
+    <EmbeddedResource Include="Library\ByteArray.cs" />
+    <EmbeddedResource Include="Library\Interfaces.cs" />
     <Compile Include="NClassifyConfig.cs">
       <Generator>CmdTool</Generator>
       <LastGenOutput>NClassifyConfig.xsd</LastGenOutput>

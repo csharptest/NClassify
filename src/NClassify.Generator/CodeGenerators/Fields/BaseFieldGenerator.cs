@@ -95,7 +95,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual string FieldBackingName
         {
-            get { return "__" + CamelName; }
+            get { return "__fld_" + CamelName; }
         }
 
         public virtual bool HasDefault
@@ -129,6 +129,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public virtual bool HasValidator
         {
             get { return Prohibited || Constraints.Count > 0; }
+        }
+
+        public virtual bool IsMessage
+        {
+            get { return false; }
         }
 
         public virtual bool IsArray
@@ -324,19 +329,17 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)
         {
-            System.Xml.XmlWriter writer;
-
             if (XmlAttribute == XmlAttributeType.Attribute)
-                code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
+                code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlName, ToXmlString(code, name));
             else if (XmlAttribute == XmlAttributeType.Element)
             {
-                code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlName, ToXmlString(code, FieldBackingName));
+                code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlName, ToXmlString(code, name));
                 //code.WriteLine("writer.WriteStartElement(\"{0}\");", XmlName);
                 //code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
                 //code.WriteLine("writer.WriteFullEndElement();");
             }
             else if (XmlAttribute == XmlAttributeType.Text)
-                code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
+                code.WriteLine("writer.WriteString({0});", ToXmlString(code, name));
         }
 
         public virtual string ToXmlString(CsCodeWriter code, string name)
@@ -344,9 +347,28 @@ namespace NClassify.Generator.CodeGenerators.Fields
             return String.Format("{0}System.Xml.XmlConvert.ToString({1})", CsCodeWriter.Global, name);
         }
 
+        public virtual string FromXmlString(CsCodeWriter code, string name)
+        {
+            return String.Format("{0}System.Xml.XmlConvert.To{1}({2})", CsCodeWriter.Global, FieldType, name);
+        }
+
         public virtual void WriteXmlInput(CsCodeWriter code)
         { }
 
         #endregion
+
+        public virtual void ReadXmlMessage(CsCodeWriter code)
+        {
+            code.WriteLine("{0}.ReadXml(reader.LocalName, reader);", FieldBackingName);
+            if(HasBackingName != null)
+                code.WriteLine(HasBackingName + " = true;");
+        }
+
+        public virtual void ReadXmlValue(CsCodeWriter code, string value)
+        {
+            code.WriteLine("{0} = {1};", FieldBackingName, FromXmlString(code, value));
+            if (HasBackingName != null)
+                code.WriteLine(HasBackingName + " = true;");
+        }
     }
 }

@@ -26,6 +26,10 @@ namespace NClassify.Generator.CodeGenerators.Fields
             _generator = gen;
         }
 
+        public override bool IsMessage
+        {
+            get { return _generator.IsMessage; }
+        }
         public override string HasBackingName { get { return null; } }
         public override bool HasValidator { get { return false; } }
         public override bool IsArray { get { return true; } }
@@ -178,6 +182,18 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
             using (code.WriteBlock("foreach ({0} item in {1})", _generator.GetPublicType(code), name))
                 _generator.WriteXmlOutput(code, "item");
+        }
+
+        public override void ReadXmlMessage(CsCodeWriter code)
+        {
+            code.WriteLine("{0} child = {1};", _generator.GetPublicType(code), _generator.MakeConstant(code, null));
+            code.WriteLine("child.ReadXml(reader.LocalName, reader);");
+            code.WriteLine("{0}.Add(child);", FieldBackingName);
+        }
+
+        public override void ReadXmlValue(CsCodeWriter code, string value)
+        {
+            code.WriteLine("{0}.Add({1});", FieldBackingName, _generator.FromXmlString(code, value));
         }
     }
 }

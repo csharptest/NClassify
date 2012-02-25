@@ -106,7 +106,7 @@ namespace NClassify.Generator.CodeWriters
 
         public void WriteNonUserCode()
         {
-            WriteLine("[" + Global + "System.Diagnostics.DebuggerNonUserCodeAttribute()]");
+            //WriteLine("[" + Global + "System.Diagnostics.DebuggerNonUserCodeAttribute()]");
             WriteGenerated();
         }
 
@@ -132,15 +132,15 @@ namespace NClassify.Generator.CodeWriters
                     case FieldType.Int32:
                         return (value ?? zero);
                     case FieldType.UInt32:
-                        return (value ?? zero) + "u";
+                        return (value ?? zero) + "U";
                     case FieldType.Int64:
-                        return (value ?? zero) + "l";
+                        return (value ?? zero) + "L";
                     case FieldType.UInt64:
-                        return (value ?? zero) + "ul";
+                        return (value ?? zero) + "UL";
                     case FieldType.Float:
-                        return (value ?? zero) + "f";
+                        return (value ?? zero) + "F";
                     case FieldType.Double:
-                        return (value ?? zero) + "d";
+                        return (value ?? zero) + "D";
                     case FieldType.String:
                         return MakeString(value ?? String.Empty);
 
@@ -172,6 +172,8 @@ namespace NClassify.Generator.CodeWriters
                         {
                             if (String.IsNullOrEmpty(value))
                                 return Global + "System.Guid.Empty";
+                            if (StringComparer.OrdinalIgnoreCase.Equals(value, "new()"))
+                                return Global + "System.Guid.NewGuid()";
                             var test = new Guid(value);
                             return String.Format("new {0}System.Guid({1})", Global, MakeString(value));
                         }
@@ -180,7 +182,7 @@ namespace NClassify.Generator.CodeWriters
                         {
                             if (String.IsNullOrEmpty(value))
                                 return Global + "System.DateTime.MinValue";
-                            if (value.StartsWith("now", StringComparison.OrdinalIgnoreCase))
+                            if (StringComparer.OrdinalIgnoreCase.Equals(value, "now()"))
                                 return Global + "System.DateTime.Now";
 
                             var test = DateTime.ParseExact(value, "u", null);
@@ -193,7 +195,7 @@ namespace NClassify.Generator.CodeWriters
                             if (String.IsNullOrEmpty(value))
                                 return Global + "System.TimeSpan.Zero";
                             var test = TimeSpan.Parse(value);
-                            return String.Format("new {0}System.TimeSpan.Parse({1})", Global, MakeString(value));
+                            return String.Format("{0}System.TimeSpan.Parse({1})", Global, MakeString(value));
                         }
 
                     //case FieldType.Uri:
@@ -221,8 +223,8 @@ namespace NClassify.Generator.CodeWriters
             {
                 case FieldType.Boolean: return "bool";
                 case FieldType.Bytes: return "byte[]";
-                case FieldType.Int8: return "byte";
-                case FieldType.UInt8: return "sbyte";
+                case FieldType.Int8: return "sbyte";
+                case FieldType.UInt8: return "byte";
                 case FieldType.Int16: return "short";
                 case FieldType.UInt16: return "ushort";
                 case FieldType.Int32: return "int";
@@ -287,7 +289,9 @@ namespace NClassify.Generator.CodeWriters
         {
             WriteSummaryXml(info.Description);
             WriteLineIf(info.Obsolete, "[" + Global + "System.Obsolete]");
-            WriteLineIf(info.DefaultValue != null, "[" + Global + "System.ComponentModel.DefaultValueAttribute({0})]", info.DefaultValue);
+
+            WriteLineIf(info.DefaultValue != null && info.DefaultValue.IndexOf("global::") < 0, 
+                "[" + Global + "System.ComponentModel.DefaultValueAttribute({0})]", info.DefaultValue);
             
             if (info.Access == FieldAccess.Public)
             {

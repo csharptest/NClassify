@@ -55,5 +55,13 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
             return _generator.ValueField.ToXmlString(code, name + ".Value");
         }
+
+        public override string FromXmlString(CsCodeWriter code, string name)
+        {
+            return String.Format("new {0}({1})",
+                GetPublicType(code),
+                _generator.ValueField.FromXmlString(code, name)
+                );
+        }
     }
 }

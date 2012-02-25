@@ -150,6 +150,16 @@ namespace NClassify.Generator.CodeWriters
 
         public abstract IDisposable WriteNamespace(string[] ns);
 
+        public void WriteLineIndent(string format, params object[] args)
+        {
+            Indent++;
+            if (args.Length > 0) 
+                WriteLine(format, args);
+            else
+                WriteLine(format);
+            Indent--;
+        }
+
         public void WriteLineIf(bool cond, string format, params object[] args)
         {
             if (cond)

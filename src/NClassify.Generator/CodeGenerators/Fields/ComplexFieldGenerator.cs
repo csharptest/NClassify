@@ -21,6 +21,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             base.XmlAttribute = XmlAttributeType.Element;
         }
 
+        public override bool IsMessage { get { return true; } }
         public override bool IsNullable { get { return true; } }
         public override XmlAttributeType XmlAttribute 
         {

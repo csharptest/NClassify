@@ -41,6 +41,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                                    {
                                        String.Format("{0}System.IEquatable<{1}>", CsCodeWriter.Global, PascalName),
                                        String.Format("{0}System.IComparable<{1}>", CsCodeWriter.Global, PascalName),
+                                       String.Format("{0}NClassify.Library.IValidate", CsCodeWriter.Global),
                                    };
 
             using (code.DeclareStruct(
@@ -68,18 +69,21 @@ namespace NClassify.Generator.CodeGenerators.Types
                 using (code.CodeRegion("Operators and Comparisons"))
                 {
                     using (code.WriteBlock("public override string ToString()"))
-                        code.WriteLine("return __has_value ? __value.ToString() : null;");
+                        code.WriteLine("return Value.ToString();");
                     using (code.WriteBlock("public override int GetHashCode()"))
-                        code.WriteLine("return __has_value ? __value.GetHashCode() : 0;");
+                        code.WriteLine("return Value.GetHashCode();");
                     using (code.WriteBlock("public override bool Equals(object obj)"))
                         code.WriteLine("return obj is {0} ? Equals(({0})obj) : base.Equals(obj);", PascalName);
 
                     using (code.WriteBlock("public bool Equals({0} other)", PascalName))
-                        code.WriteLine("return __has_value && other.__has_value " +
-                                       "? __value.Equals(other.__value) : __has_value == other.__has_value;");
+                        code.WriteLine("return {0} && other.{0} " +
+                                       "? {1}.Equals(other.{1}) : {0} == other.{0};", 
+                                       field.HasBackingName, field.FieldBackingName);
+
                     using (code.WriteBlock("public int CompareTo({0} other)", PascalName))
-                        code.WriteLine("return __has_value && other.__has_value " +
-                                       "? __value.CompareTo(other.__value) : __has_value ? 1 : __has_value ? -1 : 0;");
+                        code.WriteLine("return {0} && other.{0} " +
+                                       "? {1}.CompareTo(other.{1}) : {0} ? 1 : other.{0} ? -1 : 0;", 
+                                       field.HasBackingName, field.FieldBackingName);
 
                     code.SetClsCompliant(field.IsClsCompliant);
                     using (code.WriteBlock("public static explicit operator {0}({1} value)",

@@ -13,11 +13,19 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
         }
 
-        public override bool IsNullable { get { return true; } }
-
-        public override void WriteClone(CsCodeWriter code)
+        public override string GetStorageType(CodeWriter code)
         {
-            code.WriteLine("value.{0} = ({1})value.{0}.Clone();", FieldBackingName, GetStorageType(code));
+            return CsCodeWriter.Global + "NClassify.Library.ByteArray";
+        }
+
+        public override string ToXmlString(CsCodeWriter code, string name)
+        {
+            return String.Format("{0}.ToBase64()", name);
+        }
+
+        public override string FromXmlString(CsCodeWriter code, string name)
+        {
+            return String.Format("{0}.FromBase64({1})", GetStorageType(code), name);
         }
     }
 }

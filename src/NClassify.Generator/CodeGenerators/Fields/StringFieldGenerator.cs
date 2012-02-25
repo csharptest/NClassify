@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NClassify.Generator.CodeWriters;
 
 namespace NClassify.Generator.CodeGenerators.Fields
 {
@@ -14,7 +15,12 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override bool IsNullable { get { return true; } }
 
-        public override string ToXmlString(NClassify.Generator.CodeWriters.CsCodeWriter code, string name)
+        public override string ToXmlString(CsCodeWriter code, string name)
+        {
+            return name;
+        }
+
+        public override string FromXmlString(CsCodeWriter code, string name)
         {
             return name;
         }
