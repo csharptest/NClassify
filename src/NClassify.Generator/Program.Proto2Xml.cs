@@ -1,21 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CSharpTest.Net.IO;
-using CSharpTest.Net.Processes;
-using Google.ProtocolBuffers.DescriptorProtos;
 using System.Xml;
 using System.Xml.Serialization;
-using NClassify.Generator.CodeWriters;
 using Google.ProtocolBuffers;
+using Google.ProtocolBuffers.DescriptorProtos;
+using CSharpTest.Net.IO;
+using CSharpTest.Net.Processes;
+using NClassify.Generator.CodeWriters;
 
 namespace NClassify.Generator
 {
     partial class Program
     {
         public void Proto2Xml(string[] proto, string output, string protoc)
+        {
+            string[] ignore;
+            Proto2Xml(proto, output, protoc, out ignore);
+        }
+
+        public void ProtoGen(string[] proto, string output, string protoc, [DefaultValue(null)] string nameSpace, [DefaultValue(".cs")] string ext)
+        {
+            string[] files;
+            Proto2Xml(proto, output, protoc, out files);
+            GenerateSource(files, nameSpace, ext, out files);
+        }
+
+        void Proto2Xml(string[] proto, string output, string protoc, out string[] sourceFiles)
         {
             TempFile tempFile = null;
             if (proto.Length == 0)
@@ -32,7 +46,10 @@ namespace NClassify.Generator
             {
                 using (ProcessRunner program = new ProcessRunner(protoc))
                 {
-                    proto = proto.Select(p => Path.GetFullPath(p)).ToArray();
+                    proto = proto.SelectMany(
+                            p => Directory.GetFiles(Path.GetDirectoryName(p) ?? Environment.CurrentDirectory, Path.GetFileName(p))
+                                 .Select(fp => Path.GetFullPath(fp))
+                        ).ToArray();
                     string dir = Path.GetDirectoryName(proto[0]);
                     foreach (string path in proto)
                         while (!String.IsNullOrEmpty(dir) && !path.StartsWith(dir, StringComparison.OrdinalIgnoreCase))
@@ -51,7 +68,7 @@ namespace NClassify.Generator
                     if (result != 0)
                         throw new ApplicationException("Protoc.exe returned error " + result);
 
-                    descriptors = descriptors.Concat(new[] { tempFile.TempPath }).ToArray();
+                    descriptors = descriptors.Concat(new[] {tempFile.TempPath}).ToArray();
                 }
             }
 
@@ -68,12 +85,13 @@ namespace NClassify.Generator
 
             XmlSerializer xserialize = new XmlSerializer(typeof (NClassifyConfig));
             Dictionary<string, IMessageLite> types = new Dictionary<string, IMessageLite>(StringComparer.Ordinal);
-            foreach (FileDescriptorProto fd in files)
+            foreach (FileDescriptorProto fd in files.Distinct(new FileDescriptorByName()))
             {
                 AddScope(types, fd.Package, fd.EnumTypeList, fd.MessageTypeList);
             }
 
-            foreach (FileDescriptorProto fd in files)
+            List<string> sources = new List<string>();
+            foreach (FileDescriptorProto fd in files.Distinct(new FileDescriptorByName()))
             {
                 NClassifyConfig cfg = new NClassifyConfig();
                 cfg.Settings.Namespace = String.Join(".", fd.Package.Split('.')
@@ -94,10 +112,11 @@ namespace NClassify.Generator
                 cfg.Items = items.ToArray();
                 string path = Path.Combine(output, Path.ChangeExtension(fd.Name, ".xml"));
                 using(XmlWriter wtr = XmlWriter.Create(path, new XmlWriterSettings{ Indent = true, Encoding = new UTF8Encoding(false) }))
-                {
                     xserialize.Serialize(wtr, cfg);
-                }
+                sources.Add(path);
             }
+
+            sourceFiles = sources.ToArray();
         }
 
         private void AddScope(Dictionary<string, IMessageLite> types, string scope, IList<EnumDescriptorProto> enums, IList<DescriptorProto> messages)
@@ -160,6 +179,8 @@ namespace NClassify.Generator
             fld.FieldDirection = FieldDirection.Bidirectional;
             if (field.Options.Deprecated)
                 fld.FieldUse |= FieldUse.Obsolete;
+            if (field.HasDefaultValue)
+                fld.DefaultValue = field.DefaultValue;
 
             return fld;
         }
@@ -247,5 +268,18 @@ namespace NClassify.Generator
                 ).ToArray();
         }
 
+    }
+
+    internal class FileDescriptorByName : IEqualityComparer<FileDescriptorProto>
+    {
+        public bool Equals(FileDescriptorProto x, FileDescriptorProto y)
+        {
+            return x.Package == y.Package && x.Name == y.Name;
+        }
+
+        public int GetHashCode(FileDescriptorProto obj)
+        {
+            return (obj.Package + '|' + obj.Name).GetHashCode();
+        }
     }
 }

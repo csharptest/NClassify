@@ -48,13 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Example.cs" />
+    <Compile Include="bin\Debug\Example.cs" />
     <Compile Include="Library\ByteArray.cs" />
     <Compile Include="Library\EmptyMessage.cs" />
     <Compile Include="Library\Interfaces.cs" />
     <Compile Include="Library\XmlReading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="SampleCollection.cs" />
     <Compile Include="System.cs" />
     <Compile Include="TestExample.cs" />
   </ItemGroup>

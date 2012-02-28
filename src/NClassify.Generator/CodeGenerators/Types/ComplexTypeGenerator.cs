@@ -222,10 +222,16 @@ namespace NClassify.Generator.CodeGenerators.Types
             using (code.WriteBlock("public void WriteXml(string localName, {0}.XmlWriter writer)", xmlns))
             {
                 code.WriteLine("writer.WriteStartElement(localName);");
+                code.WriteLine("MergeTo(writer);");
+                code.WriteLine("writer.WriteFullEndElement();");
+            }
+
+            using (code.WriteBlock("public void MergeTo({0}.XmlWriter writer)", xmlns))
+            {
                 Action<BaseFieldGenerator> write =
                     (fld) =>
                     {
-                        using(fld.HasBackingName != null ? code.WriteBlock("if ({0})", fld.HasBackingName) : null)
+                        using (fld.HasBackingName != null ? code.WriteBlock("if ({0})", fld.HasBackingName) : null)
                             fld.WriteXmlOutput(code, fld.FieldBackingName);
                     };
 
@@ -237,8 +243,6 @@ namespace NClassify.Generator.CodeGenerators.Types
 
                 foreach (var fld in fields.Where(f => f.XmlAttribute == XmlAttributeType.Text))
                     write(fld);
-
-                code.WriteLine("writer.WriteFullEndElement();");
             }
         }
     }

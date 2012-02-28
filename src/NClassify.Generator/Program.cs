@@ -6,6 +6,7 @@ using NClassify.Generator.CodeGenerators;
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace NClassify.Generator
 {
@@ -39,31 +40,49 @@ namespace NClassify.Generator
             }
         }
 
-        public void Generate(string inputXml)
+        public void Generate(string[] file, [DefaultValue(null)] string nameSpace, [DefaultValue(".cs")] string extension)
         {
-            NClassifyConfig config = NClassifyConfig.Read(inputXml, null);
-
-            CsCodeGenerator gen = new CsCodeGenerator(config);
-            string srcfile = Path.ChangeExtension(config.FilePath, ".cs");
-            using(TextWriter wtr = File.CreateText(srcfile))
-                gen.GenerateCode(wtr);
-
-            string code = File.ReadAllText(srcfile);
-            Console.WriteLine(code);
-
-            int errors = 0;
-            Compile(code, e => { Console.Error.WriteLine(e); errors++; });
-            //if (errors > 0)
-            //    throw new ApplicationException(errors + " error(s) compiling code.");
+            string[] ignore;
+            GenerateSource(file, nameSpace, extension, out ignore);
         }
 
-        private void Compile(string code, Action<string> error)
+        public void TestGenerate(string[] file, [DefaultValue(null)] string nameSpace, [DefaultValue(".cs")] string extension)
+        {
+            string[] sourceFiles;
+            GenerateSource(file, nameSpace, extension, out sourceFiles);
+
+            int errors = 0;
+            Compile(sourceFiles, e => { Console.Error.WriteLine(e); errors++; });
+
+            if (errors > 0)
+                Environment.ExitCode = 0xce;
+        }
+
+        void GenerateSource(IEnumerable<string> files, string nameSpace, string extension, out string[] sourceFiles)
+        {
+            List<string> sources = new List<string>();
+            foreach (string inputXml in files)
+            {
+                NClassifyConfig config = NClassifyConfig.Read(inputXml, nameSpace);
+
+                CsCodeGenerator gen = new CsCodeGenerator(config);
+                string srcfile = Path.ChangeExtension(config.FilePath, extension ?? ".cs");
+                using (TextWriter wtr = File.CreateText(srcfile))
+                    gen.GenerateCode(wtr);
+
+                string code = File.ReadAllText(srcfile);
+                sources.Add(code);
+            }
+            sourceFiles = sources.ToArray();
+        }
+
+        void Compile(IEnumerable<string> sourceFiles, Action<string> error)
         {
             string temp = Path.GetTempFileName();
             try
             {
                 List<string> sources = new List<string>();
-                sources.Add(code);
+                sources.AddRange(sourceFiles);
                 foreach(string res in GetType().Assembly.GetManifestResourceNames())
                 {
                     if (res.StartsWith(GetType().Namespace + ".Library."))

@@ -30,6 +30,10 @@ namespace NClassify.Library
         {
         }
 
+        void IMessage.MergeTo(global::System.Xml.XmlWriter reader)
+        {
+        }
+
         object global::System.ICloneable.Clone()
         {
             return this;

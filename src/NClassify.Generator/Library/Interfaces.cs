@@ -19,6 +19,7 @@ namespace NClassify.Library
         void MergeFrom(global::System.Xml.XmlReader reader);
         
         void WriteXml(string localName, global::System.Xml.XmlWriter writer);
+        void MergeTo(global::System.Xml.XmlWriter reader);
     }
 
     public interface IDispatchStub : global::System.IDisposable

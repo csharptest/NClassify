@@ -92,7 +92,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                                        + "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IMessage"
                                        , CsCodeWriter.Global))
                 {
-                    code.WriteLine("if (_dispose) throw new {0}System.ObjectDisposedException(GetType().FullName);", CsCodeWriter.Global);
+                    //code.WriteLine("if (_dispose) throw new {0}System.ObjectDisposedException(GetType().FullName);", CsCodeWriter.Global);
                     code.WriteLine("_dispatch.CallMethod(methodName, request, response);");
                 }
 

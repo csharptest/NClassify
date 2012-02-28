@@ -228,7 +228,7 @@ namespace NClassify.Generator
     {
         internal string FullName
         {
-            get { return Path.GetFullPath(Path.Combine(ParentConfig.FilePath, File)); }
+            get { return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(ParentConfig.FilePath), File)); }
         }
     }
 
