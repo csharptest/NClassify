@@ -76,6 +76,17 @@ namespace NClassify.Generator.CodeGenerators.Types
                 code.WriteLine("return value;");
             }
 
+            using (code.WriteBlock("public void MergeFrom({0}NClassify.Library.IMessage other)", CsCodeWriter.Global))
+            {
+                code.WriteLine("if (other is {0}) MergeFrom(({0})other);", PascalName);
+            }
+            
+            using (code.WriteBlock("public void MergeFrom({0} other)", PascalName))
+            {
+                foreach (var fld in fields)
+                    fld.WriteCopy(code, "other");
+            }
+
             using (code.WriteBlock("{0}System.Xml.Schema.XmlSchema {0}System.Xml.Serialization.IXmlSerializable.GetSchema()", CsCodeWriter.Global))
             {
                 code.WriteLine("return null;");

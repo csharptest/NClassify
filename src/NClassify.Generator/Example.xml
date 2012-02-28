@@ -128,7 +128,8 @@
     </fields>
   </type>
 
-  <service name="CallbackService">
+  <service name="ExampleService">
+    <method name="Ping" />
     <method name="Get" returns="SampleMsg" />
     <method name="Put" argument="SampleMsg" returns="SampleMsg" />
     <method name="Delete" argument="SampleMsg" />

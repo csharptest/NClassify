@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Example.cs" />
     <Compile Include="Library\ByteArray.cs" />
+    <Compile Include="Library\EmptyMessage.cs" />
     <Compile Include="Library\Interfaces.cs" />
     <Compile Include="Library\XmlReading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

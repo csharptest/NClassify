@@ -387,7 +387,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<string> _contents;
+            private readonly global::System.Collections.Generic.List<string> _contents;
             public _readErrorsList()
             {
                 _readOnly = false;
@@ -404,7 +404,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _readErrorsList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<string> Modify
+            private global::System.Collections.Generic.List<string> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -414,8 +414,13 @@ namespace NClassify.Example
                 set { Modify[index] = AssertNotNull(value); }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(string value) { Modify.Add(AssertNotNull(value)); }
+            public void AddRange(global::System.Collections.Generic.ICollection<string> value)
+            {
+                foreach (string item in AssertNotNull(value)) AssertNotNull(item);
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, string value) { Modify.Insert(index, AssertNotNull(value)); }
             public bool Remove(string item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -445,7 +450,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SampleMsg> _contents;
             public _ChildrenList()
             {
                 _readOnly = false;
@@ -462,7 +467,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _ChildrenList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SampleMsg> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -472,8 +477,13 @@ namespace NClassify.Example
                 set { Modify[index] = AssertNotNull(value); }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SampleMsg value) { Modify.Add(AssertNotNull(value)); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SampleMsg> value)
+            {
+                foreach (global::NClassify.Example.SampleMsg item in AssertNotNull(value)) AssertNotNull(item);
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SampleMsg value) { Modify.Insert(index, AssertNotNull(value)); }
             public bool Remove(global::NClassify.Example.SampleMsg item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -760,6 +770,21 @@ namespace NClassify.Example
             value.__fld_errors = value.__fld_errors.Clone();
             value.__fld_children = value.__fld_children.Clone();
             return value;
+        }
+        public void MergeFrom(global::NClassify.Library.IMessage other)
+        {
+            if (other is SampleMsg) MergeFrom((SampleMsg)other);
+        }
+        public void MergeFrom(SampleMsg other)
+        {
+            if (other.__has_id) __fld_id = other.__fld_id;
+            if (other.__has_uri) __fld_uri = other.__fld_uri;
+            if (other.__has_alphaGroup) __fld_alphaGroup = other.__fld_alphaGroup;
+            if (other.__has_enum) __fld_enum = other.__fld_enum;
+            if (other.__has_bytes) __fld_bytes = other.__fld_bytes;
+            if (other.__has_verified) __fld_verified = other.__fld_verified;
+            __fld_errors.AddRange(other.__fld_errors);
+            __fld_children.AddRange(other.__fld_children);
         }
         global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
         {
@@ -1647,6 +1672,35 @@ namespace NClassify.Example
             value.__fld_sampleMsg = value.__fld_sampleMsg.Clone();
             return value;
         }
+        public void MergeFrom(global::NClassify.Library.IMessage other)
+        {
+            if (other is SingleFields) MergeFrom((SingleFields)other);
+        }
+        public void MergeFrom(SingleFields other)
+        {
+            if (other.__has_bool) __fld_bool = other.__fld_bool;
+            if (other.__has_bytes) __fld_bytes = other.__fld_bytes;
+            if (other.__has_int8) __fld_int8 = other.__fld_int8;
+            if (other.__has_uint8) __fld_uint8 = other.__fld_uint8;
+            if (other.__has_int16) __fld_int16 = other.__fld_int16;
+            if (other.__has_uint16) __fld_uint16 = other.__fld_uint16;
+            if (other.__has_int32) __fld_int32 = other.__fld_int32;
+            if (other.__has_uint32) __fld_uint32 = other.__fld_uint32;
+            if (other.__has_int64) __fld_int64 = other.__fld_int64;
+            if (other.__has_uint64) __fld_uint64 = other.__fld_uint64;
+            if (other.__has_float) __fld_float = other.__fld_float;
+            if (other.__has_double) __fld_double = other.__fld_double;
+            if (other.__has_guid) __fld_guid = other.__fld_guid;
+            if (other.__has_dateTime) __fld_dateTime = other.__fld_dateTime;
+            if (other.__has_timeSpan) __fld_timeSpan = other.__fld_timeSpan;
+            if (other.__has_string) __fld_string = other.__fld_string;
+            if (other.__has_enum) __fld_enum = other.__fld_enum;
+            if (other.__has_simpleInt32) __fld_simpleInt32 = other.__fld_simpleInt32;
+            if (other.__has_simpleUri) __fld_simpleUri = other.__fld_simpleUri;
+            if (other.__has_simpleText) __fld_simpleText = other.__fld_simpleText;
+            if (other.__has_simpleBytes) __fld_simpleBytes = other.__fld_simpleBytes;
+            if (other.__has_sampleMsg) __fld_sampleMsg = other.__fld_sampleMsg;
+        }
         global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
         {
             return null;
@@ -1974,7 +2028,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<bool> _contents;
+            private readonly global::System.Collections.Generic.List<bool> _contents;
             public _BoolList()
             {
                 _readOnly = false;
@@ -1990,7 +2044,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _BoolList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<bool> Modify
+            private global::System.Collections.Generic.List<bool> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2000,8 +2054,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(bool value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<bool> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, bool value) { Modify.Insert(index, value); }
             public bool Remove(bool item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2031,7 +2089,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Library.ByteArray> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Library.ByteArray> _contents;
             public _BytesList()
             {
                 _readOnly = false;
@@ -2047,7 +2105,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _BytesList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Library.ByteArray> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Library.ByteArray> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2057,8 +2115,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Library.ByteArray value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Library.ByteArray> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Library.ByteArray value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Library.ByteArray item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2088,7 +2150,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<sbyte> _contents;
+            private readonly global::System.Collections.Generic.List<sbyte> _contents;
             public _Int8List()
             {
                 _readOnly = false;
@@ -2104,7 +2166,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Int8List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<sbyte> Modify
+            private global::System.Collections.Generic.List<sbyte> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2114,8 +2176,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(sbyte value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<sbyte> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, sbyte value) { Modify.Insert(index, value); }
             public bool Remove(sbyte item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2145,7 +2211,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<byte> _contents;
+            private readonly global::System.Collections.Generic.List<byte> _contents;
             public _Uint8List()
             {
                 _readOnly = false;
@@ -2161,7 +2227,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Uint8List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<byte> Modify
+            private global::System.Collections.Generic.List<byte> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2171,8 +2237,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(byte value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<byte> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, byte value) { Modify.Insert(index, value); }
             public bool Remove(byte item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2202,7 +2272,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<short> _contents;
+            private readonly global::System.Collections.Generic.List<short> _contents;
             public _Int16List()
             {
                 _readOnly = false;
@@ -2218,7 +2288,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Int16List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<short> Modify
+            private global::System.Collections.Generic.List<short> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2228,8 +2298,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(short value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<short> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, short value) { Modify.Insert(index, value); }
             public bool Remove(short item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2259,7 +2333,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<ushort> _contents;
+            private readonly global::System.Collections.Generic.List<ushort> _contents;
             public _Uint16List()
             {
                 _readOnly = false;
@@ -2275,7 +2349,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Uint16List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<ushort> Modify
+            private global::System.Collections.Generic.List<ushort> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2285,8 +2359,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(ushort value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<ushort> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, ushort value) { Modify.Insert(index, value); }
             public bool Remove(ushort item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2316,7 +2394,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<int> _contents;
+            private readonly global::System.Collections.Generic.List<int> _contents;
             public _Int32List()
             {
                 _readOnly = false;
@@ -2332,7 +2410,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Int32List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<int> Modify
+            private global::System.Collections.Generic.List<int> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2342,8 +2420,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(int value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<int> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, int value) { Modify.Insert(index, value); }
             public bool Remove(int item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2373,7 +2455,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<uint> _contents;
+            private readonly global::System.Collections.Generic.List<uint> _contents;
             public _Uint32List()
             {
                 _readOnly = false;
@@ -2389,7 +2471,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Uint32List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<uint> Modify
+            private global::System.Collections.Generic.List<uint> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2399,8 +2481,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(uint value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<uint> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, uint value) { Modify.Insert(index, value); }
             public bool Remove(uint item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2430,7 +2516,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<long> _contents;
+            private readonly global::System.Collections.Generic.List<long> _contents;
             public _Int64List()
             {
                 _readOnly = false;
@@ -2446,7 +2532,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Int64List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<long> Modify
+            private global::System.Collections.Generic.List<long> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2456,8 +2542,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(long value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<long> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, long value) { Modify.Insert(index, value); }
             public bool Remove(long item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2487,7 +2577,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<ulong> _contents;
+            private readonly global::System.Collections.Generic.List<ulong> _contents;
             public _Uint64List()
             {
                 _readOnly = false;
@@ -2503,7 +2593,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _Uint64List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<ulong> Modify
+            private global::System.Collections.Generic.List<ulong> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2513,8 +2603,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(ulong value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<ulong> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, ulong value) { Modify.Insert(index, value); }
             public bool Remove(ulong item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2544,7 +2638,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<float> _contents;
+            private readonly global::System.Collections.Generic.List<float> _contents;
             public _FloatList()
             {
                 _readOnly = false;
@@ -2560,7 +2654,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _FloatList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<float> Modify
+            private global::System.Collections.Generic.List<float> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2570,8 +2664,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(float value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<float> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, float value) { Modify.Insert(index, value); }
             public bool Remove(float item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2601,7 +2699,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<double> _contents;
+            private readonly global::System.Collections.Generic.List<double> _contents;
             public _DoubleList()
             {
                 _readOnly = false;
@@ -2617,7 +2715,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _DoubleList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<double> Modify
+            private global::System.Collections.Generic.List<double> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2627,8 +2725,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(double value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<double> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, double value) { Modify.Insert(index, value); }
             public bool Remove(double item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2658,7 +2760,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::System.Guid> _contents;
+            private readonly global::System.Collections.Generic.List<global::System.Guid> _contents;
             public _GuidList()
             {
                 _readOnly = false;
@@ -2674,7 +2776,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _GuidList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::System.Guid> Modify
+            private global::System.Collections.Generic.List<global::System.Guid> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2684,8 +2786,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::System.Guid value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::System.Guid> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::System.Guid value) { Modify.Insert(index, value); }
             public bool Remove(global::System.Guid item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2715,7 +2821,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::System.DateTime> _contents;
+            private readonly global::System.Collections.Generic.List<global::System.DateTime> _contents;
             public _DateTimeList()
             {
                 _readOnly = false;
@@ -2731,7 +2837,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _DateTimeList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::System.DateTime> Modify
+            private global::System.Collections.Generic.List<global::System.DateTime> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2741,8 +2847,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::System.DateTime value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::System.DateTime> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::System.DateTime value) { Modify.Insert(index, value); }
             public bool Remove(global::System.DateTime item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2772,7 +2882,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::System.TimeSpan> _contents;
+            private readonly global::System.Collections.Generic.List<global::System.TimeSpan> _contents;
             public _TimeSpanList()
             {
                 _readOnly = false;
@@ -2788,7 +2898,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _TimeSpanList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::System.TimeSpan> Modify
+            private global::System.Collections.Generic.List<global::System.TimeSpan> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2798,8 +2908,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::System.TimeSpan value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::System.TimeSpan> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::System.TimeSpan value) { Modify.Insert(index, value); }
             public bool Remove(global::System.TimeSpan item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2829,7 +2943,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<string> _contents;
+            private readonly global::System.Collections.Generic.List<string> _contents;
             public _StringList()
             {
                 _readOnly = false;
@@ -2846,7 +2960,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _StringList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<string> Modify
+            private global::System.Collections.Generic.List<string> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2856,8 +2970,13 @@ namespace NClassify.Example
                 set { Modify[index] = AssertNotNull(value); }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(string value) { Modify.Add(AssertNotNull(value)); }
+            public void AddRange(global::System.Collections.Generic.ICollection<string> value)
+            {
+                foreach (string item in AssertNotNull(value)) AssertNotNull(item);
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, string value) { Modify.Insert(index, AssertNotNull(value)); }
             public bool Remove(string item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2887,7 +3006,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SampleEnum> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SampleEnum> _contents;
             public _EnumList()
             {
                 _readOnly = false;
@@ -2903,7 +3022,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _EnumList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SampleEnum> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SampleEnum> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2913,8 +3032,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SampleEnum value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SampleEnum> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SampleEnum value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Example.SampleEnum item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -2944,7 +3067,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SimpleInt32> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SimpleInt32> _contents;
             public _SimpleInt32List()
             {
                 _readOnly = false;
@@ -2960,7 +3083,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _SimpleInt32List(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SimpleInt32> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SimpleInt32> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -2970,8 +3093,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SimpleInt32 value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SimpleInt32> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SimpleInt32 value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Example.SimpleInt32 item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -3001,7 +3128,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SimpleUri> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SimpleUri> _contents;
             public _SimpleUriList()
             {
                 _readOnly = false;
@@ -3017,7 +3144,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _SimpleUriList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SimpleUri> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SimpleUri> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -3027,8 +3154,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SimpleUri value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SimpleUri> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SimpleUri value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Example.SimpleUri item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -3058,7 +3189,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SimpleText> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SimpleText> _contents;
             public _SimpleTextList()
             {
                 _readOnly = false;
@@ -3074,7 +3205,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _SimpleTextList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SimpleText> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SimpleText> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -3084,8 +3215,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SimpleText value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SimpleText> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SimpleText value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Example.SimpleText item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -3115,7 +3250,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SimpleBytes> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SimpleBytes> _contents;
             public _SimpleBytesList()
             {
                 _readOnly = false;
@@ -3131,7 +3266,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _SimpleBytesList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SimpleBytes> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SimpleBytes> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -3141,8 +3276,12 @@ namespace NClassify.Example
                 set { Modify[index] = value; }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SimpleBytes value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SimpleBytes> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SimpleBytes value) { Modify.Insert(index, value); }
             public bool Remove(global::NClassify.Example.SimpleBytes item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -3172,7 +3311,7 @@ namespace NClassify.Example
                 return value;
             }
             private readonly bool _readOnly;
-            private readonly global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> _contents;
+            private readonly global::System.Collections.Generic.List<global::NClassify.Example.SampleMsg> _contents;
             public _SampleMsgList()
             {
                 _readOnly = false;
@@ -3189,7 +3328,7 @@ namespace NClassify.Example
                 if (IsReadOnly) return this;
                 return new _SampleMsgList(_contents, true);
             }
-            private global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> Modify
+            private global::System.Collections.Generic.List<global::NClassify.Example.SampleMsg> Modify
             {
                 get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
             }
@@ -3199,8 +3338,13 @@ namespace NClassify.Example
                 set { Modify[index] = AssertNotNull(value); }
             }
             public int Count { get { return _contents.Count; } }
-            public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }
+            public bool IsReadOnly { get { return _readOnly; } }
             public void Add(global::NClassify.Example.SampleMsg value) { Modify.Add(AssertNotNull(value)); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::NClassify.Example.SampleMsg> value)
+            {
+                foreach (global::NClassify.Example.SampleMsg item in AssertNotNull(value)) AssertNotNull(item);
+                Modify.AddRange(AssertNotNull(value));
+            }
             public void Insert(int index, global::NClassify.Example.SampleMsg value) { Modify.Insert(index, AssertNotNull(value)); }
             public bool Remove(global::NClassify.Example.SampleMsg item) { return Modify.Remove(item); }
             public void RemoveAt(int index) { Modify.RemoveAt(index); }
@@ -3625,6 +3769,35 @@ namespace NClassify.Example
             value.__fld_sampleMsg = value.__fld_sampleMsg.Clone();
             return value;
         }
+        public void MergeFrom(global::NClassify.Library.IMessage other)
+        {
+            if (other is ArrayFields) MergeFrom((ArrayFields)other);
+        }
+        public void MergeFrom(ArrayFields other)
+        {
+            __fld_bool.AddRange(other.__fld_bool);
+            __fld_bytes.AddRange(other.__fld_bytes);
+            __fld_int8.AddRange(other.__fld_int8);
+            __fld_uint8.AddRange(other.__fld_uint8);
+            __fld_int16.AddRange(other.__fld_int16);
+            __fld_uint16.AddRange(other.__fld_uint16);
+            __fld_int32.AddRange(other.__fld_int32);
+            __fld_uint32.AddRange(other.__fld_uint32);
+            __fld_int64.AddRange(other.__fld_int64);
+            __fld_uint64.AddRange(other.__fld_uint64);
+            __fld_float.AddRange(other.__fld_float);
+            __fld_double.AddRange(other.__fld_double);
+            __fld_guid.AddRange(other.__fld_guid);
+            __fld_dateTime.AddRange(other.__fld_dateTime);
+            __fld_timeSpan.AddRange(other.__fld_timeSpan);
+            __fld_string.AddRange(other.__fld_string);
+            __fld_enum.AddRange(other.__fld_enum);
+            __fld_simpleInt32.AddRange(other.__fld_simpleInt32);
+            __fld_simpleUri.AddRange(other.__fld_simpleUri);
+            __fld_simpleText.AddRange(other.__fld_simpleText);
+            __fld_simpleBytes.AddRange(other.__fld_simpleBytes);
+            __fld_sampleMsg.AddRange(other.__fld_sampleMsg);
+        }
         global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
         {
             return null;
@@ -3915,7 +4088,187 @@ namespace NClassify.Example
         #endregion
     }
     #endregion
-    #region CallbackService
+    #region ExampleService
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
+    public partial interface IExampleService
+    {
+        void Ping();
+        global::NClassify.Example.SampleMsg Get();
+        global::NClassify.Example.SampleMsg Put(global::NClassify.Example.SampleMsg sampleMsg);
+        void Delete(global::NClassify.Example.SampleMsg sampleMsg);
+    }
+    [global::System.Xml.Serialization.XmlType("ExampleService")]
+    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
+    public partial class ExampleService : IExampleService, global::NClassify.Library.IDispatchStub
+    {
+        private bool _dispose;
+        private readonly global::NClassify.Library.IDispatchStub _dispatch;
+        public ExampleService(global::NClassify.Library.IDispatchStub dispatch)
+            : this(dispatch, true) { }
+        public ExampleService(global::NClassify.Library.IDispatchStub dispatch, bool dispose)
+        {
+            if (dispatch == null) throw new global::System.ArgumentNullException("dispatch");
+            _dispatch = dispatch;
+            _dispose = dispose;
+        }
+        public void Dispose()
+        {
+            if (_dispose)
+            {
+                _dispose = false;
+                _dispatch.Dispose();
+            }
+        }
+        protected virtual void Invoke<TRequest, TResponse>(string methodName, TRequest request, TResponse response) where TRequest : class, global::NClassify.Library.IMessage where TResponse : class, global::NClassify.Library.IMessage
+        {
+            if (_dispose) throw new global::System.ObjectDisposedException(GetType().FullName);
+            _dispatch.CallMethod(methodName, request, response);
+        }
+        void global::NClassify.Library.IDispatchStub.CallMethod<TRequest, TResponse>(string methodName, TRequest request, TResponse response) 
+        {
+            Invoke(methodName, request, response);
+        }
+        public void Ping()
+        {
+            Invoke("Ping", global::NClassify.Library.EmptyMessage.Default, global::NClassify.Library.EmptyMessage.Default);
+        }
+        public global::NClassify.Example.SampleMsg Get()
+        {
+            global::NClassify.Example.SampleMsg response = new global::NClassify.Example.SampleMsg();
+            Invoke("Get", global::NClassify.Library.EmptyMessage.Default, response);
+            return response;
+        }
+        public global::NClassify.Example.SampleMsg Put(global::NClassify.Example.SampleMsg sampleMsg)
+        {
+            global::NClassify.Example.SampleMsg response = new global::NClassify.Example.SampleMsg();
+            Invoke("Put", sampleMsg, response);
+            return response;
+        }
+        public void Delete(global::NClassify.Example.SampleMsg sampleMsg)
+        {
+            Invoke("Delete", sampleMsg, global::NClassify.Library.EmptyMessage.Default);
+        }
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
+        public partial class Dispatch : global::NClassify.Library.IDispatchStub
+        {
+            private bool _dispose;
+            private readonly IExampleService _dispatch;
+            public Dispatch(IExampleService dispatch)
+                : this(dispatch, true) { }
+            public Dispatch(IExampleService dispatch, bool dispose)
+            {
+                if (dispatch == null) throw new global::System.ArgumentNullException("dispatch");
+                _dispatch = dispatch;
+                _dispose = dispose && dispatch is global::System.IDisposable;
+            }
+            public void Dispose()
+            {
+                if (_dispose)
+                {
+                    _dispose = false;
+                    ((global::System.IDisposable)_dispatch).Dispose();
+                }
+            }
+            public void CallMethod<TRequest, TResponse>(string methodName, TRequest request, TResponse response) where TRequest : class, global::NClassify.Library.IMessage where TResponse : class, global::NClassify.Library.IMessage
+            {
+                int ordinal = global::System.Array.BinarySearch(new string[] { "Delete", "Get", "Ping", "Put" }, methodName, global::System.StringComparer.Ordinal);
+                switch(ordinal)
+                {
+                    case 0:
+                    {
+                        _dispatch.Delete((global::NClassify.Example.SampleMsg)(object)request);
+                        break;
+                    }
+                    case 1:
+                    {
+                        response.MergeFrom(_dispatch.Get());
+                        break;
+                    }
+                    case 2:
+                    {
+                        _dispatch.Ping();
+                        break;
+                    }
+                    case 3:
+                    {
+                        response.MergeFrom(_dispatch.Put((global::NClassify.Example.SampleMsg)(object)request));
+                        break;
+                    }
+                    default:
+                    {
+                        throw new global::System.MissingMethodException(typeof(IExampleService).FullName, methodName);
+                    }
+                }
+            }
+        }
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
+        public partial class ServerStub : global::NClassify.Library.IServerStub
+        {
+            private bool _dispose;
+            private readonly global::NClassify.Library.IDispatchStub _dispatch;
+            public ServerStub(IExampleService dispatch)
+                : this(new Dispatch(dispatch), true) { }
+            public ServerStub(IExampleService dispatch, bool dispose)
+                : this(new Dispatch(dispatch), dispose) { }
+            public ServerStub(global::NClassify.Library.IDispatchStub dispatch)
+                : this(dispatch, true) { }
+            public ServerStub(global::NClassify.Library.IDispatchStub dispatch, bool dispose)
+            {
+                if (dispatch == null) throw new global::System.ArgumentNullException("dispatch");
+                _dispatch = dispatch;
+                _dispose = dispose;
+            }
+            public void Dispose()
+            {
+                if (_dispose)
+                {
+                    _dispose = false;
+                    _dispatch.Dispose();
+                }
+            }
+            public global::NClassify.Library.IMessage CallMethod(string methodName, global::System.Action<global::NClassify.Library.IMessage> readInput)
+            {
+                int ordinal = global::System.Array.BinarySearch(new string[] { "Delete", "Get", "Ping", "Put" }, methodName, global::System.StringComparer.Ordinal);
+                switch(ordinal)
+                {
+                    case 0:
+                    {
+                        global::NClassify.Example.SampleMsg request = new global::NClassify.Example.SampleMsg();
+                        readInput(request);
+                        _dispatch.CallMethod(methodName, request, global::NClassify.Library.EmptyMessage.Default);
+                        return global::NClassify.Library.EmptyMessage.Default;
+                    }
+                    case 1:
+                    {
+                        global::NClassify.Example.SampleMsg response = new global::NClassify.Example.SampleMsg();
+                        _dispatch.CallMethod(methodName, global::NClassify.Library.EmptyMessage.Default, response);
+                        return response;
+                    }
+                    case 2:
+                    {
+                        _dispatch.CallMethod(methodName, global::NClassify.Library.EmptyMessage.Default, global::NClassify.Library.EmptyMessage.Default);
+                        return global::NClassify.Library.EmptyMessage.Default;
+                    }
+                    case 3:
+                    {
+                        global::NClassify.Example.SampleMsg request = new global::NClassify.Example.SampleMsg();
+                        readInput(request);
+                        global::NClassify.Example.SampleMsg response = new global::NClassify.Example.SampleMsg();
+                        _dispatch.CallMethod(methodName, request, response);
+                        return response;
+                    }
+                    default:
+                    {
+                        throw new global::System.MissingMethodException(typeof(IExampleService).FullName, methodName);
+                    }
+                }
+            }
+        }
+    }
     #endregion
 }
 #endregion

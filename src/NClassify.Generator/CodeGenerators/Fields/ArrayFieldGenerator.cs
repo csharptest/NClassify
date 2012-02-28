@@ -76,7 +76,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
                 string value = _generator.IsNullable ? "AssertNotNull(value)" : "value";
                 code.WriteLine("private readonly bool _readOnly;");
-                code.WriteLine("private readonly {0}System.Collections.Generic.IList<{1}> _contents;", CsCodeWriter.Global, itemType);
+                code.WriteLine("private readonly {0}System.Collections.Generic.List<{1}> _contents;", CsCodeWriter.Global, itemType);
 
                 using(code.WriteBlock("public {0}()", collection))
                 {
@@ -96,7 +96,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     code.WriteLine("if (IsReadOnly) return this;");
                     code.WriteLine("return new {0}(_contents, true);", collection);
                 }
-                using (code.WriteBlock("private {0}System.Collections.Generic.IList<{1}> Modify", CsCodeWriter.Global, itemType))
+                using (code.WriteBlock("private {0}System.Collections.Generic.List<{1}> Modify", CsCodeWriter.Global, itemType))
                     code.WriteLine("get {{ if (!IsReadOnly) return _contents; throw new {0}System.InvalidOperationException(); }}", CsCodeWriter.Global);
                 using (code.WriteBlock("public {0} this[int index]", itemType))
                 {
@@ -104,8 +104,14 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     code.WriteLine("set {{ Modify[index] = {0}; }}", value);
                 }
                 code.WriteLine("public int Count { get { return _contents.Count; } }");
-                code.WriteLine("public bool IsReadOnly { get { return _readOnly || _contents.IsReadOnly; } }");
+                code.WriteLine("public bool IsReadOnly { get { return _readOnly; } }");
                 code.WriteLine("public void Add({0} value) {{ Modify.Add({1}); }}", itemType, value);
+                using (code.WriteBlock("public void AddRange({1}System.Collections.Generic.ICollection<{0}> value)", itemType, CsCodeWriter.Global))
+                {
+                    if (_generator.IsNullable)
+                        code.WriteLine("foreach ({0} item in AssertNotNull(value)) AssertNotNull(item);", _generator.GetPublicType(code));
+                    code.WriteLine("Modify.AddRange(AssertNotNull(value));");
+                }
                 code.WriteLine("public void Insert(int index, {0} value) {{ Modify.Insert(index, {1}); }}", itemType, value);
                 code.WriteLine("public bool Remove({0} item) {{ return Modify.Remove(item); }}", itemType);
                 code.WriteLine("public void RemoveAt(int index) { Modify.RemoveAt(index); }");
@@ -176,6 +182,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public override void WriteClone(CsCodeWriter code)
         {
             code.WriteLine("value.{0} = value.{0}.Clone();", FieldBackingName);
+        }
+
+        public override void WriteCopy(CsCodeWriter code, string other)
+        {
+            code.WriteLine("{0}.AddRange({1}.{0});", FieldBackingName, other);
         }
 
         public override void WriteXmlOutput(CsCodeWriter code, string name)

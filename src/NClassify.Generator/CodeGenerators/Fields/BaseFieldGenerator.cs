@@ -327,6 +327,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
         }
 
+        public virtual void WriteCopy(CsCodeWriter code, string from)
+        {
+            code.WriteLine("if ({0}.{1}) {2} = {0}.{2};", from, HasBackingName, FieldBackingName);
+        }
+
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)
         {
             if (XmlAttribute == XmlAttributeType.Attribute)
