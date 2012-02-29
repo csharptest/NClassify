@@ -35,8 +35,14 @@ namespace NClassify.Generator.CodeGenerators.Constraints
             if (_field.FieldType != FieldType.String)
                 throw new ApplicationException("The possible values constraints only applies to fields of type String.");
 
-            code.WriteLine("if (global::System.Array.BinarySearch(__in_{0}, value) >= 0) return false;",
-                           _field.CamelName);
+            using (code.WriteBlock("if (global::System.Array.BinarySearch(__in_{0}, value) < 0)", _field.CamelName))
+            {
+                code.WriteLine(
+                    "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
+                    "{0}NClassify.Library.Resources.MustBeOneOf, TypeFields.{2}, string.Join(\", \", __in_{1})));",
+                    CsCodeWriter.Global, _field.CamelName, _field.PascalName);
+                code.WriteLine("return false;");
+            }
         }
     }
 }

@@ -52,6 +52,10 @@ namespace NClassify.Generator.CodeGenerators.Types
                     },
                     derives))
             {
+                using (code.CodeRegion("TypeFields"))
+                using (code.DeclareEnum(new CodeItem("TypeFields")))
+                    code.WriteLine("Value = 0");
+
                 field.DeclareTypes(code);
 
                 using (code.CodeRegion("Instance Fields and Members"))

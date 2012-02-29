@@ -1,7 +1,7 @@
 ﻿#pragma warning disable 1591
 namespace NClassify.Library
 {
-    public static class MessageExtensions
+    public static class XmlExtensions
     {
         public static string ToXml(this IMessage msg, string name)
         {

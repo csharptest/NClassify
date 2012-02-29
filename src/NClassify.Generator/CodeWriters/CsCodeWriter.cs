@@ -257,8 +257,9 @@ namespace NClassify.Generator.CodeWriters
         public override void WriteEnumValue(string name, uint value)
         {
             WriteSummaryXml("{0} = {1}", name, value);
-            WriteLine("[" + Global + "System.Xml.Serialization.XmlEnum({0})] {1} = {2},",
-                MakeString(name), ToPascalCase(name), value);
+            if(name != ToPascalCase(name))
+                WriteLine("[" + Global + "System.Xml.Serialization.XmlEnum({0})]", MakeString(name));
+            WriteLine("{0} = {1},", ToPascalCase(name), value);
         }
 
         public override IDisposable DeclareClass(CodeItem info, string[] implements)
@@ -289,6 +290,7 @@ namespace NClassify.Generator.CodeWriters
         {
             WriteSummaryXml(info.Description);
             WriteLineIf(info.Obsolete, "[" + Global + "System.Obsolete]");
+            SetClsCompliant(info.ClsCompliant || info.Access == FieldAccess.Private);
 
             WriteLineIf(info.DefaultValue != null && info.DefaultValue.IndexOf("global::") < 0, 
                 "[" + Global + "System.ComponentModel.DefaultValueAttribute({0})]", info.DefaultValue);

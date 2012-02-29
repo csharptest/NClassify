@@ -55,6 +55,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\NClassify.Library\ByteArray.cs">
+      <Link>Library\ByteArray.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\NClassify.Library\EmptyMessage.cs">
+      <Link>Library\EmptyMessage.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\NClassify.Library\Interfaces.cs">
+      <Link>Library\Interfaces.cs</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\NClassify.Library\Resources.cs">
+      <Link>Library\Resources.cs</Link>
+    </EmbeddedResource>
     <Compile Include="CodeGenerators\BaseGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />
@@ -73,6 +85,7 @@
     <Compile Include="CodeGenerators\Fields\BaseNumericFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\BaseUnsignedFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\ComplexFieldGenerator.cs" />
+    <Compile Include="CodeGenerators\ReservedWords.cs" />
     <Compile Include="CodeGenerators\Types\BaseTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\ComplexTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\EnumTypeGenerator.cs" />
@@ -100,9 +113,6 @@
     <Compile Include="CodeWriters\CsCodeWriter.cs" />
     <Compile Include="CodeWriters\CodeItem.cs" />
     <Compile Include="Extensions.cs" />
-    <EmbeddedResource Include="Library\ByteArray.cs" />
-    <EmbeddedResource Include="Library\Interfaces.cs" />
-    <EmbeddedResource Include="Library\EmptyMessage.cs" />
     <Compile Include="NClassifyConfig.cs">
       <Generator>CmdTool</Generator>
       <LastGenOutput>NClassifyConfig.xsd</LastGenOutput>
@@ -114,9 +124,9 @@
     <Compile Include="XmlValidatingReader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Example.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="..\NClassify.Library\NClassify.resx">
+      <Link>Library\NClassify.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="NClassifyConfig.xsd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

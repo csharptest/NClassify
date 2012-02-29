@@ -53,7 +53,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     base.CreateConstraints()
                 );
 
-            constraints.Add(new IsValidConstraintGenerator());
+            constraints.Add(new IsValidConstraintGenerator(this));
             return constraints.AsReadOnly();
         }
 

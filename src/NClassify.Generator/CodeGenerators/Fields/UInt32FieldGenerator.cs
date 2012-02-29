@@ -11,5 +11,10 @@ namespace NClassify.Generator.CodeGenerators.Fields
             : base(fld)
         {
         }
+
+        public override bool IsClsCompliant
+        {
+            get { return false; }
+        }
     }
 }

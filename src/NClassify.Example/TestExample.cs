@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Xml.Serialization;
-using NClassify.Example;
-using System.Collections.Generic;
-using System.IO;
-using System.Xml;
 using NClassify.Library;
 
-namespace Example
+namespace NClassify.Example
 {
     class TestExample
     {

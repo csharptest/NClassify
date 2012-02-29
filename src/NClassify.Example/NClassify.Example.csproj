@@ -8,8 +8,8 @@
     <ProjectGuid>{C26AC98A-D488-4357-9699-D9B20ABCC76C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NClassify</RootNamespace>
-    <AssemblyName>Example</AssemblyName>
+    <RootNamespace>NClassify.Example</RootNamespace>
+    <AssemblyName>NClassify.Example</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Example.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\NClassify.Example.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,14 +48,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bin\Debug\Example.cs" />
-    <Compile Include="Library\ByteArray.cs" />
-    <Compile Include="Library\EmptyMessage.cs" />
-    <Compile Include="Library\Interfaces.cs" />
-    <Compile Include="Library\XmlReading.cs" />
+    <Compile Include="..\NClassify.Library\ByteArray.cs">
+      <Link>Library\ByteArray.cs</Link>
+    </Compile>
+    <Compile Include="..\NClassify.Library\EmptyMessage.cs">
+      <Link>Library\EmptyMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\NClassify.Library\Interfaces.cs">
+      <Link>Library\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\NClassify.Library\Resources.cs">
+      <Link>Library\Resources.cs</Link>
+    </Compile>
+    <Compile Include="..\NClassify.Library\XmlExtensions.cs">
+      <Link>Library\XmlExtensions.cs</Link>
+    </Compile>
+    <Compile Include="Example.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System.cs" />
     <Compile Include="TestExample.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Example.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\NClassify.Library\NClassify.resx">
+      <Link>Library\NClassify.resx</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

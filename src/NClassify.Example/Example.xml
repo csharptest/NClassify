@@ -62,13 +62,25 @@
       <simple ordinal="5" name="bytes" type="SimpleBytes" />
 
       <primitive ordinal="10" name="verified" type="bool" />
-      <primitive ordinal="11" name="errors" type="string" array="true" direction="read-only" property="readErrors" access="protected">
+      <primitive ordinal="11" name="errors" type="string" array="true" direction="read-only" property="ReadErrors" access="protected">
         <validation>
           <length max="0"/>
         </validation>
       </primitive>
       
       <complex ordinal="20" name="children" type="SampleMsg" array="true" />
+
+      <!-- Intentional name collisions -->
+      <primitive ordinal="100" name="TypeFields" type="bool" />
+      <primitive ordinal="100" name="IsValid" type="bool" />
+      <primitive ordinal="102" name="AssertValid" type="bool" />
+      <primitive ordinal="103" name="GetBrokenRules" type="bool" />
+      <primitive ordinal="104" name="Clear" type="bool" />
+      <primitive ordinal="101" name="Initialize" type="bool" />
+      <primitive ordinal="102" name="MergeFrom" type="bool" />
+      <primitive ordinal="102" name="MergeTo" type="bool" />
+      <primitive ordinal="103" name="ReadXml" type="bool" />
+      <primitive ordinal="104" name="WriteXml" type="bool" />
     </fields>
   </type>
 

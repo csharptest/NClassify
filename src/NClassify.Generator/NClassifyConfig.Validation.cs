@@ -117,8 +117,8 @@ namespace NClassify.Generator
             {
                 foreach (FieldInfo field in type.Fields)
                 {
-                    field.PropertyName = field.PropertyName ?? CodeWriter.ToPascalCase(field.Name);
-                    if (CodeWriter.ToPascalCase(field.PropertyName ?? field.Name) == type.PascalName)
+                    string fldName = field.PropertyName ?? CodeWriter.ToPascalCase(field.Name);
+                    if (fldName == type.PascalName)
                         throw new ApplicationException("The field " + field.Name +
                                                        " can not be the same name as the enclosing type " +
                                                        type.QualifiedName);

@@ -59,9 +59,19 @@ namespace NClassify.Generator.CodeGenerators.Types
         {
             using (code.WriteBlock("public bool IsValid()"))
             {
+                code.WriteLine("return 0 == GetBrokenRules(null);");
+            }
+            using (code.WriteBlock("public void AssertValid()"))
+            {
+                code.WriteLine("GetBrokenRules(delegate({0}NClassify.Library.ValidationError e) " +
+                               "{{ throw new {0}System.IO.InvalidDataException(e.Message); }});", CsCodeWriter.Global);
+            }
+            using (code.WriteBlock("public int GetBrokenRules(global::System.Action<{0}NClassify.Library.ValidationError> onError)", CsCodeWriter.Global))
+            {
+                code.WriteLine("int errorCount = 0;");
                 foreach (var fld in fields)
                     fld.WriteValidation(code);
-                code.WriteLine(" return true;");
+                code.WriteLine("return errorCount;");
             }
         }
 

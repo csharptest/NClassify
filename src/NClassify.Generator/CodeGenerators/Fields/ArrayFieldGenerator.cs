@@ -18,7 +18,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                            FieldUse = fld.FieldUse,
                            IsArray = false,
                            Name = fld.Name,
-                           PropertyName = fld.PropertyName,
+                           PropertyName = gen.PropertyName,
                            Type = FieldType.Array,
                            Validation = null,
                        })
@@ -34,7 +34,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public override bool HasValidator { get { return false; } }
         public override bool IsArray { get { return true; } }
         public override bool IsNullable { get { return true; } }
-        public override string PropertyName { get { return base.PropertyName + "List"; } }
 
         public override string GetStorageType(CodeWriter code)
         {
@@ -175,7 +174,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             if (_generator.HasValidator)
             {
                 using(code.WriteBlock("foreach ({0} item in {1})", _generator.GetPublicType(code), FieldBackingName))
-                    code.WriteLine("if (!IsValid{0}(item)) return false;", _generator.PropertyName);
+                    code.WriteLine("if (!IsValid{0}(item, onError)) errorCount++;", _generator.PropertyName);
             }
         }
 

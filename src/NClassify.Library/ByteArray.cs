@@ -1,5 +1,4 @@
 ﻿#pragma warning disable 1591
-
 namespace NClassify.Library
 {
     public struct ByteArray : global::System.IComparable, global::System.IFormattable, global::System.ICloneable,
@@ -90,6 +89,14 @@ namespace NClassify.Library
             byte[] copy = new byte[length];
             global::System.Buffer.BlockCopy(SafeBytes, offset, copy, 0, length);
             return copy;
+        }
+
+        public global::System.IO.Stream ToStream()
+        { return ToStream(0, Length); }
+
+        public global::System.IO.Stream ToStream(int offset, int length)
+        {
+            return new global::System.IO.MemoryStream(SafeBytes, offset, length, false, false);
         }
 
         object global::System.ICloneable.Clone()

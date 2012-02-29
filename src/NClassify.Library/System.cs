@@ -1,0 +1,6 @@
+﻿namespace NClassify
+{
+    class System
+    {
+    }
+}

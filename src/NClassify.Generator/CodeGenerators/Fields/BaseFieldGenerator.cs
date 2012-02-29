@@ -83,9 +83,21 @@ namespace NClassify.Generator.CodeGenerators.Fields
             get { return CodeWriter.ToPascalCase(Field.Name); }
         }
 
-        public virtual string PropertyName
+        public string PropertyName
         {
-            get { return Field.PropertyName ?? PascalName; }
+            get
+            {
+                if (Field.PropertyName != null)
+                    return Field.PropertyName;
+                Field.PropertyName = PascalName;
+                if (Field.IsArray)
+                    Field.PropertyName += "List";
+
+                if (!ReservedWords.IsValidFieldName(Field.PropertyName))
+                    Field.PropertyName += "_";
+
+                return Field.PropertyName;
+            }
         }
 
         public virtual string HasBackingName
@@ -158,7 +170,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual bool IsClsCompliant
         {
-            get { return !IsNumeric || !IsUnsigned; }
+            get { return true; }
         }
 
         public IList<BaseConstraintGenerator> Constraints
@@ -170,7 +182,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
             List<BaseConstraintGenerator> rules = new List<BaseConstraintGenerator>();
             if (IsNullable)
-                rules.Add(new NotNullConstraintGenerator());
+                rules.Add(new NotNullConstraintGenerator(this));
             rules.AddRange(ConstraintFactory.Create(this, Field.Validation));
 
             return new ReadOnlyCollection<BaseConstraintGenerator>(rules);
@@ -223,8 +235,9 @@ namespace NClassify.Generator.CodeGenerators.Fields
             if (HasValidator)
             {
                 bool pseudoTyped = IsPseudoTyped(code);
-                using (code.WriteBlock("public static bool IsValid{0}({1} {2})", PropertyName, GetPublicType(code),
-                                       pseudoTyped ? "testValue" : "value"))
+                using (code.WriteBlock("public static bool IsValid{0}({1} {2}, {3}System.Action<{3}NClassify.Library.ValidationError> onError)", 
+                                        PropertyName, GetPublicType(code),
+                                        pseudoTyped ? "testValue" : "value", CsCodeWriter.Global))
                 {
                     if (Prohibited)
                         code.WriteLine("throw new " + CsCodeWriter.Global + "System.InvalidOperationException();");
@@ -315,11 +328,20 @@ namespace NClassify.Generator.CodeGenerators.Fields
             if (HasValidator)
             {
                 if (Field.FieldUse == FieldUse.Required)
-                    code.WriteLine("if (!{0} || !IsValid{1}({2})) return false;",
-                                   HasBackingName, PropertyName, FieldBackingName);
+                {
+                    using(code.WriteBlock("if (!{0})", HasBackingName))
+                    {
+                        code.WriteLine("if (onError != null) " +
+                            "onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, {0}NClassify.Library.Resources.MissingRequiredField, TypeFields.{1}));",
+                            CsCodeWriter.Global, PascalName);
+                        code.WriteLine("errorCount++;");
+                    }
+                }
                 else
-                    code.WriteLine("if ({0} && !IsValid{1}({2})) return false;",
+                {
+                    code.WriteLine("if ({0} && !IsValid{1}({2}, onError)) errorCount++;",
                                    HasBackingName, PropertyName, FieldBackingName);
+                }
             }
         }
 

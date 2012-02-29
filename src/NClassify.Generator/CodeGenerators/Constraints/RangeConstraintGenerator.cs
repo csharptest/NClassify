@@ -18,9 +18,27 @@ namespace NClassify.Generator.CodeGenerators.Constraints
         public override void WriteChecks(CsCodeWriter code)
         {
             if (_rule.MinValue != null)
-                code.WriteLine("if (value.CompareTo({0}) < 0) return false;", code.MakeConstant(_field.FieldType, _rule.MinValue));
+            {
+                using (code.WriteBlock("if (value.CompareTo({0}) < 0)", code.MakeConstant(_field.FieldType, _rule.MinValue)))
+                {
+                    code.WriteLine(
+                        "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
+                        "{0}NClassify.Library.Resources.MustBeGreaterThan, TypeFields.{2}, {1}));",
+                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MinValue), _field.PascalName);
+                    code.WriteLine("return false;");
+                }
+            }
             if (_rule.MaxValue != null)
-                code.WriteLine("if (value.CompareTo({0}) > 0) return false;", code.MakeConstant(_field.FieldType, _rule.MaxValue));
+            {
+                using (code.WriteBlock("if (value.CompareTo({0}) < 0)", code.MakeConstant(_field.FieldType, _rule.MaxValue)))
+                {
+                    code.WriteLine(
+                        "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
+                        "{0}NClassify.Library.Resources.MustBeLessThan, TypeFields.{2}, {1}));",
+                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MaxValue), _field.PascalName);
+                    code.WriteLine("return false;");
+                }
+            }
         }
     }
 }

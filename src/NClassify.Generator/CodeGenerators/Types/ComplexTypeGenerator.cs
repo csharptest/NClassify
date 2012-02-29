@@ -29,6 +29,10 @@ namespace NClassify.Generator.CodeGenerators.Types
                     }, 
                     derives))
             {
+                using (code.CodeRegion("TypeFields"))
+                using (code.DeclareEnum(new CodeItem("TypeFields")))
+                    Fields.ForAll(f => code.WriteLine("{0} = {1},", f.PascalName, f.Ordinal));
+
                 WriteChildren(code, Type.ChildTypes);
                 Fields.ForAll(x => x.DeclareTypes(code));
 
