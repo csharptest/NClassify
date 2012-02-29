@@ -18,6 +18,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                            FieldUse = fld.FieldUse,
                            IsArray = false,
                            Name = fld.Name,
+                           XmlOptions = fld.XmlOptions,
                            PropertyName = gen.PropertyName,
                            Type = FieldType.Array,
                            Validation = null,
@@ -34,6 +35,16 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public override bool HasValidator { get { return false; } }
         public override bool IsArray { get { return true; } }
         public override bool IsNullable { get { return true; } }
+
+        public override XmlFieldOptions XmlOptions
+        {
+            get
+            {
+                var options = base.XmlOptions;
+                options.AttributeType = XmlAttributeType.Element;
+                return options;
+            }
+        }
 
         public override string GetStorageType(CodeWriter code)
         {
@@ -149,7 +160,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 ClsCompliant = _generator.IsClsCompliant,
                 Obsolete = _generator.Obsolete,
                 XmlName = _generator.Name,
-                XmlAttribute = _generator.XmlAttribute,
             };
 
             using (code.DeclareProperty(prop, GetPublicType(code)))

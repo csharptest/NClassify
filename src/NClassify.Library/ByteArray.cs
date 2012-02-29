@@ -86,6 +86,8 @@ namespace NClassify.Library
 
         public byte[] ToArray(int offset, int length)
         {
+            if (offset + length > Length)
+                throw new global::System.ArgumentOutOfRangeException("length");
             byte[] copy = new byte[length];
             global::System.Buffer.BlockCopy(SafeBytes, offset, copy, 0, length);
             return copy;
@@ -156,6 +158,10 @@ namespace NClassify.Library
 
         public static ByteArray CopyFrom(byte[] array, int arrayIndex, int length)
         {
+            if (array == null)
+                throw new global::System.ArgumentNullException("array");
+            if (arrayIndex + length > array.Length)
+                throw new global::System.ArgumentOutOfRangeException("length");
             byte[] bytes = new byte[length];
             global::System.Buffer.BlockCopy(array, arrayIndex, bytes, 0, length);
             return new ByteArray(bytes, false);
@@ -163,10 +169,28 @@ namespace NClassify.Library
 
         public static ByteArray ReadFrom(global::System.IO.Stream stream, int count)
         {
-            byte[] bytes = new byte[count];
             int len, pos = 0;
-            while (count > pos && (len = stream.Read(bytes, pos, count - pos)) > 0)
-                pos += len;
+            byte[] bytes;
+            if (count <= 0x10000)
+            {
+                bytes = new byte[count];
+                while (count > pos && (len = stream.Read(bytes, pos, count - pos)) > 0)
+                    pos += len;
+            }
+            else
+            {
+                bytes = new byte[0x10000];
+                using (global::System.IO.MemoryStream ms = new global::System.IO.MemoryStream(0x10000))
+                {
+                    while (count > pos && (len = stream.Read(bytes, 0, global::System.Math.Min(0x10000, count - pos))) > 0)
+                    {
+                        ms.Write(bytes, 0, len);
+                        pos += len;
+                    }
+                    bytes = ms.GetBuffer();
+                    global::System.Array.Resize(ref bytes, count);
+                }
+            }
             if (pos != count)
                 throw new global::System.IO.EndOfStreamException();
             return new ByteArray(bytes, false);
@@ -205,14 +229,35 @@ namespace NClassify.Library
         public override string ToString()
         { return global::System.Convert.ToBase64String(SafeBytes); }
 
-        string global::System.IFormattable.ToString(string format, global::System.IFormatProvider formatProvider)
+        public string ToString(string format, global::System.IFormatProvider formatProvider)
         {
-            if (format == "x")
+            if (format == "x" || string.IsNullOrEmpty(format))
                 return ToHex();
             if (format == "b")
                 return ToBase64();
             throw new global::System.ArgumentOutOfRangeException("format", "Invalid format specifier.");
         }
+
+        public static ByteArray Parse(string text, string format, global::System.IFormatProvider formatProvider)
+        {
+            if (format == "x" || string.IsNullOrEmpty(format))
+                return FromHex(text);
+            if (format == "b")
+                return FromBase64(text);
+            throw new global::System.ArgumentOutOfRangeException("format", "Invalid format specifier.");
+        }
+
+        public string ToUtf8()
+        { return global::System.Text.Encoding.UTF8.GetString(SafeBytes); }
+
+        public string ToUtf8(int offset, int length)
+        { return global::System.Text.Encoding.UTF8.GetString(SafeBytes, offset, length); }
+
+        public static ByteArray FromUtf8(string text)
+        { return global::System.Text.Encoding.UTF8.GetBytes(text); }
+
+        public static ByteArray FromUtf8(string text, int offset, int length)
+        { return global::System.Text.Encoding.UTF8.GetBytes(text.ToCharArray(), offset, length); }
 
         public string ToBase64()
         { return global::System.Convert.ToBase64String(SafeBytes); }
@@ -335,5 +380,18 @@ namespace NClassify.Library
         { return SafeBytes.GetEnumerator(); }
 
         #endregion
+    }
+
+    public partial class TypeConverter
+    {
+        public virtual ByteArray ParseBytes(string text, string format, global::System.IFormatProvider formatProvider)
+        {
+            return ByteArray.Parse(text, format, formatProvider);
+        }
+
+        public virtual string ToString(ByteArray value, string format, global::System.IFormatProvider formatProvider)
+        {
+            return value.ToString(format, formatProvider);
+        }
     }
 }

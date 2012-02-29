@@ -103,7 +103,7 @@ namespace NClassify.Generator.CodeGenerators.Types
         protected void WriteXmlReadMembers(CsCodeWriter code, ICollection<BaseFieldGenerator> rawfields)
         {
             List<BaseFieldGenerator> fields = new List<BaseFieldGenerator>(rawfields);
-            fields.Sort((a, b) => StringComparer.Ordinal.Compare(a.XmlName, b.XmlName));
+            fields.Sort((a, b) => StringComparer.Ordinal.Compare(a.XmlOptions.XmlName, b.XmlOptions.XmlName));
 
             string xmlns = CsCodeWriter.Global + "System.Xml";
             using (code.WriteBlock("public void ReadXml({0}.XmlReader reader)", xmlns))
@@ -133,7 +133,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                     "global::System.Text.StringBuilder sbuilder = new global::System.Text.StringBuilder();");
 
                 code.WriteLine("string[] fields = new string[] {{ \"{0}\" }};",
-                               String.Join("\", \"", fields.Select(f => f.XmlName).ToArray()));
+                               String.Join("\", \"", fields.Select(f => f.XmlOptions.XmlName).ToArray()));
                 bool hasMessage = fields.Exists(f => f.IsMessage);
                 if (hasMessage)
                     code.WriteLine("bool[] isMessage = new bool[] {{ {0} }};",
@@ -239,13 +239,13 @@ namespace NClassify.Generator.CodeGenerators.Types
                             fld.WriteXmlOutput(code, fld.FieldBackingName);
                     };
 
-                foreach (var fld in fields.Where(f => f.XmlAttribute == XmlAttributeType.Attribute))
+                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Attribute))
                     write(fld);
 
-                foreach (var fld in fields.Where(f => f.XmlAttribute == XmlAttributeType.Element))
+                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Element))
                     write(fld);
 
-                foreach (var fld in fields.Where(f => f.XmlAttribute == XmlAttributeType.Text))
+                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Text))
                     write(fld);
             }
         }

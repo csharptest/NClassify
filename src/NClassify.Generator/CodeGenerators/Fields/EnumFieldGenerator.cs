@@ -52,6 +52,8 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override string ToXmlString(CsCodeWriter code, string name)
         {
+            if (XmlOptions.Format != null)
+                return base.ToXmlString(code, name);
             return String.Format("{0}.ToString()", name);
         }
 

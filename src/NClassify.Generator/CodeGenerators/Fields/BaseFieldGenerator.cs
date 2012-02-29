@@ -15,7 +15,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
         protected BaseFieldGenerator(FieldInfo field)
         {
             _field = field;
-            XmlAttribute = XmlAttributeType.Element;
         }
 
         protected FieldInfo Field
@@ -64,11 +63,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
         }
 
         public string Name
-        {
-            get { return Field.Name; }
-        }
-
-        public string XmlName
         {
             get { return Field.Name; }
         }
@@ -136,7 +130,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
         }
 
         public bool IsStructure { get; set; }
-        public virtual XmlAttributeType XmlAttribute { get; set; }
 
         public virtual bool HasValidator
         {
@@ -171,6 +164,38 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public virtual bool IsClsCompliant
         {
             get { return true; }
+        }
+
+        public virtual XmlFieldOptions XmlOptions
+        {
+            get 
+            { 
+                Field.XmlOptions = Field.XmlOptions ?? new XmlFieldOptions();
+                var xdefaults = Field.DeclaringType.ParentConfig.Settings.XmlDefaults;
+                if(xdefaults != null)
+                {
+                    if (Field.XmlOptions.AttributeType == XmlAttributeType.Default)
+                        Field.XmlOptions.AttributeType = xdefaults.AttributeType;
+                    foreach (var fmt in xdefaults.Formats.SafeEnum().Where(f => f.Type == Field.Type))
+                    {
+                        if (String.IsNullOrEmpty(Field.XmlOptions.Format))
+                            Field.XmlOptions.Format = fmt.Format;
+                        if (Field.XmlOptions.Culture == CultureInfo.Default)
+                            Field.XmlOptions.Culture = fmt.Culture;
+                    }
+                }
+
+                if (Field.XmlOptions.AttributeType == XmlAttributeType.Default)
+                    Field.XmlOptions.AttributeType = XmlAttributeType.Element;
+                if (Field.XmlOptions.Culture == CultureInfo.Default)
+                    Field.XmlOptions.Culture = CultureInfo.InvariantCulture;
+                if (String.IsNullOrEmpty(Field.XmlOptions.Format))
+                    Field.XmlOptions.Format = null;
+                if (String.IsNullOrEmpty(Field.XmlOptions.XmlName))
+                    Field.XmlOptions.XmlName = Field.Name;
+
+                return Field.XmlOptions;
+            }
         }
 
         public IList<BaseConstraintGenerator> Constraints
@@ -272,7 +297,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
                         Access = FieldAccess,
                         Obsolete = Obsolete,
                         XmlName = null,
-                        XmlAttribute = XmlAttributeType.Ignore,
                     }, FieldType.Boolean))
             {
                 code.WriteLine("get {{ return {0}; }}", HasBackingName);
@@ -293,7 +317,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
                                     ClsCompliant = IsClsCompliant,
                                     Obsolete = Obsolete,
                                     XmlName = Name,
-                                    XmlAttribute = XmlAttribute,
                                 };
             if (Field.FieldUse != FieldUse.Required && !IsNullable)
             {
@@ -356,26 +379,34 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)
         {
-            if (XmlAttribute == XmlAttributeType.Attribute)
-                code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlName, ToXmlString(code, name));
-            else if (XmlAttribute == XmlAttributeType.Element)
+            if (XmlOptions.AttributeType == XmlAttributeType.Attribute)
+                code.WriteLine("writer.WriteAttributeString(\"{0}\", {1});", XmlOptions.XmlName, ToXmlString(code, name));
+            else if (XmlOptions.AttributeType == XmlAttributeType.Element)
             {
-                code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlName, ToXmlString(code, name));
+                code.WriteLine("writer.WriteElementString(\"{0}\", {1});", XmlOptions.XmlName, ToXmlString(code, name));
                 //code.WriteLine("writer.WriteStartElement(\"{0}\");", XmlName);
                 //code.WriteLine("writer.WriteString({0});", ToXmlString(code, FieldBackingName));
                 //code.WriteLine("writer.WriteFullEndElement();");
             }
-            else if (XmlAttribute == XmlAttributeType.Text)
+            else if (XmlOptions.AttributeType == XmlAttributeType.Text)
                 code.WriteLine("writer.WriteString({0});", ToXmlString(code, name));
         }
 
         public virtual string ToXmlString(CsCodeWriter code, string name)
         {
+            if (XmlOptions.Format != null)
+                return String.Format("{0}.ToString({1}, {2}System.Globalization.CultureInfo.{3})",
+                                     name, code.MakeString(XmlOptions.Format), CsCodeWriter.Global, XmlOptions.Culture);
+
             return String.Format("{0}System.Xml.XmlConvert.ToString({1})", CsCodeWriter.Global, name);
         }
 
         public virtual string FromXmlString(CsCodeWriter code, string name)
         {
+            if (XmlOptions.Format != null)
+                return String.Format("{0}.Parse({1}, {2}, {3}System.Globalization.CultureInfo.{4})", code.GetTypeName(FieldType),
+                                     name, code.MakeString(XmlOptions.Format), CsCodeWriter.Global, XmlOptions.Culture);
+
             return String.Format("{0}System.Xml.XmlConvert.To{1}({2})", CsCodeWriter.Global, FieldType, name);
         }
 

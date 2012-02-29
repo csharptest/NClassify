@@ -35,7 +35,9 @@ namespace NClassify.Library {
             return null;
         }
 
+
         public static string InvalidField { get { return GetString("InvalidField") ?? "The field {0} is invalid."; } }
+        public static string InvalidFormat { get { return GetString("InvalidFormat") ?? "The value '{0}' is in an invalid format."; } }
         public static string MissingRequiredField { get { return GetString("MissingRequiredField") ?? "The field {0} is required."; } }
 
         public static string MustNotBeNull { get { return GetString("MustNotBeNull") ?? "The field {0} is invalid, can not be null."; } }

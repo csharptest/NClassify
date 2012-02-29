@@ -22,6 +22,9 @@ namespace NClassify.Generator
     {
         [XmlElement("namespace")]
         public string Namespace { get; set; }
+
+        [XmlElement("xml-defaults")]
+        public XmlDefaults XmlDefaults { get; set; }
     }
 
     public abstract partial class RootItem
@@ -140,8 +143,8 @@ namespace NClassify.Generator
         [XmlIgnore]
         internal ValidationRule[] Validation { get; set; }
 
-        //[XmlElement("xml-options")]
-        //public XmlFieldOptions XmlOptions { get; set; }
+        [XmlElement("xml-options")]
+        public XmlFieldOptions XmlOptions { get; set; }
     }
 
     public sealed class Primitive : FieldInfo
@@ -181,9 +184,40 @@ namespace NClassify.Generator
         [XmlAttribute("type", DataType = "NCName")]
         public string TypeName { get; set; }
     }
-    
-    //public sealed class XmlFieldOptions
-    //{ }
+
+    public sealed class XmlDefaults
+    {
+        [XmlAttribute("namespace-uri")]
+        public string NamespaceUri { get; set; }
+        [XmlAttribute("form"), DefaultValue(XmlAttributeType.Element)]
+        public XmlAttributeType AttributeType { get; set; }
+        [XmlElement("formatting")]
+        public FormatInfo[] Formats { get; set; }
+
+        public struct FormatInfo
+        {
+            [XmlAttribute("type")]
+            public FieldType Type { get; set; }
+            [XmlAttribute("format")]
+            public string Format { get; set; }
+            [XmlAttribute("culture"), DefaultValue(CultureInfo.InvariantCulture)]
+            public CultureInfo Culture { get; set; }
+        }
+    }
+
+    public sealed class XmlFieldOptions
+    {
+        [XmlAttribute("form"), DefaultValue(XmlAttributeType.Default)]
+        public XmlAttributeType AttributeType { get; set; }
+        [XmlAttribute("name", DataType = "NCName")]
+        public string XmlName { get; set; }
+        [XmlAttribute("array-item-name", DataType = "NCName")]
+        public string NestedArrayItemName { get; set; }
+        [XmlAttribute("format")]
+        public string Format { get; set; }
+        [XmlAttribute("culture"), DefaultValue(CultureInfo.Default)]
+        public CultureInfo Culture { get; set; }
+    }
 
     #endregion
 
@@ -264,7 +298,6 @@ namespace NClassify.Generator
         [XmlEnum("dateTime")] DateTime,
         [XmlEnum("timeSpan")] TimeSpan,
         [XmlEnum("string")] String,
-        //[XmlEnum("uri")] Uri,
     }
 
     public enum FieldAccess
@@ -297,12 +330,21 @@ namespace NClassify.Generator
 
     public enum XmlAttributeType
     {
-        None = 0,
-        Type,
-        Element,
-        Attribute,
-        Text,
-        Ignore,
-    };
+        [XmlIgnore] Default = 0,
+        [XmlEnum("ignore")] Ignore,
+        [XmlEnum("element")] Element,
+        [XmlEnum("attribute")] Attribute,
+        [XmlEnum("text")] Text,
+    }
+
+    public enum CultureInfo
+    {
+        [XmlIgnore] Default = 0,
+        [XmlEnum("invariant")] InvariantCulture = 1,
+        [XmlEnum("current")] CurrentCulture,
+        [XmlEnum("current-ui")] CurrentUICulture,
+        [XmlEnum("installed-ui")] InstalledUICulture,
+    }
+
     #endregion
 }

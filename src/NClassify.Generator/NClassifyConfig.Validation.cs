@@ -111,10 +111,28 @@ namespace NClassify.Generator
                 if (type.Values == null || type.Values.Length == 0)
                     throw new ApplicationException("Enumeration " + type.QualifiedName +
                                                    " must define at least one value");
+                if (type.Values.Any(i => String.IsNullOrEmpty(i.Name)))
+                    throw new ApplicationException("Enumeration " + type.QualifiedName +
+                                                   " has an invalid entry name");
+
+                foreach (var i in type.Values.GroupBy(i => i.Name).Where(kv => kv.Count() > 1))
+                    throw new ApplicationException("Enumeration " + type.QualifiedName +
+                                                   " has a duplicate entry name " + i.Key);
+
+                foreach (var i in type.Values.GroupBy(i => i.Value).Where(kv => kv.Count() > 1))
+                    throw new ApplicationException("Enumeration " + type.QualifiedName +
+                                                   " has a duplicate entry value " + i.Key);
             }
 
             foreach (ComplexType type in _defineTypes.OfType<ComplexType>())
             {
+                foreach (var i in type.Fields.GroupBy(f => f.Name).Where(kv => kv.Count() > 1))
+                    throw new ApplicationException("Type " + type.QualifiedName +
+                                                   " has a duplicate field name " + i.Key);
+                foreach (var i in type.Fields.GroupBy(f => f.FieldId).Where(kv => kv.Count() > 1))
+                    throw new ApplicationException("Type " + type.QualifiedName +
+                                                   " has a duplicate field id " + i.Key);
+
                 foreach (FieldInfo field in type.Fields)
                 {
                     string fldName = field.PropertyName ?? CodeWriter.ToPascalCase(field.Name);
@@ -134,8 +152,14 @@ namespace NClassify.Generator
                 }
             }
             foreach (ServiceInfo svc in _defineTypes.OfType<ServiceInfo>())
+            {
+                foreach (var i in svc.Methods.GroupBy(m => m.Name).Where(kv => kv.Count() > 1))
+                    throw new ApplicationException("Service " + svc.QualifiedName +
+                                                   " has a duplicate method name " + i.Key);
+
                 foreach (ServiceMethod method in svc.Methods)
                     Validate(svc, method);
+            }
         }
 
         private BaseType ResolveName(BaseType type, string name)

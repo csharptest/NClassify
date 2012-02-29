@@ -56,12 +56,10 @@ namespace NClassify.Example
         {
             this.Value = value;
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasValue
         {
             get { return __has_value; }
         }
-        [global::System.Xml.Serialization.XmlText()]
         public int Value
         {
             get
@@ -169,12 +167,10 @@ namespace NClassify.Example
         {
             this.Value = value;
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasValue
         {
             get { return __has_value; }
         }
-        [global::System.Xml.Serialization.XmlText()]
         public global::NClassify.Library.ByteArray Value
         {
             get
@@ -283,12 +279,10 @@ namespace NClassify.Example
         {
             this.Value = value;
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasValue
         {
             get { return __has_value; }
         }
-        [global::System.Xml.Serialization.XmlText()]
         public string Value
         {
             get
@@ -418,12 +412,10 @@ namespace NClassify.Example
         {
             this.Value = value;
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasValue
         {
             get { return __has_value; }
         }
-        [global::System.Xml.Serialization.XmlText()]
         public string Value
         {
             get
@@ -516,16 +508,17 @@ namespace NClassify.Example
             Verified = 10,
             Errors = 11,
             Children = 20,
-            TypeFields = 100,
+            DateModified = 31,
             IsValid = 100,
             AssertValid = 102,
             GetBrokenRules = 103,
             Clear = 104,
-            Initialize = 101,
-            MergeFrom = 102,
-            MergeTo = 102,
-            ReadXml = 103,
-            WriteXml = 104,
+            Initialize = 105,
+            MergeFrom = 106,
+            MergeTo = 107,
+            ReadXml = 108,
+            WriteXml = 109,
+            TypeFields = 110,
         }
         #endregion
         #region _ReadErrors
@@ -654,6 +647,67 @@ namespace NClassify.Example
             { return ((global::System.Collections.IEnumerable)_contents).GetEnumerator(); }
         }
         #endregion
+        #region _DateModifiedList
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "1.0")]
+        partial class _DateModifiedList : global::System.Collections.Generic.IList<global::System.DateTime>, global::System.ICloneable
+        {
+            private static T AssertNotNull<T>(T value) where T : class
+            {
+                if (null == value) throw new global::System.ArgumentNullException("DateModifiedList");
+                return value;
+            }
+            private readonly bool _readOnly;
+            private readonly global::System.Collections.Generic.List<global::System.DateTime> _contents;
+            public _DateModifiedList()
+            {
+                _readOnly = false;
+                _contents = new global::System.Collections.Generic.List<global::System.DateTime>();
+            }
+            public _DateModifiedList(global::System.Collections.Generic.IList<global::System.DateTime> contents, bool readOnly)
+            {
+                _readOnly = readOnly;
+                _contents = new global::System.Collections.Generic.List<global::System.DateTime>(AssertNotNull(contents));
+            }
+            public _DateModifiedList AsReadOnly()
+            {
+                if (IsReadOnly) return this;
+                return new _DateModifiedList(_contents, true);
+            }
+            private global::System.Collections.Generic.List<global::System.DateTime> Modify
+            {
+                get { if (!IsReadOnly) return _contents; throw new global::System.InvalidOperationException(); }
+            }
+            public global::System.DateTime this[int index]
+            {
+                get { return _contents[index]; }
+                set { Modify[index] = value; }
+            }
+            public int Count { get { return _contents.Count; } }
+            public bool IsReadOnly { get { return _readOnly; } }
+            public void Add(global::System.DateTime value) { Modify.Add(value); }
+            public void AddRange(global::System.Collections.Generic.ICollection<global::System.DateTime> value)
+            {
+                Modify.AddRange(AssertNotNull(value));
+            }
+            public void Insert(int index, global::System.DateTime value) { Modify.Insert(index, value); }
+            public bool Remove(global::System.DateTime item) { return Modify.Remove(item); }
+            public void RemoveAt(int index) { Modify.RemoveAt(index); }
+            public void Clear() { Modify.Clear(); }
+            public bool Contains(global::System.DateTime item) { return _contents.Contains(item); }
+            public int IndexOf(global::System.DateTime item) { return _contents.IndexOf(item); }
+            public void CopyTo(global::System.DateTime[] array, int arrayIndex) { _contents.CopyTo(array, arrayIndex); }
+            object global::System.ICloneable.Clone() { return Clone(); }
+            public _DateModifiedList Clone()
+            {
+                return new _DateModifiedList(this, false);
+            }
+            public global::System.Collections.Generic.IEnumerator<global::System.DateTime> GetEnumerator()
+            { return _contents.GetEnumerator(); }
+            global::System.Collections.IEnumerator global::System.Collections.IEnumerable.GetEnumerator()
+            { return ((global::System.Collections.IEnumerable)_contents).GetEnumerator(); }
+        }
+        #endregion
         #region Static Data
         public static bool IsValidId(global::NClassify.Example.SimpleInt32 value, global::System.Action<global::NClassify.Library.ValidationError> onError)
         {
@@ -755,8 +809,7 @@ namespace NClassify.Example
         private bool __fld_verified;
         private _ReadErrors __fld_errors = new _ReadErrors();
         private _ChildrenList __fld_children = new _ChildrenList();
-        private bool __has_typeFields;
-        private bool __fld_typeFields;
+        private _DateModifiedList __fld_dateModified = new _DateModifiedList();
         private bool __has_isValid;
         private bool __fld_isValid;
         private bool __has_assertValid;
@@ -775,9 +828,10 @@ namespace NClassify.Example
         private bool __fld_readXml;
         private bool __has_writeXml;
         private bool __fld_writeXml;
+        private bool __has_typeFields;
+        private bool __fld_typeFields;
         #endregion
         #region Instance Members
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasId
         {
             get { return __has_id; }
@@ -788,7 +842,6 @@ namespace NClassify.Example
                 __has_id = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("Id")]
         public global::NClassify.Example.SimpleInt32 Id
         {
             get
@@ -801,7 +854,6 @@ namespace NClassify.Example
                 __has_id = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasUri
         {
             get { return __has_uri; }
@@ -812,7 +864,6 @@ namespace NClassify.Example
                 __has_uri = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("uri")]
         public global::NClassify.Example.SimpleUri Uri
         {
             get
@@ -825,7 +876,6 @@ namespace NClassify.Example
                 __has_uri = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasAlphaGroup
         {
             get { return __has_alphaGroup; }
@@ -836,7 +886,6 @@ namespace NClassify.Example
                 __has_alphaGroup = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("alpha_group")]
         public global::NClassify.Example.SimpleText AlphaGroup
         {
             get
@@ -849,7 +898,6 @@ namespace NClassify.Example
                 __has_alphaGroup = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasEnum
         {
             get { return __has_enum; }
@@ -860,7 +908,6 @@ namespace NClassify.Example
                 __has_enum = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("enum")]
         public global::NClassify.Example.SampleEnum Enum
         {
             get
@@ -873,7 +920,6 @@ namespace NClassify.Example
                 __has_enum = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasBytes
         {
             get { return __has_bytes; }
@@ -884,7 +930,6 @@ namespace NClassify.Example
                 __has_bytes = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("bytes")]
         public global::NClassify.Example.SimpleBytes Bytes
         {
             get
@@ -897,7 +942,6 @@ namespace NClassify.Example
                 __has_bytes = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasVerified
         {
             get { return __has_verified; }
@@ -909,7 +953,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("verified")]
         public bool Verified
         {
             get
@@ -933,7 +976,6 @@ namespace NClassify.Example
                 __fld_errors = new _ReadErrors(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("children")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> ChildrenList
         {
             get
@@ -945,32 +987,17 @@ namespace NClassify.Example
                 __fld_children = new _ChildrenList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
-        public bool HasTypeFields_
-        {
-            get { return __has_typeFields; }
-            set
-            {
-                if (value) throw new global::System.InvalidOperationException();
-                __fld_typeFields = false;
-                __has_typeFields = false;
-            }
-        }
-        [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("TypeFields")]
-        public bool TypeFields_
+        public global::System.Collections.Generic.IList<global::System.DateTime> DateModifiedList
         {
             get
             {
-                return __fld_typeFields;
+                return __fld_dateModified;
             }
             set
             {
-                __fld_typeFields = value;
-                __has_typeFields = true;
+                __fld_dateModified = new _DateModifiedList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasIsValid_
         {
             get { return __has_isValid; }
@@ -982,7 +1009,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("IsValid")]
         public bool IsValid_
         {
             get
@@ -995,7 +1021,6 @@ namespace NClassify.Example
                 __has_isValid = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasAssertValid_
         {
             get { return __has_assertValid; }
@@ -1007,7 +1032,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("AssertValid")]
         public bool AssertValid_
         {
             get
@@ -1020,7 +1044,6 @@ namespace NClassify.Example
                 __has_assertValid = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasGetBrokenRules_
         {
             get { return __has_getBrokenRules; }
@@ -1032,7 +1055,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("GetBrokenRules")]
         public bool GetBrokenRules_
         {
             get
@@ -1045,7 +1067,6 @@ namespace NClassify.Example
                 __has_getBrokenRules = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasClear_
         {
             get { return __has_clear; }
@@ -1057,7 +1078,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("Clear")]
         public bool Clear_
         {
             get
@@ -1070,7 +1090,6 @@ namespace NClassify.Example
                 __has_clear = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasInitialize_
         {
             get { return __has_initialize; }
@@ -1082,7 +1101,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("Initialize")]
         public bool Initialize_
         {
             get
@@ -1095,7 +1113,6 @@ namespace NClassify.Example
                 __has_initialize = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasMergeFrom_
         {
             get { return __has_mergeFrom; }
@@ -1107,7 +1124,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("MergeFrom")]
         public bool MergeFrom_
         {
             get
@@ -1120,7 +1136,6 @@ namespace NClassify.Example
                 __has_mergeFrom = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasMergeTo_
         {
             get { return __has_mergeTo; }
@@ -1132,7 +1147,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("MergeTo")]
         public bool MergeTo_
         {
             get
@@ -1145,7 +1159,6 @@ namespace NClassify.Example
                 __has_mergeTo = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasReadXml_
         {
             get { return __has_readXml; }
@@ -1157,7 +1170,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("ReadXml")]
         public bool ReadXml_
         {
             get
@@ -1170,7 +1182,6 @@ namespace NClassify.Example
                 __has_readXml = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasWriteXml_
         {
             get { return __has_writeXml; }
@@ -1182,7 +1193,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(false)]
-        [global::System.Xml.Serialization.XmlElement("WriteXml")]
         public bool WriteXml_
         {
             get
@@ -1193,6 +1203,29 @@ namespace NClassify.Example
             {
                 __fld_writeXml = value;
                 __has_writeXml = true;
+            }
+        }
+        public bool HasTypeFields_
+        {
+            get { return __has_typeFields; }
+            set
+            {
+                if (value) throw new global::System.InvalidOperationException();
+                __fld_typeFields = false;
+                __has_typeFields = false;
+            }
+        }
+        [global::System.ComponentModel.DefaultValueAttribute(false)]
+        public bool TypeFields_
+        {
+            get
+            {
+                return __fld_typeFields;
+            }
+            set
+            {
+                __fld_typeFields = value;
+                __has_typeFields = true;
             }
         }
         public bool IsValid()
@@ -1232,7 +1265,6 @@ namespace NClassify.Example
             __has_enum = true;
             __has_bytes = true;
             __has_verified = true;
-            __has_typeFields = true;
             __has_isValid = true;
             __has_assertValid = true;
             __has_getBrokenRules = true;
@@ -1242,6 +1274,7 @@ namespace NClassify.Example
             __has_mergeTo = true;
             __has_readXml = true;
             __has_writeXml = true;
+            __has_typeFields = true;
         }
         public void Clear()
         {
@@ -1259,8 +1292,7 @@ namespace NClassify.Example
             __fld_verified = false;
             __fld_errors = new _ReadErrors();
             __fld_children = new _ChildrenList();
-            __has_typeFields = false;
-            __fld_typeFields = false;
+            __fld_dateModified = new _DateModifiedList();
             __has_isValid = false;
             __fld_isValid = false;
             __has_assertValid = false;
@@ -1279,6 +1311,8 @@ namespace NClassify.Example
             __fld_readXml = false;
             __has_writeXml = false;
             __fld_writeXml = false;
+            __has_typeFields = false;
+            __fld_typeFields = false;
         }
         object global::System.ICloneable.Clone() { return Clone(); }
         public SampleMsg Clone()
@@ -1286,6 +1320,7 @@ namespace NClassify.Example
             SampleMsg value = (SampleMsg)this.MemberwiseClone();
             value.__fld_errors = value.__fld_errors.Clone();
             value.__fld_children = value.__fld_children.Clone();
+            value.__fld_dateModified = value.__fld_dateModified.Clone();
             return value;
         }
         public void MergeFrom(global::NClassify.Library.IMessage other)
@@ -1302,7 +1337,7 @@ namespace NClassify.Example
             if (other.__has_verified) __fld_verified = other.__fld_verified;
             __fld_errors.AddRange(other.__fld_errors);
             __fld_children.AddRange(other.__fld_children);
-            if (other.__has_typeFields) __fld_typeFields = other.__fld_typeFields;
+            __fld_dateModified.AddRange(other.__fld_dateModified);
             if (other.__has_isValid) __fld_isValid = other.__fld_isValid;
             if (other.__has_assertValid) __fld_assertValid = other.__fld_assertValid;
             if (other.__has_getBrokenRules) __fld_getBrokenRules = other.__fld_getBrokenRules;
@@ -1312,6 +1347,7 @@ namespace NClassify.Example
             if (other.__has_mergeTo) __fld_mergeTo = other.__fld_mergeTo;
             if (other.__has_readXml) __fld_readXml = other.__fld_readXml;
             if (other.__has_writeXml) __fld_writeXml = other.__fld_writeXml;
+            if (other.__has_typeFields) __fld_typeFields = other.__fld_typeFields;
         }
         global::System.Xml.Schema.XmlSchema global::System.Xml.Serialization.IXmlSerializable.GetSchema()
         {
@@ -1340,8 +1376,8 @@ namespace NClassify.Example
         {
             int depth = reader.Depth;
             global::System.Text.StringBuilder sbuilder = new global::System.Text.StringBuilder();
-            string[] fields = new string[] { "AssertValid", "Clear", "GetBrokenRules", "Id", "Initialize", "IsValid", "MergeFrom", "MergeTo", "ReadXml", "TypeFields", "WriteXml", "alpha_group", "bytes", "children", "enum", "errors", "uri", "verified" };
-            bool[] isMessage = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false };
+            string[] fields = new string[] { "AssertValid", "Clear", "GetBrokenRules", "Id", "Initialize", "IsValid", "MergeFrom", "MergeTo", "ReadXml", "TypeFields", "WriteXml", "alpha_group", "bytes", "children", "enum", "errors", "mod-date", "uri", "verified" };
+            bool[] isMessage = new bool[] { false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false };
             while (!reader.EOF && reader.Depth >= depth)
             {
                 if (reader.NodeType == global::System.Xml.XmlNodeType.EndElement) break;
@@ -1481,11 +1517,16 @@ namespace NClassify.Example
                         }
                         case 16:
                         {
+                            __fld_dateModified.Add(global::System.DateTime.Parse(sbuilder.ToString(), "yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
+                            break;
+                        }
+                        case 17:
+                        {
                             __fld_uri = new global::NClassify.Example.SimpleUri(sbuilder.ToString());
                             __has_uri = true;
                             break;
                         }
-                        case 17:
+                        case 18:
                         {
                             __fld_verified = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
                             __has_verified = true;
@@ -1543,9 +1584,9 @@ namespace NClassify.Example
             {
                 item.WriteXml("children", writer);
             }
-            if (__has_typeFields)
+            foreach (global::System.DateTime item in __fld_dateModified)
             {
-                writer.WriteElementString("TypeFields", global::System.Xml.XmlConvert.ToString(__fld_typeFields));
+                writer.WriteElementString("mod-date", item.ToString("yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_isValid)
             {
@@ -1582,6 +1623,10 @@ namespace NClassify.Example
             if (__has_writeXml)
             {
                 writer.WriteElementString("WriteXml", global::System.Xml.XmlConvert.ToString(__fld_writeXml));
+            }
+            if (__has_typeFields)
+            {
+                writer.WriteElementString("TypeFields", global::System.Xml.XmlConvert.ToString(__fld_typeFields));
             }
         }
         #endregion
@@ -1750,7 +1795,6 @@ namespace NClassify.Example
         private global::NClassify.Example.SampleMsg __fld_sampleMsg = new global::NClassify.Example.SampleMsg();
         #endregion
         #region Instance Members
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasBool
         {
             get { return __has_bool; }
@@ -1762,7 +1806,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(true)]
-        [global::System.Xml.Serialization.XmlElement("bool")]
         public bool Bool
         {
             get
@@ -1775,7 +1818,6 @@ namespace NClassify.Example
                 __has_bool = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasBytes
         {
             get { return __has_bytes; }
@@ -1786,7 +1828,6 @@ namespace NClassify.Example
                 __has_bytes = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("bytes")]
         public global::NClassify.Library.ByteArray Bytes
         {
             get
@@ -1799,7 +1840,6 @@ namespace NClassify.Example
                 __has_bytes = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasInt8
         {
             get { return __has_int8; }
@@ -1812,7 +1852,6 @@ namespace NClassify.Example
         }
         [global::System.CLSCompliant(false)]
         [global::System.ComponentModel.DefaultValueAttribute((sbyte)1)]
-        [global::System.Xml.Serialization.XmlElement("int8")]
         public sbyte Int8
         {
             get
@@ -1825,7 +1864,6 @@ namespace NClassify.Example
                 __has_int8 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasUint8
         {
             get { return __has_uint8; }
@@ -1837,7 +1875,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute((byte)1u)]
-        [global::System.Xml.Serialization.XmlElement("uint8")]
         public byte Uint8
         {
             get
@@ -1850,7 +1887,6 @@ namespace NClassify.Example
                 __has_uint8 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasInt16
         {
             get { return __has_int16; }
@@ -1862,7 +1898,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute((short)1)]
-        [global::System.Xml.Serialization.XmlElement("int16")]
         public short Int16
         {
             get
@@ -1875,7 +1910,6 @@ namespace NClassify.Example
                 __has_int16 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasUint16
         {
             get { return __has_uint16; }
@@ -1888,7 +1922,6 @@ namespace NClassify.Example
         }
         [global::System.CLSCompliant(false)]
         [global::System.ComponentModel.DefaultValueAttribute((ushort)1u)]
-        [global::System.Xml.Serialization.XmlElement("uint16")]
         public ushort Uint16
         {
             get
@@ -1901,7 +1934,6 @@ namespace NClassify.Example
                 __has_uint16 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasInt32
         {
             get { return __has_int32; }
@@ -1913,7 +1945,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(1)]
-        [global::System.Xml.Serialization.XmlElement("int32")]
         public int Int32
         {
             get
@@ -1926,7 +1957,6 @@ namespace NClassify.Example
                 __has_int32 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasUint32
         {
             get { return __has_uint32; }
@@ -1939,7 +1969,6 @@ namespace NClassify.Example
         }
         [global::System.CLSCompliant(false)]
         [global::System.ComponentModel.DefaultValueAttribute(1U)]
-        [global::System.Xml.Serialization.XmlElement("uint32")]
         public uint Uint32
         {
             get
@@ -1952,7 +1981,6 @@ namespace NClassify.Example
                 __has_uint32 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasInt64
         {
             get { return __has_int64; }
@@ -1964,7 +1992,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(1L)]
-        [global::System.Xml.Serialization.XmlElement("int64")]
         public long Int64
         {
             get
@@ -1977,7 +2004,6 @@ namespace NClassify.Example
                 __has_int64 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasUint64
         {
             get { return __has_uint64; }
@@ -1990,7 +2016,6 @@ namespace NClassify.Example
         }
         [global::System.CLSCompliant(false)]
         [global::System.ComponentModel.DefaultValueAttribute(1UL)]
-        [global::System.Xml.Serialization.XmlElement("uint64")]
         public ulong Uint64
         {
             get
@@ -2003,7 +2028,6 @@ namespace NClassify.Example
                 __has_uint64 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasFloat
         {
             get { return __has_float; }
@@ -2015,7 +2039,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(1F)]
-        [global::System.Xml.Serialization.XmlElement("float")]
         public float Float
         {
             get
@@ -2028,7 +2051,6 @@ namespace NClassify.Example
                 __has_float = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasDouble
         {
             get { return __has_double; }
@@ -2040,7 +2062,6 @@ namespace NClassify.Example
             }
         }
         [global::System.ComponentModel.DefaultValueAttribute(1D)]
-        [global::System.Xml.Serialization.XmlElement("double")]
         public double Double
         {
             get
@@ -2053,7 +2074,6 @@ namespace NClassify.Example
                 __has_double = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasGuid
         {
             get { return __has_guid; }
@@ -2064,7 +2084,6 @@ namespace NClassify.Example
                 __has_guid = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("guid")]
         public global::System.Guid Guid
         {
             get
@@ -2077,7 +2096,6 @@ namespace NClassify.Example
                 __has_guid = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasDateTime
         {
             get { return __has_dateTime; }
@@ -2088,7 +2106,6 @@ namespace NClassify.Example
                 __has_dateTime = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("dateTime")]
         public global::System.DateTime DateTime
         {
             get
@@ -2101,7 +2118,6 @@ namespace NClassify.Example
                 __has_dateTime = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasTimeSpan
         {
             get { return __has_timeSpan; }
@@ -2112,7 +2128,6 @@ namespace NClassify.Example
                 __has_timeSpan = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("timeSpan")]
         public global::System.TimeSpan TimeSpan
         {
             get
@@ -2125,7 +2140,6 @@ namespace NClassify.Example
                 __has_timeSpan = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasString
         {
             get { return __has_string; }
@@ -2136,7 +2150,6 @@ namespace NClassify.Example
                 __has_string = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("string")]
         public string String
         {
             get
@@ -2150,7 +2163,6 @@ namespace NClassify.Example
                 __has_string = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasEnum
         {
             get { return __has_enum; }
@@ -2161,7 +2173,6 @@ namespace NClassify.Example
                 __has_enum = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("enum")]
         public global::NClassify.Example.SampleEnum Enum
         {
             get
@@ -2174,7 +2185,6 @@ namespace NClassify.Example
                 __has_enum = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasSimpleInt32
         {
             get { return __has_simpleInt32; }
@@ -2185,7 +2195,6 @@ namespace NClassify.Example
                 __has_simpleInt32 = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_int32")]
         public global::NClassify.Example.SimpleInt32 SimpleInt32
         {
             get
@@ -2198,7 +2207,6 @@ namespace NClassify.Example
                 __has_simpleInt32 = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasSimpleUri
         {
             get { return __has_simpleUri; }
@@ -2209,7 +2217,6 @@ namespace NClassify.Example
                 __has_simpleUri = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_uri")]
         public global::NClassify.Example.SimpleUri SimpleUri
         {
             get
@@ -2222,7 +2229,6 @@ namespace NClassify.Example
                 __has_simpleUri = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasSimpleText
         {
             get { return __has_simpleText; }
@@ -2233,7 +2239,6 @@ namespace NClassify.Example
                 __has_simpleText = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_text")]
         public global::NClassify.Example.SimpleText SimpleText
         {
             get
@@ -2246,7 +2251,6 @@ namespace NClassify.Example
                 __has_simpleText = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasSimpleBytes
         {
             get { return __has_simpleBytes; }
@@ -2257,7 +2261,6 @@ namespace NClassify.Example
                 __has_simpleBytes = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_bytes")]
         public global::NClassify.Example.SimpleBytes SimpleBytes
         {
             get
@@ -2270,7 +2273,6 @@ namespace NClassify.Example
                 __has_simpleBytes = true;
             }
         }
-        [global::System.Xml.Serialization.XmlIgnore()]
         public bool HasSampleMsg
         {
             get { return __has_sampleMsg; }
@@ -2281,7 +2283,6 @@ namespace NClassify.Example
                 __has_sampleMsg = false;
             }
         }
-        [global::System.Xml.Serialization.XmlElement("sample_msg")]
         public global::NClassify.Example.SampleMsg SampleMsg
         {
             get
@@ -2516,7 +2517,7 @@ namespace NClassify.Example
                         }
                         case 2:
                         {
-                            __fld_dateTime = global::System.Xml.XmlConvert.ToDateTime(sbuilder.ToString(), global::System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
+                            __fld_dateTime = global::System.DateTime.Parse(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_dateTime = true;
                             break;
                         }
@@ -2702,7 +2703,7 @@ namespace NClassify.Example
             }
             if (__has_dateTime)
             {
-                writer.WriteElementString("dateTime", global::System.Xml.XmlConvert.ToString(__fld_dateTime, global::System.Xml.XmlDateTimeSerializationMode.RoundtripKind));
+                writer.WriteElementString("dateTime", __fld_dateTime.ToString("yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_timeSpan)
             {
@@ -4227,7 +4228,6 @@ namespace NClassify.Example
         private _SampleMsgList __fld_sampleMsg = new _SampleMsgList();
         #endregion
         #region Instance Members
-        [global::System.Xml.Serialization.XmlElement("bool")]
         public global::System.Collections.Generic.IList<bool> BoolList
         {
             get
@@ -4239,7 +4239,6 @@ namespace NClassify.Example
                 __fld_bool = new _BoolList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("bytes")]
         public global::System.Collections.Generic.IList<global::NClassify.Library.ByteArray> BytesList
         {
             get
@@ -4252,7 +4251,6 @@ namespace NClassify.Example
             }
         }
         [global::System.CLSCompliant(false)]
-        [global::System.Xml.Serialization.XmlElement("int8")]
         public global::System.Collections.Generic.IList<sbyte> Int8List
         {
             get
@@ -4264,7 +4262,6 @@ namespace NClassify.Example
                 __fld_int8 = new _Int8List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("uint8")]
         public global::System.Collections.Generic.IList<byte> Uint8List
         {
             get
@@ -4276,7 +4273,6 @@ namespace NClassify.Example
                 __fld_uint8 = new _Uint8List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("int16")]
         public global::System.Collections.Generic.IList<short> Int16List
         {
             get
@@ -4289,7 +4285,6 @@ namespace NClassify.Example
             }
         }
         [global::System.CLSCompliant(false)]
-        [global::System.Xml.Serialization.XmlElement("uint16")]
         public global::System.Collections.Generic.IList<ushort> Uint16List
         {
             get
@@ -4301,7 +4296,6 @@ namespace NClassify.Example
                 __fld_uint16 = new _Uint16List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("int32")]
         public global::System.Collections.Generic.IList<int> Int32List
         {
             get
@@ -4314,7 +4308,6 @@ namespace NClassify.Example
             }
         }
         [global::System.CLSCompliant(false)]
-        [global::System.Xml.Serialization.XmlElement("uint32")]
         public global::System.Collections.Generic.IList<uint> Uint32List
         {
             get
@@ -4326,7 +4319,6 @@ namespace NClassify.Example
                 __fld_uint32 = new _Uint32List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("int64")]
         public global::System.Collections.Generic.IList<long> Int64List
         {
             get
@@ -4339,7 +4331,6 @@ namespace NClassify.Example
             }
         }
         [global::System.CLSCompliant(false)]
-        [global::System.Xml.Serialization.XmlElement("uint64")]
         public global::System.Collections.Generic.IList<ulong> Uint64List
         {
             get
@@ -4351,7 +4342,6 @@ namespace NClassify.Example
                 __fld_uint64 = new _Uint64List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("float")]
         public global::System.Collections.Generic.IList<float> FloatList
         {
             get
@@ -4363,7 +4353,6 @@ namespace NClassify.Example
                 __fld_float = new _FloatList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("double")]
         public global::System.Collections.Generic.IList<double> DoubleList
         {
             get
@@ -4375,7 +4364,6 @@ namespace NClassify.Example
                 __fld_double = new _DoubleList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("guid")]
         public global::System.Collections.Generic.IList<global::System.Guid> GuidList
         {
             get
@@ -4387,7 +4375,6 @@ namespace NClassify.Example
                 __fld_guid = new _GuidList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("dateTime")]
         public global::System.Collections.Generic.IList<global::System.DateTime> DateTimeList
         {
             get
@@ -4399,7 +4386,6 @@ namespace NClassify.Example
                 __fld_dateTime = new _DateTimeList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("timeSpan")]
         public global::System.Collections.Generic.IList<global::System.TimeSpan> TimeSpanList
         {
             get
@@ -4411,7 +4397,6 @@ namespace NClassify.Example
                 __fld_timeSpan = new _TimeSpanList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("string")]
         public global::System.Collections.Generic.IList<string> StringList
         {
             get
@@ -4423,7 +4408,6 @@ namespace NClassify.Example
                 __fld_string = new _StringList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("enum")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SampleEnum> EnumList
         {
             get
@@ -4435,7 +4419,6 @@ namespace NClassify.Example
                 __fld_enum = new _EnumList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_int32")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SimpleInt32> SimpleInt32List
         {
             get
@@ -4447,7 +4430,6 @@ namespace NClassify.Example
                 __fld_simpleInt32 = new _SimpleInt32List(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_uri")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SimpleUri> SimpleUriList
         {
             get
@@ -4459,7 +4441,6 @@ namespace NClassify.Example
                 __fld_simpleUri = new _SimpleUriList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_text")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SimpleText> SimpleTextList
         {
             get
@@ -4471,7 +4452,6 @@ namespace NClassify.Example
                 __fld_simpleText = new _SimpleTextList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("simple_bytes")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SimpleBytes> SimpleBytesList
         {
             get
@@ -4483,7 +4463,6 @@ namespace NClassify.Example
                 __fld_simpleBytes = new _SimpleBytesList(value, false);
             }
         }
-        [global::System.Xml.Serialization.XmlElement("sample_msg")]
         public global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg> SampleMsgList
         {
             get
@@ -4706,7 +4685,7 @@ namespace NClassify.Example
                         }
                         case 2:
                         {
-                            __fld_dateTime.Add(global::System.Xml.XmlConvert.ToDateTime(sbuilder.ToString(), global::System.Xml.XmlDateTimeSerializationMode.RoundtripKind));
+                            __fld_dateTime.Add(global::System.DateTime.Parse(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 3:
@@ -4873,7 +4852,7 @@ namespace NClassify.Example
             }
             foreach (global::System.DateTime item in __fld_dateTime)
             {
-                writer.WriteElementString("dateTime", global::System.Xml.XmlConvert.ToString(item, global::System.Xml.XmlDateTimeSerializationMode.RoundtripKind));
+                writer.WriteElementString("dateTime", item.ToString("yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::System.TimeSpan item in __fld_timeSpan)
             {

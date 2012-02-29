@@ -9,7 +9,6 @@ namespace NClassify.Generator.CodeWriters
             Name = name;
             Access = FieldAccess.Public;
             ClsCompliant = true;
-            XmlAttribute = XmlAttributeType.Element;
         }
         public string Name;
         public FieldAccess Access;
@@ -20,7 +19,5 @@ namespace NClassify.Generator.CodeWriters
 
         public bool Obsolete;
         public bool ClsCompliant;
-
-        public XmlAttributeType XmlAttribute;
     }
 }

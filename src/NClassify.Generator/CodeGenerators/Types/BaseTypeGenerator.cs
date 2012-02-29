@@ -17,7 +17,7 @@ namespace NClassify.Generator.CodeGenerators.Types
 
     abstract class BaseTypeGenerator : IMemberGenerator<CsCodeWriter>
     {
-        protected readonly BaseType Type;
+        public readonly BaseType Type;
         protected readonly IList<BaseFieldGenerator> Fields;
 
         protected BaseTypeGenerator(BaseType type)
@@ -25,7 +25,7 @@ namespace NClassify.Generator.CodeGenerators.Types
             Type = type;
             Fields = new ReadOnlyCollection<BaseFieldGenerator>(
                 Type.Fields.SafeEnum()
-                .Select(f => FieldFactory.Create(f))
+                .Select(f => FieldFactory.Create(this, f))
                 .ToArray());
 
             Access = Type.ParentConfig.DefaultAccess;

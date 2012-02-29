@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<NClassify xsi:noNamespaceSchemaLocation="NClassifyConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<NClassify xsi:noNamespaceSchemaLocation="..\NClassify.Generator\NClassifyConfig.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <settings>
     <namespace>NClassify.Example</namespace>
+    <xml-defaults form="element" namespace-uri="http://nclassify.com/schema/v1/example">
+      <formatting type="dateTime" format="yyyy-MM-dd hh:mm:ss"/>
+    </xml-defaults>
   </settings>
 
   <value name="SimpleInt32" base="int32">
@@ -70,17 +73,21 @@
       
       <complex ordinal="20" name="children" type="SampleMsg" array="true" />
 
+      <primitive ordinal="31" name="dateModified" type="dateTime" array="true">
+        <xml-options array-item-name="item" name="mod-date" form="element" format="yy-m-d" />
+      </primitive>
+
       <!-- Intentional name collisions -->
-      <primitive ordinal="100" name="TypeFields" type="bool" />
       <primitive ordinal="100" name="IsValid" type="bool" />
       <primitive ordinal="102" name="AssertValid" type="bool" />
       <primitive ordinal="103" name="GetBrokenRules" type="bool" />
       <primitive ordinal="104" name="Clear" type="bool" />
-      <primitive ordinal="101" name="Initialize" type="bool" />
-      <primitive ordinal="102" name="MergeFrom" type="bool" />
-      <primitive ordinal="102" name="MergeTo" type="bool" />
-      <primitive ordinal="103" name="ReadXml" type="bool" />
-      <primitive ordinal="104" name="WriteXml" type="bool" />
+      <primitive ordinal="105" name="Initialize" type="bool" />
+      <primitive ordinal="106" name="MergeFrom" type="bool" />
+      <primitive ordinal="107" name="MergeTo" type="bool" />
+      <primitive ordinal="108" name="ReadXml" type="bool" />
+      <primitive ordinal="109" name="WriteXml" type="bool" />
+      <primitive ordinal="110" name="TypeFields" type="bool" />
     </fields>
   </type>
 

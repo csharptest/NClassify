@@ -18,25 +18,24 @@ namespace NClassify.Generator.CodeGenerators.Fields
             _type = fld.DeclaringType.ParentConfig.ResolveName<ComplexType>(
                 fld.DeclaringType, ((ComplexTypeRef)fld).TypeName
                 );
-            base.XmlAttribute = XmlAttributeType.Element;
         }
 
         public override bool IsMessage { get { return true; } }
         public override bool IsNullable { get { return true; } }
-        public override XmlAttributeType XmlAttribute 
-        {
-            get { return base.XmlAttribute; }
-            set
-            {
-                if (value != XmlAttributeType.Element && value != XmlAttributeType.Ignore && value != XmlAttributeType.None) 
-                    throw new NotSupportedException();
-                base.XmlAttribute = value;
-            } 
-        }
-
+        
         public override string GetStorageType(CodeWriter code)
         {
             return CsCodeWriter.Global + _type.QualifiedName;
+        }
+
+        public override XmlFieldOptions XmlOptions
+        {
+            get
+            {
+                XmlFieldOptions options =  base.XmlOptions;
+                options.AttributeType = XmlAttributeType.Element;
+                return options;
+            }
         }
 
         public override string MakeConstant(CsCodeWriter code, string value)
@@ -64,7 +63,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override void WriteXmlOutput(CsCodeWriter code, string name)
         {
-            code.WriteLine("{0}.WriteXml(\"{1}\", writer);", name, XmlName);
+            code.WriteLine("{0}.WriteXml(\"{1}\", writer);", name, XmlOptions.XmlName);
         }
     }
 }

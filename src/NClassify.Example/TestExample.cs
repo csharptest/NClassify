@@ -9,6 +9,9 @@ namespace NClassify.Example
         {
             SampleMsg child = new SampleMsg();
             child.Initialize();
+            child.DateModifiedList.Add(DateTime.Now.AddDays(-2));
+            child.DateModifiedList.Add(DateTime.Now.AddDays(-1));
+            child.DateModifiedList.Add(DateTime.Now.AddDays(0));
 
             Console.WriteLine(child.ToXml("message"));
             TestRoundTripXml(child);

@@ -295,17 +295,6 @@ namespace NClassify.Generator.CodeWriters
             WriteLineIf(info.DefaultValue != null && info.DefaultValue.IndexOf("global::") < 0, 
                 "[" + Global + "System.ComponentModel.DefaultValueAttribute({0})]", info.DefaultValue);
             
-            if (info.Access == FieldAccess.Public)
-            {
-                WriteLineIf(info.XmlAttribute != XmlAttributeType.None,
-                            "[" + Global + "System.Xml.Serialization.Xml{1}({0})]",
-                            info.XmlName != null && (info.XmlAttribute == XmlAttributeType.Type
-                                                     || info.XmlAttribute == XmlAttributeType.Element ||
-                                                     info.XmlAttribute == XmlAttributeType.Attribute)
-                                ? MakeString(info.XmlName)
-                                : null,
-                            info.XmlAttribute);
-            }
             return WriteBlock("{0} {1} {2}",
                 info.Access.ToString().ToLower(),
                 type, info.Name

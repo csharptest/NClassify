@@ -14,7 +14,7 @@ namespace NClassify.Generator.CodeGenerators.Types
         {
             get
             {
-                BaseFieldGenerator field = FieldFactory.Create(
+                BaseFieldGenerator field = FieldFactory.Create(this,
                     new Primitive()
                         {
                             Access = FieldAccess.Public,
@@ -28,7 +28,6 @@ namespace NClassify.Generator.CodeGenerators.Types
                         });
 
                 field.IsStructure = true;
-                field.XmlAttribute = XmlAttributeType.Text;
                 return field;
             }
         }

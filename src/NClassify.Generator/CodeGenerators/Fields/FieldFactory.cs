@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NClassify.Generator.CodeGenerators.Types;
 
 namespace NClassify.Generator.CodeGenerators.Fields
 {
@@ -32,8 +33,9 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     //{FieldType.Uri, f => new UriFieldGenerator(f)},
                 };
 
-        public static BaseFieldGenerator Create(FieldInfo field)
+        public static BaseFieldGenerator Create(BaseTypeGenerator type, FieldInfo field)
         {
+            field.DeclaringType = type.Type;
             FactoryMethod factory;
             if (!Fields.TryGetValue(field.Type, out factory))
                 throw new ApplicationException("Unknown field type " + field.Type);
