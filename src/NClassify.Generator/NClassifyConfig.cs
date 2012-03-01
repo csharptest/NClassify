@@ -11,15 +11,18 @@ namespace NClassify.Generator
         internal NClassifySettings Settings { get { return _settings ?? (_settings = new NClassifySettings()); } }
 
         [XmlElement("import", Type = typeof(ImportFile))]
-        [XmlElement("service", Type = typeof(ServiceInfo))]
-        [XmlElement("enum", Type = typeof(EnumType))]
-        [XmlElement("type", Type = typeof(ComplexType))]
+        [XmlElement("message", Type = typeof(ComplexType))]
         [XmlElement("value", Type = typeof(SimpleType))]
+        [XmlElement("enum", Type = typeof(EnumType))]
+        [XmlElement("service", Type = typeof(ServiceInfo))]
         public RootItem[] Items;
     }
 
     public sealed class NClassifySettings
     {
+        [XmlAttribute("src")]
+        public string IncludeSettingsFile { get; set; }
+
         [XmlElement("namespace")]
         public string Namespace { get; set; }
 
@@ -98,14 +101,14 @@ namespace NClassify.Generator
     {
         [XmlArray("fields")]
         [XmlArrayItem("primitive", Type = typeof(Primitive))]
-        [XmlArrayItem("complex", Type = typeof(ComplexTypeRef))]
-        [XmlArrayItem("simple", Type = typeof(SimpleTypeRef))]
+        [XmlArrayItem("message", Type = typeof(ComplexTypeRef))]
+        [XmlArrayItem("value", Type = typeof(SimpleTypeRef))]
         [XmlArrayItem("enum", Type = typeof(EnumTypeRef))]
         public new FieldInfo[] Fields { get { return base.Fields; } set { base.Fields = value; } }
 
-        [XmlElement("enum", Type = typeof(EnumType))]
-        [XmlElement("type", Type = typeof(ComplexType))]
+        [XmlElement("message", Type = typeof(ComplexType))]
         [XmlElement("value", Type = typeof(SimpleType))]
+        [XmlElement("enum", Type = typeof(EnumType))]
         public new BaseType[] ChildTypes { get { return base.ChildTypes; } set { base.ChildTypes = value; } }
     }
 

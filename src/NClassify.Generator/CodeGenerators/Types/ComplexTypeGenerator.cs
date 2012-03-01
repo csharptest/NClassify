@@ -29,6 +29,14 @@ namespace NClassify.Generator.CodeGenerators.Types
                     }, 
                     derives))
             {
+                using (code.WriteBlock("public {0}()", PascalName))
+                { }
+
+                using (code.WriteBlock("public {0}({0} copyFrom) : this()", PascalName))
+                {
+                    code.WriteLine("MergeFrom(copyFrom);");
+                }
+
                 using (code.CodeRegion("TypeFields"))
                 using (code.DeclareEnum(new CodeItem("TypeFields")))
                     Fields.ForAll(f => code.WriteLine("{0} = {1},", f.PascalName, f.Ordinal));

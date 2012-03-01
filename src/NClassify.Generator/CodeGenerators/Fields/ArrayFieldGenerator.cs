@@ -195,7 +195,13 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override void WriteCopy(CsCodeWriter code, string other)
         {
-            code.WriteLine("{0}.AddRange({1}.{0});", FieldBackingName, other);
+            if(_generator.IsMessage)
+            {
+                code.WriteLine("foreach ({0} item in {1}.{2})", _generator.GetPublicType(code), other, FieldBackingName);
+                code.WriteLineIndent("{0}.Add(item.Clone());", FieldBackingName);
+            }
+            else
+                code.WriteLine("{0}.AddRange({1}.{0});", FieldBackingName, other);
         }
 
         public override void WriteXmlOutput(CsCodeWriter code, string name)

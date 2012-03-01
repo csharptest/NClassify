@@ -56,13 +56,13 @@
     </validation>
   </value>
 
-  <type name="SampleMsg">
+  <message name="SampleMsg">
     <fields>
-      <simple ordinal="1" name="Id" type="SimpleInt32" default="0" />
-      <simple ordinal="2" name="uri" type="simple_uri" default="" />
-      <simple ordinal="3" name="alpha_group" type="SimpleText" use="required" default="abc" />
-      <enum ordinal="4" name="enum" type="SampleEnum" default="1" />
-      <simple ordinal="5" name="bytes" type="SimpleBytes" />
+      <value ordinal="1" name="Id" type="SimpleInt32" default="0" />
+      <value ordinal="2" name="uri" type="simple_uri" default="" />
+      <value ordinal="3" name="alpha_group" type="SimpleText" use="required" default="abc" />
+      <enum  ordinal="4" name="enum" type="SampleEnum" default="1" />
+      <value ordinal="5" name="bytes" type="SimpleBytes" />
 
       <primitive ordinal="10" name="verified" type="bool" />
       <primitive ordinal="11" name="errors" type="string" array="true" direction="read-only" property="ReadErrors" access="protected">
@@ -71,7 +71,7 @@
         </validation>
       </primitive>
       
-      <complex ordinal="20" name="children" type="SampleMsg" array="true" />
+      <message ordinal="20" name="children" type="SampleMsg" array="true" />
 
       <primitive ordinal="31" name="dateModified" type="dateTime" array="true">
         <xml-options array-item-name="item" name="mod-date" form="element" format="yy-m-d" />
@@ -89,9 +89,9 @@
       <primitive ordinal="109" name="WriteXml" type="bool" />
       <primitive ordinal="110" name="TypeFields" type="bool" />
     </fields>
-  </type>
+  </message>
 
-  <type name="SingleFields">
+  <message name="SingleFields">
     <fields>
       <!-- The following are all valid types types of non-array fields -->
       <primitive ordinal="11" name="bool" type="bool" default="1" />
@@ -111,15 +111,15 @@
       <primitive ordinal="25" name="timeSpan" type="timeSpan" default="1:00" />
       <primitive ordinal="26" name="string" type="string" default="1" />
       <enum      ordinal="27" name="enum" type="SampleEnum" default="2" />
-      <simple    ordinal="28" name="simple_int32" type="SimpleInt32" default="2" />
-      <simple    ordinal="29" name="simple_uri" type="simple_uri" default="http://example.uri" />
-      <simple    ordinal="30" name="simple_text" type="SimpleText" use="required" default="def" />
-      <simple    ordinal="31" name="simple_bytes" type="SimpleBytes" default="AsdF12==" />
-      <complex   ordinal="32" name="sample_msg" type="SampleMsg" />
+      <value     ordinal="28" name="simple_int32" type="SimpleInt32" default="2" />
+      <value     ordinal="29" name="simple_uri" type="simple_uri" default="http://example.uri" />
+      <value     ordinal="30" name="simple_text" type="SimpleText" use="required" default="def" />
+      <value     ordinal="31" name="simple_bytes" type="SimpleBytes" default="AsdF12==" />
+      <message   ordinal="32" name="sample_msg" type="SampleMsg" />
     </fields>
-  </type>
+  </message>
 
-  <type name="ArrayFields">
+  <message name="ArrayFields">
     <fields>
       <!-- The following are all valid types types of array fields -->
       <primitive ordinal="11" name="bool" type="bool" array="true" />
@@ -139,13 +139,13 @@
       <primitive ordinal="25" name="timeSpan" type="timeSpan" array="true" />
       <primitive ordinal="26" name="string" type="string" array="true" />
       <enum      ordinal="27" name="enum" type="SampleEnum" array="true" />
-      <simple    ordinal="28" name="simple_int32" type="SimpleInt32" array="true" />
-      <simple    ordinal="29" name="simple_uri" type="simple_uri" array="true" />
-      <simple    ordinal="30" name="simple_text" type="SimpleText" use="required" array="true" />
-      <simple    ordinal="31" name="simple_bytes" type="SimpleBytes" array="true" />
-      <complex   ordinal="32" name="sample_msg" type="SampleMsg" array="true" />
+      <value     ordinal="28" name="simple_int32" type="SimpleInt32" array="true" />
+      <value     ordinal="29" name="simple_uri" type="simple_uri" array="true" />
+      <value     ordinal="30" name="simple_text" type="SimpleText" use="required" array="true" />
+      <value     ordinal="31" name="simple_bytes" type="SimpleBytes" array="true" />
+      <message   ordinal="32" name="sample_msg" type="SampleMsg" array="true" />
     </fields>
-  </type>
+  </message>
 
   <service name="ExampleService">
     <method name="Ping" />

@@ -38,13 +38,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ResourceTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NClassify.Library\NClassify.Library.csproj">
       <Project>{377B4A92-9BEC-473C-9A98-616FB0ED6C87}</Project>
       <Name>NClassify.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

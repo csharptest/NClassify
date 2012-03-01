@@ -377,7 +377,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void WriteCopy(CsCodeWriter code, string from)
         {
-            code.WriteLine("if ({0}.{1}) {2} = {0}.{2};", from, HasBackingName, FieldBackingName);
+            code.WriteLine("if ({0}.{1}) {{ {1} = true; {2} = {0}.{2}{3}; }}", from, HasBackingName, FieldBackingName, IsMessage ? ".Clone()" : "");
         }
 
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)

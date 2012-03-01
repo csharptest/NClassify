@@ -28,11 +28,19 @@ namespace NClassify.Generator
 
             try
             {
-                NClassifyConfig config = new XmlValidatingReader<NClassifyConfig>(typeof(NClassifyConfig).FullName)
-                        .ReadXml(inputFile);
+                var reader = new XmlValidatingReader<NClassifyConfig>(typeof (NClassifyConfig).FullName);
+                NClassifyConfig config = reader.ReadXml(inputFile);
 
                 FilePath = Path.GetFullPath(inputFile);
                 _settings = config.Settings;
+
+                if(!String.IsNullOrEmpty(_settings.IncludeSettingsFile))
+                {
+                    NClassifyConfig inc = reader.ReadXml(
+                        Path.Combine(Path.GetDirectoryName(FilePath), _settings.IncludeSettingsFile));
+                    _settings = inc.Settings;
+                }
+
                 Items = config.Items ?? new RootItem[0];
             }
             catch (XmlException xe)
@@ -42,7 +50,7 @@ namespace NClassify.Generator
                 item.ParentConfig = this;
 
             Settings.Namespace = Settings.Namespace ?? defaultNamespace;
-            _root = new NamespaceType(Settings.Namespace);
+            _root = new NamespaceType(Settings.Namespace) { ParentConfig = this };
             SetTypeHeirarchy(Items.OfType<BaseType>(), _root);
         }
 
@@ -71,6 +79,7 @@ namespace NClassify.Generator
             foreach(BaseType t in types)
             {
                 t.ParentType = parent;
+                t.ParentConfig = parent.ParentConfig;
                 if (t.Fields != null)
                 {
                     foreach (FieldInfo fld in t.Fields)
@@ -94,7 +103,7 @@ namespace NClassify.Generator
                     continue;
 
                 NClassifyConfig included = Read(import.FullName, Settings.Namespace);
-                items.AddRange(included.Items.Select(i => i.Importing()));
+                items.AddRange(included.Items.Where(i => !i.IsImported).Select(i => i.Importing()));
                 imported[included.FilePath] = null;
             }
 
