@@ -191,6 +191,9 @@ namespace NClassify.Generator
         public string NamespaceUri { get; set; }
         [XmlAttribute("form"), DefaultValue(XmlAttributeType.Element)]
         public XmlAttributeType AttributeType { get; set; }
+        [XmlAttribute("ignore-empty"), DefaultValue(false)]
+        public bool IgnoreEmpty { get; set; }
+
         [XmlElement("formatting")]
         public FormatInfo[] Formats { get; set; }
 
@@ -202,6 +205,8 @@ namespace NClassify.Generator
             public string Format { get; set; }
             [XmlAttribute("culture"), DefaultValue(CultureInfo.InvariantCulture)]
             public CultureInfo Culture { get; set; }
+            [XmlAttribute("ignore-empty"), DefaultValue(false)]
+            public bool IgnoreEmpty { get; set; }
         }
     }
 
@@ -217,6 +222,8 @@ namespace NClassify.Generator
         public string Format { get; set; }
         [XmlAttribute("culture"), DefaultValue(CultureInfo.Default)]
         public CultureInfo Culture { get; set; }
+        [XmlAttribute("ignore-empty"), DefaultValue(false)]
+        public bool IgnoreEmpty { get; set; }
     }
 
     #endregion

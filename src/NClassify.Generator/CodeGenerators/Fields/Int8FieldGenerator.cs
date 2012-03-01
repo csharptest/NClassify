@@ -13,11 +13,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
         }
 
-        public override string FromXmlString(CsCodeWriter code, string name)
-        {
-            return String.Format("{0}System.Xml.XmlConvert.ToSByte({1})", CsCodeWriter.Global, name);
-        }
-
         public override bool IsClsCompliant
         {
             get { return false; }

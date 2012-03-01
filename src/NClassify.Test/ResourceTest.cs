@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NClassify.Library;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace NClassify.Test
 {
@@ -18,6 +16,24 @@ namespace NClassify.Test
         [TestMethod]
         public void TestToFromTimeSpan()
         {
+            Random r = new Random();
+
+            long ticks = (((long)r.Next(2048) << 30) + r.Next());
+            ticks -= ticks % TimeSpan.TicksPerMillisecond; // round to nearest ms
+            TimeSpan test = new TimeSpan(-ticks);
+            string text = test.ToString();
+
+            DateTime start = DateTime.Now;
+            for (int i = 0; i < 1000000; i++)
+                GC.KeepAlive(TimeSpan.Parse(text));
+            Console.WriteLine("TimeSpan.Parse = {0}", DateTime.Now - start);
+            start = DateTime.Now;
+
+            text = TypeConverter.Instance.ToString(test, "{1}", null);
+            for (int i = 0; i < 1000000; i++)
+                GC.KeepAlive(TypeConverter.Instance.ParseTimeSpan(text, "{1}", null));
+            Console.WriteLine("TypeConverter.ParseTimeSpan = {0}", DateTime.Now - start);
+
             string[] formats =
                 new string[]
                     {
@@ -34,15 +50,14 @@ namespace NClassify.Test
                         "{12}ms",
                     };
 
-            Random r = new Random();
-            for( int i=0; i < 100; i++ )
+            for( int i=0; i < 10000; i++ )
             {
-                long ticks = (((long)r.Next(2048) << 30) + r.Next());
+                ticks = (((long)r.Next(2048) << 30) + r.Next());
                 ticks -= ticks % TimeSpan.TicksPerMillisecond; // round to nearest ms
-                TimeSpan test = new TimeSpan(ticks);
+                test = new TimeSpan(ticks);
                 foreach (var fmt in formats)
                 {
-                    string text = TypeConverter.Instance.ToString(test, fmt, null);
+                    text = TypeConverter.Instance.ToString(test, fmt, null);
                     TimeSpan result = TypeConverter.Instance.ParseTimeSpan(text, fmt, null);
 
                     if (i == 0) Console.WriteLine("{0} => {1} == {2}", test, fmt, text);

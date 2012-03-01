@@ -176,12 +176,15 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 {
                     if (Field.XmlOptions.AttributeType == XmlAttributeType.Default)
                         Field.XmlOptions.AttributeType = xdefaults.AttributeType;
+                    Field.XmlOptions.IgnoreEmpty |= xdefaults.IgnoreEmpty;
+
                     foreach (var fmt in xdefaults.Formats.SafeEnum().Where(f => f.Type == Field.Type))
                     {
                         if (String.IsNullOrEmpty(Field.XmlOptions.Format))
                             Field.XmlOptions.Format = fmt.Format;
                         if (Field.XmlOptions.Culture == CultureInfo.Default)
                             Field.XmlOptions.Culture = fmt.Culture;
+                        Field.XmlOptions.IgnoreEmpty |= fmt.IgnoreEmpty;
                     }
                 }
 
@@ -394,20 +397,14 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual string ToXmlString(CsCodeWriter code, string name)
         {
-            if (XmlOptions.Format != null)
-                return String.Format("{0}.ToString({1}, {2}System.Globalization.CultureInfo.{3})",
-                                     name, code.MakeString(XmlOptions.Format), CsCodeWriter.Global, XmlOptions.Culture);
-
-            return String.Format("{0}System.Xml.XmlConvert.ToString({1})", CsCodeWriter.Global, name);
+            return String.Format("{0}NClassify.Library.TypeConverter.Instance.ToString({1}, {2}, {0}System.Globalization.CultureInfo.{3})",
+                CsCodeWriter.Global, name, XmlOptions.Format == null ? "null" : code.MakeString(XmlOptions.Format), XmlOptions.Culture);
         }
 
         public virtual string FromXmlString(CsCodeWriter code, string name)
         {
-            if (XmlOptions.Format != null)
-                return String.Format("{0}.Parse({1}, {2}, {3}System.Globalization.CultureInfo.{4})", code.GetTypeName(FieldType),
-                                     name, code.MakeString(XmlOptions.Format), CsCodeWriter.Global, XmlOptions.Culture);
-
-            return String.Format("{0}System.Xml.XmlConvert.To{1}({2})", CsCodeWriter.Global, FieldType, name);
+            return String.Format("{0}NClassify.Library.TypeConverter.Instance.Parse{1}({2}, {3}, {0}System.Globalization.CultureInfo.{4})",
+                CsCodeWriter.Global, FieldType, name, XmlOptions.Format == null ? "null" : code.MakeString(XmlOptions.Format), XmlOptions.Culture);
         }
 
         public virtual void WriteXmlInput(CsCodeWriter code)

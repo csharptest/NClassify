@@ -17,17 +17,5 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
             return CsCodeWriter.Global + "NClassify.Library.ByteArray";
         }
-
-        public override string ToXmlString(CsCodeWriter code, string name)
-        {
-            if (XmlOptions.Format != null)
-                return base.ToXmlString(code, name);
-            return String.Format("{0}.ToBase64()", name);
-        }
-
-        public override string FromXmlString(CsCodeWriter code, string name)
-        {
-            return String.Format("{0}.FromBase64({1})", GetStorageType(code), name);
-        }
     }
 }

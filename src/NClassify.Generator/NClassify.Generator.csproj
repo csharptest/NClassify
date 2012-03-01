@@ -67,6 +67,9 @@
     <EmbeddedResource Include="..\NClassify.Library\Resources.cs">
       <Link>Library\Resources.cs</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\NClassify.Library\TypeConverter.cs">
+      <Link>Library\TypeConverter.cs</Link>
+    </EmbeddedResource>
     <Compile Include="CodeGenerators\BaseGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />

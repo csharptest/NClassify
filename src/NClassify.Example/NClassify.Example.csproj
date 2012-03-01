@@ -60,6 +60,9 @@
     <Compile Include="..\NClassify.Library\Resources.cs">
       <Link>Library\Resources.cs</Link>
     </Compile>
+    <Compile Include="..\NClassify.Library\TypeConverter.cs">
+      <Link>Library\TypeConverter.cs</Link>
+    </Compile>
     <Compile Include="..\NClassify.Library\XmlExtensions.cs">
       <Link>Library\XmlExtensions.cs</Link>
     </Compile>

@@ -1,11 +1,10 @@
-﻿#pragma warning disable 1591
+﻿#pragma warning disable 1591, 3021
 
 namespace NClassify.Library
 {
     using Regex = global::System.Text.RegularExpressions.Regex;
     using Match = global::System.Text.RegularExpressions.Match;
     using Group = global::System.Text.RegularExpressions.Group;
-    using MatchCollection = global::System.Text.RegularExpressions.MatchCollection;
 
     public partial class TypeConverter
     {
@@ -24,7 +23,6 @@ namespace NClassify.Library
 
         private readonly Regex _stdNumberFormat = new Regex(@"[a-zA-Z]\d*");
         private readonly Regex _formatString = new Regex(@"(?<!{){(?<field>\d+)(?<suffix>(?:,(?<width>-?\d+))?(?:\:(?<format>[^}{]+))?)}");
-        private readonly Regex _digits = new Regex(@"^\d+");
 
         #region Convert From Text
         
@@ -92,6 +90,7 @@ namespace NClassify.Library
             throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual sbyte ParseInt8(string text, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -123,6 +122,7 @@ namespace NClassify.Library
             return short.Parse(text, NumberFormatToStyle(format), formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual ushort ParseUInt16(string text, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -137,6 +137,7 @@ namespace NClassify.Library
             return int.Parse(text, NumberFormatToStyle(format), formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual uint ParseUInt32(string text, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -151,6 +152,7 @@ namespace NClassify.Library
             return long.Parse(text, NumberFormatToStyle(format), formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual ulong ParseUInt64(string text, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -181,7 +183,7 @@ namespace NClassify.Library
         {
             if (string.IsNullOrEmpty(format))
                 return global::System.Xml.XmlConvert.ToDateTime(text, global::System.Xml.XmlDateTimeSerializationMode.RoundtripKind);
-            return global::System.DateTime.ParseExact(text, format, formatProvider, global::System.Globalization.DateTimeStyles.AssumeUniversal);
+            return global::System.DateTime.ParseExact(text, format, formatProvider, global::System.Globalization.DateTimeStyles.None);
         }
 
         #region ParseTimeSpan Implementation
@@ -189,18 +191,21 @@ namespace NClassify.Library
         private readonly global::System.Collections.Generic.Dictionary<string, object[]> _parseTimeSpanCache = 
             new global::System.Collections.Generic.Dictionary<string, object[]>(global::System.StringComparer.Ordinal);
 
-        public virtual global::System.TimeSpan ParseTimeSpan(string text, string format, global::System.IFormatProvider formatProvider)
+        private object[] CreateExpression(out Regex exp, out int[] fieldsUsed, string format, global::System.IFormatProvider formatProvider)
         {
-            global::System.Text.StringBuilder sb = new global::System.Text.StringBuilder();
-            int pos = 0;
+            global::System.Globalization.NumberFormatInfo nfi =
+                global::System.Globalization.NumberFormatInfo.GetInstance(formatProvider);
+
             object[] numFormat;
             lock (_parseTimeSpanCache)
             {
                 if (!_parseTimeSpanCache.TryGetValue(format, out numFormat))
                 {
-                    numFormat = new object[14];
-                    global::System.Globalization.NumberFormatInfo nfi =
-                        global::System.Globalization.NumberFormatInfo.GetInstance(formatProvider);
+                    numFormat = new object[15];
+                    global::System.Collections.Generic.List<int> fields = new global::System.Collections.Generic.List<int>();
+
+                    int pos = 0;
+                    global::System.Text.StringBuilder sb = new global::System.Text.StringBuilder();
                     sb.Append("^");
                     foreach (Match m in _formatString.Matches(format))
                     {
@@ -209,208 +214,77 @@ namespace NClassify.Library
                         int fld = int.Parse(m.Groups["field"].Value);
                         if (fld < 0 || fld > 12)
                             throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
-                        numFormat[fld + 1] = m.Groups["format"].Success ? m.Groups["format"].Value : null;
                         if (fld == 2) //neg sign
-                            sb.AppendFormat("(?<_{0}>{1})?", fld + 1, Regex.Escape(nfi.NegativeSign));
+                            sb.AppendFormat("(?<f{0}>{1})?", fld, Regex.Escape(nfi.NegativeSign));
+                        else if(pos+1 < format.Length)
+                            sb.AppendFormat("(?<f{0}>[^{1}]+?)", fld, Regex.Escape(new string(format[pos + 1], 1)));
                         else
-                            sb.AppendFormat("(?<_{0}>.+?)", fld + 1);
+                            sb.AppendFormat("(?<f{0}>.+)", fld);
+                        numFormat[fld] = m.Groups["format"].Success ? m.Groups["format"].Value : null;
+                        fields.Add(fld);
                     }
                     sb.Append(Regex.Escape(format.Substring(pos, format.Length - pos)));
                     sb.Append("$");
-                    numFormat[0] = new Regex(sb.ToString());
+                    numFormat[13] = new Regex(sb.ToString());
+                    numFormat[14] = fields.ToArray();
                     _parseTimeSpanCache[format] = numFormat;
                 }
             }
-            Match match = ((Regex)numFormat[0]).Match(text);
+            exp = (Regex) numFormat[13];
+            fieldsUsed = (int[]) numFormat[14];
+            return numFormat;
+        }
+
+        public virtual global::System.TimeSpan ParseTimeSpan(string text, string format, global::System.IFormatProvider formatProvider)
+        {
+            Regex pattern;
+            int[] fields;
+            object[] numFormat = CreateExpression(out pattern, out fields, format, formatProvider);
+            Match match = pattern.Match(text);
             if(!match.Success)
                 throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
             
             bool negate = false;
             global::System.TimeSpan value = global::System.TimeSpan.Zero;
             
-            for(int i=1; i <= 13; i++)
+            foreach(int ixfld in fields)
             {
-                Group grp = match.Groups["_" + i];
+                Group grp = match.Groups["f" + ixfld];
                 if (!grp.Success) continue;
-                switch (i - 1)
+                switch (ixfld)
                 {
                     case 0: //value,
                         value += global::System.TimeSpan.Parse(grp.Value);
                         break;
                     case 1: //value.Ticks,
-                        value += new global::System.TimeSpan(ParseInt64(grp.Value, (string)numFormat[i], formatProvider));
+                        value += new global::System.TimeSpan(ParseInt64(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                     case 2: //value.Ticks < 0 ? negSign : "",
                         negate = true; 
                         break;
                     case 3: //global::System.Math.Abs(value.Days),
                     case 8: //value.TotalDays,
-                        value += global::System.TimeSpan.FromDays(ParseDouble(grp.Value, (string)numFormat[i], formatProvider));
+                        value += global::System.TimeSpan.FromDays(ParseDouble(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                     case 4: //global::System.Math.Abs(value.Hours),
                     case 9: //value.TotalHours,
-                        value += global::System.TimeSpan.FromHours(ParseDouble(grp.Value, (string)numFormat[i], formatProvider));
+                        value += global::System.TimeSpan.FromHours(ParseDouble(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                     case 5: //global::System.Math.Abs(value.Minutes),
                     case 10: //value.TotalMinutes,
-                        value += global::System.TimeSpan.FromMinutes(ParseDouble(grp.Value, (string)numFormat[i], formatProvider));
+                        value += global::System.TimeSpan.FromMinutes(ParseDouble(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                     case 6: //global::System.Math.Abs(value.Seconds),
                     case 11: //value.TotalSeconds,
-                        value += global::System.TimeSpan.FromSeconds(ParseDouble(grp.Value, (string)numFormat[i], formatProvider));
+                        value += global::System.TimeSpan.FromSeconds(ParseDouble(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                     case 7: //global::System.Math.Abs(value.Milliseconds),
                     case 12: //value.TotalMilliseconds
-                        value += global::System.TimeSpan.FromMilliseconds(ParseDouble(grp.Value, (string)numFormat[i], formatProvider));
+                        value += global::System.TimeSpan.FromMilliseconds(ParseDouble(grp.Value, (string)numFormat[ixfld], formatProvider));
                         break;
                 }
             }
             return negate ? value.Negate() : value;
-        }
-
-        public virtual global::System.TimeSpan ParseTimeSpanx(string text, string format, global::System.IFormatProvider formatProvider)
-        {
-            if (string.IsNullOrEmpty(format))
-                return global::System.Xml.XmlConvert.ToTimeSpan(text);
-
-            int fpos = 0;
-            
-            char[] chars = text.ToCharArray();
-            int ixch = 0, lastch = chars.Length;
-
-            global::System.DateTime medianDate = new global::System.DateTime(global::System.DateTime.MaxValue.Ticks >> 1);
-            MatchCollection matches = _formatString.Matches(format);
-            int flast = matches[matches.Count - 1].Index + matches[matches.Count - 1].Length;
-            for(int ix = lastch - (format.Length - flast); flast < format.Length; ix++)
-            {
-                if(--lastch == 0 || chars[ix] != format[flast++])
-                    throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
-            }
-
-            bool neg = false;
-            int days = 0, hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
-            
-            foreach(Match m in matches)
-            {
-                while(fpos < m.Index)
-                    if(chars[ixch++] != format[fpos++])
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
-
-                fpos += m.Length;
-                Match digits;
-
-                switch (int.Parse(m.Groups["field"].Value))
-                {
-                    case 0: //value,
-                        return global::System.TimeSpan.Parse(new string(chars, ixch, lastch - ixch));
-                    case 1: //value.Ticks,
-                        return new global::System.TimeSpan(
-                            ParseInt64(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider
-                            ));
-                    case 2: //value.Ticks < 0 ? "-" : "",
-                        string negSign = global::System.Globalization.NumberFormatInfo.GetInstance(formatProvider).NegativeSign;
-                        if ((ixch + negSign.Length) < chars.Length && negSign == new string(chars, ixch, negSign.Length))
-                        {
-                            ixch += negSign.Length;
-                            neg = true;
-                        }
-                        break;
-                    case 3: //global::System.Math.Abs(value.Days),
-                        if ((digits = _digits.Match(text, ixch, lastch - ixch)).Success)
-                        {
-                            ixch += digits.Length;
-                            days = ParseInt32(digits.Value,
-                                              m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                              formatProvider);
-                            break;
-                        }
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
-                    case 4: //global::System.Math.Abs(value.Hours),
-                        if ((digits = _digits.Match(text, ixch, lastch - ixch)).Success)
-                        {
-                            ixch += digits.Length;
-                            hours = ParseInt32(digits.Value,
-                                              m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                              formatProvider);
-                            break;
-                        }
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
-                    case 5: //global::System.Math.Abs(value.Minutes),
-                        if ((digits = _digits.Match(text, ixch, lastch - ixch)).Success)
-                        {
-                            ixch += digits.Length;
-                            minutes = ParseInt32(digits.Value,
-                                              m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                              formatProvider);
-                            break;
-                        }
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
-                    case 6: //global::System.Math.Abs(value.Seconds),
-                        if ((digits = _digits.Match(text, ixch, lastch - ixch)).Success)
-                        {
-                            ixch += digits.Length;
-                            seconds = ParseInt32(digits.Value,
-                                              m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                              formatProvider);
-                            break;
-                        }
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
-                    case 7: //global::System.Math.Abs(value.Milliseconds),
-                        if ((digits = _digits.Match(text, ixch, lastch - ixch)).Success)
-                        {
-                            ixch += digits.Length;
-                            milliseconds = ParseInt32(digits.Value,
-                                              m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                              formatProvider);
-                            break;
-                        }
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
-                    case 8: //value.TotalDays,
-                        return medianDate
-                            .AddDays(ParseDouble(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider))
-                            - medianDate;
-                    case 9: //value.TotalHours,
-                        return medianDate
-                            .AddHours(ParseDouble(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider))
-                            - medianDate;
-                    case 10: //value.TotalMinutes,
-                        return medianDate
-                            .AddMinutes(ParseDouble(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider))
-                            - medianDate;
-                    case 11: //value.TotalSeconds,
-                        return medianDate
-                            .AddSeconds(ParseDouble(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider))
-                            - medianDate;
-                    case 12: //value.TotalMilliseconds
-                        return medianDate
-                            .AddMilliseconds(ParseDouble(
-                                new string(chars, ixch, lastch - ixch),
-                                m.Groups["format"].Success ? m.Groups["format"].Value : null,
-                                formatProvider))
-                            - medianDate;
-                    default:
-                        throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
-                }
-            }
-
-            global::System.TimeSpan value = new global::System.TimeSpan(
-                days, hours, minutes, seconds, milliseconds);
-            return neg ? value.Negate() : value;
         }
         #endregion
 
@@ -427,6 +301,7 @@ namespace NClassify.Library
             throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual string ToString(sbyte value, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -448,6 +323,7 @@ namespace NClassify.Library
             return value.ToString(format, formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual string ToString(ushort value, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -462,6 +338,7 @@ namespace NClassify.Library
             return value.ToString(format, formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual string ToString(uint value, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -476,6 +353,7 @@ namespace NClassify.Library
             return value.ToString(format, formatProvider);
         }
 
+        [global::System.CLSCompliant(false)]
         public virtual string ToString(ulong value, string format, global::System.IFormatProvider formatProvider)
         {
             if (string.IsNullOrEmpty(format))
@@ -531,8 +409,6 @@ namespace NClassify.Library
                 value.TotalMinutes, value.TotalSeconds,
                 value.TotalMilliseconds
                 );
-
-            
         }
 
         #endregion

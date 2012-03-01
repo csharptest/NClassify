@@ -12,9 +12,5 @@ namespace NClassify.Generator.CodeGenerators.Fields
             : base(fld)
         {
         }
-        public override string FromXmlString(CsCodeWriter code, string name)
-        {
-            return String.Format("{0}System.Xml.XmlConvert.ToSingle({1})", CsCodeWriter.Global, name);
-        }
     }
 }

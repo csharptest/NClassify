@@ -1428,67 +1428,67 @@ namespace NClassify.Example
                     {
                         case 0:
                         {
-                            __fld_assertValid = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_assertValid = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_assertValid = true;
                             break;
                         }
                         case 1:
                         {
-                            __fld_clear = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_clear = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_clear = true;
                             break;
                         }
                         case 2:
                         {
-                            __fld_getBrokenRules = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_getBrokenRules = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_getBrokenRules = true;
                             break;
                         }
                         case 3:
                         {
-                            __fld_id = new global::NClassify.Example.SimpleInt32(global::System.Xml.XmlConvert.ToInt32(sbuilder.ToString()));
+                            __fld_id = new global::NClassify.Example.SimpleInt32(global::NClassify.Library.TypeConverter.Instance.ParseInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             __has_id = true;
                             break;
                         }
                         case 4:
                         {
-                            __fld_initialize = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_initialize = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_initialize = true;
                             break;
                         }
                         case 5:
                         {
-                            __fld_isValid = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_isValid = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_isValid = true;
                             break;
                         }
                         case 6:
                         {
-                            __fld_mergeFrom = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_mergeFrom = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_mergeFrom = true;
                             break;
                         }
                         case 7:
                         {
-                            __fld_mergeTo = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_mergeTo = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_mergeTo = true;
                             break;
                         }
                         case 8:
                         {
-                            __fld_readXml = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_readXml = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_readXml = true;
                             break;
                         }
                         case 9:
                         {
-                            __fld_typeFields = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_typeFields = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_typeFields = true;
                             break;
                         }
                         case 10:
                         {
-                            __fld_writeXml = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_writeXml = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_writeXml = true;
                             break;
                         }
@@ -1500,7 +1500,7 @@ namespace NClassify.Example
                         }
                         case 12:
                         {
-                            __fld_bytes = new global::NClassify.Example.SimpleBytes(global::NClassify.Library.ByteArray.FromBase64(sbuilder.ToString()));
+                            __fld_bytes = new global::NClassify.Example.SimpleBytes(global::NClassify.Library.TypeConverter.Instance.ParseBytes(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             __has_bytes = true;
                             break;
                         }
@@ -1517,7 +1517,7 @@ namespace NClassify.Example
                         }
                         case 16:
                         {
-                            __fld_dateModified.Add(global::System.DateTime.Parse(sbuilder.ToString(), "yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
+                            __fld_dateModified.Add(global::NClassify.Library.TypeConverter.Instance.ParseDateTime(sbuilder.ToString(), "yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 17:
@@ -1528,7 +1528,7 @@ namespace NClassify.Example
                         }
                         case 18:
                         {
-                            __fld_verified = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_verified = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_verified = true;
                             break;
                         }
@@ -1554,7 +1554,7 @@ namespace NClassify.Example
         {
             if (__has_id)
             {
-                writer.WriteElementString("Id", global::System.Xml.XmlConvert.ToString(__fld_id.Value));
+                writer.WriteElementString("Id", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_id.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_uri)
             {
@@ -1570,15 +1570,11 @@ namespace NClassify.Example
             }
             if (__has_bytes)
             {
-                writer.WriteElementString("bytes", __fld_bytes.Value.ToBase64());
+                writer.WriteElementString("bytes", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_bytes.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_verified)
             {
-                writer.WriteElementString("verified", global::System.Xml.XmlConvert.ToString(__fld_verified));
-            }
-            foreach (string item in __fld_errors)
-            {
-                writer.WriteElementString("errors", item);
+                writer.WriteElementString("verified", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_verified, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::NClassify.Example.SampleMsg item in __fld_children)
             {
@@ -1586,47 +1582,47 @@ namespace NClassify.Example
             }
             foreach (global::System.DateTime item in __fld_dateModified)
             {
-                writer.WriteElementString("mod-date", item.ToString("yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
+                writer.WriteElementString("mod-date", global::NClassify.Library.TypeConverter.Instance.ToString(item, "yy-m-d", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_isValid)
             {
-                writer.WriteElementString("IsValid", global::System.Xml.XmlConvert.ToString(__fld_isValid));
+                writer.WriteElementString("IsValid", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_isValid, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_assertValid)
             {
-                writer.WriteElementString("AssertValid", global::System.Xml.XmlConvert.ToString(__fld_assertValid));
+                writer.WriteElementString("AssertValid", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_assertValid, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_getBrokenRules)
             {
-                writer.WriteElementString("GetBrokenRules", global::System.Xml.XmlConvert.ToString(__fld_getBrokenRules));
+                writer.WriteElementString("GetBrokenRules", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_getBrokenRules, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_clear)
             {
-                writer.WriteElementString("Clear", global::System.Xml.XmlConvert.ToString(__fld_clear));
+                writer.WriteElementString("Clear", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_clear, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_initialize)
             {
-                writer.WriteElementString("Initialize", global::System.Xml.XmlConvert.ToString(__fld_initialize));
+                writer.WriteElementString("Initialize", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_initialize, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_mergeFrom)
             {
-                writer.WriteElementString("MergeFrom", global::System.Xml.XmlConvert.ToString(__fld_mergeFrom));
+                writer.WriteElementString("MergeFrom", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_mergeFrom, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_mergeTo)
             {
-                writer.WriteElementString("MergeTo", global::System.Xml.XmlConvert.ToString(__fld_mergeTo));
+                writer.WriteElementString("MergeTo", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_mergeTo, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_readXml)
             {
-                writer.WriteElementString("ReadXml", global::System.Xml.XmlConvert.ToString(__fld_readXml));
+                writer.WriteElementString("ReadXml", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_readXml, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_writeXml)
             {
-                writer.WriteElementString("WriteXml", global::System.Xml.XmlConvert.ToString(__fld_writeXml));
+                writer.WriteElementString("WriteXml", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_writeXml, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_typeFields)
             {
-                writer.WriteElementString("TypeFields", global::System.Xml.XmlConvert.ToString(__fld_typeFields));
+                writer.WriteElementString("TypeFields", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_typeFields, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
         }
         #endregion
@@ -2505,25 +2501,25 @@ namespace NClassify.Example
                     {
                         case 0:
                         {
-                            __fld_bool = global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString());
+                            __fld_bool = global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_bool = true;
                             break;
                         }
                         case 1:
                         {
-                            __fld_bytes = global::NClassify.Library.ByteArray.FromBase64(sbuilder.ToString());
+                            __fld_bytes = global::NClassify.Library.TypeConverter.Instance.ParseBytes(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_bytes = true;
                             break;
                         }
                         case 2:
                         {
-                            __fld_dateTime = global::System.DateTime.Parse(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture);
+                            __fld_dateTime = global::NClassify.Library.TypeConverter.Instance.ParseDateTime(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_dateTime = true;
                             break;
                         }
                         case 3:
                         {
-                            __fld_double = global::System.Xml.XmlConvert.ToDouble(sbuilder.ToString());
+                            __fld_double = global::NClassify.Library.TypeConverter.Instance.ParseDouble(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_double = true;
                             break;
                         }
@@ -2535,49 +2531,49 @@ namespace NClassify.Example
                         }
                         case 5:
                         {
-                            __fld_float = global::System.Xml.XmlConvert.ToSingle(sbuilder.ToString());
+                            __fld_float = global::NClassify.Library.TypeConverter.Instance.ParseFloat(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_float = true;
                             break;
                         }
                         case 6:
                         {
-                            __fld_guid = global::System.Xml.XmlConvert.ToGuid(sbuilder.ToString());
+                            __fld_guid = global::NClassify.Library.TypeConverter.Instance.ParseGuid(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_guid = true;
                             break;
                         }
                         case 7:
                         {
-                            __fld_int16 = global::System.Xml.XmlConvert.ToInt16(sbuilder.ToString());
+                            __fld_int16 = global::NClassify.Library.TypeConverter.Instance.ParseInt16(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_int16 = true;
                             break;
                         }
                         case 8:
                         {
-                            __fld_int32 = global::System.Xml.XmlConvert.ToInt32(sbuilder.ToString());
+                            __fld_int32 = global::NClassify.Library.TypeConverter.Instance.ParseInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_int32 = true;
                             break;
                         }
                         case 9:
                         {
-                            __fld_int64 = global::System.Xml.XmlConvert.ToInt64(sbuilder.ToString());
+                            __fld_int64 = global::NClassify.Library.TypeConverter.Instance.ParseInt64(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_int64 = true;
                             break;
                         }
                         case 10:
                         {
-                            __fld_int8 = global::System.Xml.XmlConvert.ToSByte(sbuilder.ToString());
+                            __fld_int8 = global::NClassify.Library.TypeConverter.Instance.ParseInt8(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_int8 = true;
                             break;
                         }
                         case 12:
                         {
-                            __fld_simpleBytes = new global::NClassify.Example.SimpleBytes(global::NClassify.Library.ByteArray.FromBase64(sbuilder.ToString()));
+                            __fld_simpleBytes = new global::NClassify.Example.SimpleBytes(global::NClassify.Library.TypeConverter.Instance.ParseBytes(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             __has_simpleBytes = true;
                             break;
                         }
                         case 13:
                         {
-                            __fld_simpleInt32 = new global::NClassify.Example.SimpleInt32(global::System.Xml.XmlConvert.ToInt32(sbuilder.ToString()));
+                            __fld_simpleInt32 = new global::NClassify.Example.SimpleInt32(global::NClassify.Library.TypeConverter.Instance.ParseInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             __has_simpleInt32 = true;
                             break;
                         }
@@ -2601,31 +2597,31 @@ namespace NClassify.Example
                         }
                         case 17:
                         {
-                            __fld_timeSpan = global::System.Xml.XmlConvert.ToTimeSpan(sbuilder.ToString());
+                            __fld_timeSpan = global::NClassify.Library.TypeConverter.Instance.ParseTimeSpan(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_timeSpan = true;
                             break;
                         }
                         case 18:
                         {
-                            __fld_uint16 = global::System.Xml.XmlConvert.ToUInt16(sbuilder.ToString());
+                            __fld_uint16 = global::NClassify.Library.TypeConverter.Instance.ParseUInt16(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_uint16 = true;
                             break;
                         }
                         case 19:
                         {
-                            __fld_uint32 = global::System.Xml.XmlConvert.ToUInt32(sbuilder.ToString());
+                            __fld_uint32 = global::NClassify.Library.TypeConverter.Instance.ParseUInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_uint32 = true;
                             break;
                         }
                         case 20:
                         {
-                            __fld_uint64 = global::System.Xml.XmlConvert.ToUInt64(sbuilder.ToString());
+                            __fld_uint64 = global::NClassify.Library.TypeConverter.Instance.ParseUInt64(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_uint64 = true;
                             break;
                         }
                         case 21:
                         {
-                            __fld_uint8 = global::System.Xml.XmlConvert.ToByte(sbuilder.ToString());
+                            __fld_uint8 = global::NClassify.Library.TypeConverter.Instance.ParseUInt8(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture);
                             __has_uint8 = true;
                             break;
                         }
@@ -2651,63 +2647,63 @@ namespace NClassify.Example
         {
             if (__has_bool)
             {
-                writer.WriteElementString("bool", global::System.Xml.XmlConvert.ToString(__fld_bool));
+                writer.WriteElementString("bool", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_bool, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_bytes)
             {
-                writer.WriteElementString("bytes", __fld_bytes.ToBase64());
+                writer.WriteElementString("bytes", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_bytes, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_int8)
             {
-                writer.WriteElementString("int8", global::System.Xml.XmlConvert.ToString(__fld_int8));
+                writer.WriteElementString("int8", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_int8, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_uint8)
             {
-                writer.WriteElementString("uint8", global::System.Xml.XmlConvert.ToString(__fld_uint8));
+                writer.WriteElementString("uint8", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_uint8, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_int16)
             {
-                writer.WriteElementString("int16", global::System.Xml.XmlConvert.ToString(__fld_int16));
+                writer.WriteElementString("int16", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_int16, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_uint16)
             {
-                writer.WriteElementString("uint16", global::System.Xml.XmlConvert.ToString(__fld_uint16));
+                writer.WriteElementString("uint16", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_uint16, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_int32)
             {
-                writer.WriteElementString("int32", global::System.Xml.XmlConvert.ToString(__fld_int32));
+                writer.WriteElementString("int32", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_int32, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_uint32)
             {
-                writer.WriteElementString("uint32", global::System.Xml.XmlConvert.ToString(__fld_uint32));
+                writer.WriteElementString("uint32", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_uint32, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_int64)
             {
-                writer.WriteElementString("int64", global::System.Xml.XmlConvert.ToString(__fld_int64));
+                writer.WriteElementString("int64", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_int64, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_uint64)
             {
-                writer.WriteElementString("uint64", global::System.Xml.XmlConvert.ToString(__fld_uint64));
+                writer.WriteElementString("uint64", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_uint64, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_float)
             {
-                writer.WriteElementString("float", global::System.Xml.XmlConvert.ToString(__fld_float));
+                writer.WriteElementString("float", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_float, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_double)
             {
-                writer.WriteElementString("double", global::System.Xml.XmlConvert.ToString(__fld_double));
+                writer.WriteElementString("double", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_double, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_guid)
             {
-                writer.WriteElementString("guid", global::System.Xml.XmlConvert.ToString(__fld_guid));
+                writer.WriteElementString("guid", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_guid, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_dateTime)
             {
-                writer.WriteElementString("dateTime", __fld_dateTime.ToString("yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
+                writer.WriteElementString("dateTime", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_dateTime, "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_timeSpan)
             {
-                writer.WriteElementString("timeSpan", global::System.Xml.XmlConvert.ToString(__fld_timeSpan));
+                writer.WriteElementString("timeSpan", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_timeSpan, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_string)
             {
@@ -2719,7 +2715,7 @@ namespace NClassify.Example
             }
             if (__has_simpleInt32)
             {
-                writer.WriteElementString("simple_int32", global::System.Xml.XmlConvert.ToString(__fld_simpleInt32.Value));
+                writer.WriteElementString("simple_int32", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_simpleInt32.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_simpleUri)
             {
@@ -2731,7 +2727,7 @@ namespace NClassify.Example
             }
             if (__has_simpleBytes)
             {
-                writer.WriteElementString("simple_bytes", __fld_simpleBytes.Value.ToBase64());
+                writer.WriteElementString("simple_bytes", global::NClassify.Library.TypeConverter.Instance.ToString(__fld_simpleBytes.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             if (__has_sampleMsg)
             {
@@ -4675,22 +4671,22 @@ namespace NClassify.Example
                     {
                         case 0:
                         {
-                            __fld_bool.Add(global::System.Xml.XmlConvert.ToBoolean(sbuilder.ToString()));
+                            __fld_bool.Add(global::NClassify.Library.TypeConverter.Instance.ParseBoolean(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 1:
                         {
-                            __fld_bytes.Add(global::NClassify.Library.ByteArray.FromBase64(sbuilder.ToString()));
+                            __fld_bytes.Add(global::NClassify.Library.TypeConverter.Instance.ParseBytes(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 2:
                         {
-                            __fld_dateTime.Add(global::System.DateTime.Parse(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
+                            __fld_dateTime.Add(global::NClassify.Library.TypeConverter.Instance.ParseDateTime(sbuilder.ToString(), "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 3:
                         {
-                            __fld_double.Add(global::System.Xml.XmlConvert.ToDouble(sbuilder.ToString()));
+                            __fld_double.Add(global::NClassify.Library.TypeConverter.Instance.ParseDouble(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 4:
@@ -4700,42 +4696,42 @@ namespace NClassify.Example
                         }
                         case 5:
                         {
-                            __fld_float.Add(global::System.Xml.XmlConvert.ToSingle(sbuilder.ToString()));
+                            __fld_float.Add(global::NClassify.Library.TypeConverter.Instance.ParseFloat(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 6:
                         {
-                            __fld_guid.Add(global::System.Xml.XmlConvert.ToGuid(sbuilder.ToString()));
+                            __fld_guid.Add(global::NClassify.Library.TypeConverter.Instance.ParseGuid(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 7:
                         {
-                            __fld_int16.Add(global::System.Xml.XmlConvert.ToInt16(sbuilder.ToString()));
+                            __fld_int16.Add(global::NClassify.Library.TypeConverter.Instance.ParseInt16(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 8:
                         {
-                            __fld_int32.Add(global::System.Xml.XmlConvert.ToInt32(sbuilder.ToString()));
+                            __fld_int32.Add(global::NClassify.Library.TypeConverter.Instance.ParseInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 9:
                         {
-                            __fld_int64.Add(global::System.Xml.XmlConvert.ToInt64(sbuilder.ToString()));
+                            __fld_int64.Add(global::NClassify.Library.TypeConverter.Instance.ParseInt64(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 10:
                         {
-                            __fld_int8.Add(global::System.Xml.XmlConvert.ToSByte(sbuilder.ToString()));
+                            __fld_int8.Add(global::NClassify.Library.TypeConverter.Instance.ParseInt8(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 12:
                         {
-                            __fld_simpleBytes.Add(new global::NClassify.Example.SimpleBytes(global::NClassify.Library.ByteArray.FromBase64(sbuilder.ToString())));
+                            __fld_simpleBytes.Add(new global::NClassify.Example.SimpleBytes(global::NClassify.Library.TypeConverter.Instance.ParseBytes(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture)));
                             break;
                         }
                         case 13:
                         {
-                            __fld_simpleInt32.Add(new global::NClassify.Example.SimpleInt32(global::System.Xml.XmlConvert.ToInt32(sbuilder.ToString())));
+                            __fld_simpleInt32.Add(new global::NClassify.Example.SimpleInt32(global::NClassify.Library.TypeConverter.Instance.ParseInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture)));
                             break;
                         }
                         case 14:
@@ -4755,27 +4751,27 @@ namespace NClassify.Example
                         }
                         case 17:
                         {
-                            __fld_timeSpan.Add(global::System.Xml.XmlConvert.ToTimeSpan(sbuilder.ToString()));
+                            __fld_timeSpan.Add(global::NClassify.Library.TypeConverter.Instance.ParseTimeSpan(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 18:
                         {
-                            __fld_uint16.Add(global::System.Xml.XmlConvert.ToUInt16(sbuilder.ToString()));
+                            __fld_uint16.Add(global::NClassify.Library.TypeConverter.Instance.ParseUInt16(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 19:
                         {
-                            __fld_uint32.Add(global::System.Xml.XmlConvert.ToUInt32(sbuilder.ToString()));
+                            __fld_uint32.Add(global::NClassify.Library.TypeConverter.Instance.ParseUInt32(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 20:
                         {
-                            __fld_uint64.Add(global::System.Xml.XmlConvert.ToUInt64(sbuilder.ToString()));
+                            __fld_uint64.Add(global::NClassify.Library.TypeConverter.Instance.ParseUInt64(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         case 21:
                         {
-                            __fld_uint8.Add(global::System.Xml.XmlConvert.ToByte(sbuilder.ToString()));
+                            __fld_uint8.Add(global::NClassify.Library.TypeConverter.Instance.ParseUInt8(sbuilder.ToString(), null, global::System.Globalization.CultureInfo.InvariantCulture));
                             break;
                         }
                         default:
@@ -4800,63 +4796,63 @@ namespace NClassify.Example
         {
             foreach (bool item in __fld_bool)
             {
-                writer.WriteElementString("bool", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("bool", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::NClassify.Library.ByteArray item in __fld_bytes)
             {
-                writer.WriteElementString("bytes", item.ToBase64());
+                writer.WriteElementString("bytes", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (sbyte item in __fld_int8)
             {
-                writer.WriteElementString("int8", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("int8", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (byte item in __fld_uint8)
             {
-                writer.WriteElementString("uint8", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("uint8", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (short item in __fld_int16)
             {
-                writer.WriteElementString("int16", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("int16", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (ushort item in __fld_uint16)
             {
-                writer.WriteElementString("uint16", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("uint16", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (int item in __fld_int32)
             {
-                writer.WriteElementString("int32", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("int32", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (uint item in __fld_uint32)
             {
-                writer.WriteElementString("uint32", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("uint32", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (long item in __fld_int64)
             {
-                writer.WriteElementString("int64", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("int64", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (ulong item in __fld_uint64)
             {
-                writer.WriteElementString("uint64", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("uint64", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (float item in __fld_float)
             {
-                writer.WriteElementString("float", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("float", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (double item in __fld_double)
             {
-                writer.WriteElementString("double", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("double", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::System.Guid item in __fld_guid)
             {
-                writer.WriteElementString("guid", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("guid", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::System.DateTime item in __fld_dateTime)
             {
-                writer.WriteElementString("dateTime", item.ToString("yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
+                writer.WriteElementString("dateTime", global::NClassify.Library.TypeConverter.Instance.ToString(item, "yyyy-MM-dd hh:mm:ss", global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::System.TimeSpan item in __fld_timeSpan)
             {
-                writer.WriteElementString("timeSpan", global::System.Xml.XmlConvert.ToString(item));
+                writer.WriteElementString("timeSpan", global::NClassify.Library.TypeConverter.Instance.ToString(item, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (string item in __fld_string)
             {
@@ -4868,7 +4864,7 @@ namespace NClassify.Example
             }
             foreach (global::NClassify.Example.SimpleInt32 item in __fld_simpleInt32)
             {
-                writer.WriteElementString("simple_int32", global::System.Xml.XmlConvert.ToString(item.Value));
+                writer.WriteElementString("simple_int32", global::NClassify.Library.TypeConverter.Instance.ToString(item.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::NClassify.Example.SimpleUri item in __fld_simpleUri)
             {
@@ -4880,7 +4876,7 @@ namespace NClassify.Example
             }
             foreach (global::NClassify.Example.SimpleBytes item in __fld_simpleBytes)
             {
-                writer.WriteElementString("simple_bytes", item.Value.ToBase64());
+                writer.WriteElementString("simple_bytes", global::NClassify.Library.TypeConverter.Instance.ToString(item.Value, null, global::System.Globalization.CultureInfo.InvariantCulture));
             }
             foreach (global::NClassify.Example.SampleMsg item in __fld_sampleMsg)
             {

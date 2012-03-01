@@ -96,11 +96,11 @@ namespace NClassify.Generator.CodeGenerators.Types
                 code.WriteLine("return null;");
             }
 
-            WriteXmlReadMembers(code, fields);
-            WriteXmlWriteMembers(code, fields);
+            WriteXmlReadMembers(code, fields.Where(f => f.Direction != FieldDirection.WriteOnly));
+            WriteXmlWriteMembers(code, fields.Where(f => f.Direction != FieldDirection.ReadOnly));
         }
 
-        protected void WriteXmlReadMembers(CsCodeWriter code, ICollection<BaseFieldGenerator> rawfields)
+        protected void WriteXmlReadMembers(CsCodeWriter code, IEnumerable<BaseFieldGenerator> rawfields)
         {
             List<BaseFieldGenerator> fields = new List<BaseFieldGenerator>(rawfields);
             fields.Sort((a, b) => StringComparer.Ordinal.Compare(a.XmlOptions.XmlName, b.XmlOptions.XmlName));
@@ -203,7 +203,8 @@ namespace NClassify.Generator.CodeGenerators.Types
 
                                 using (code.WriteBlock("case {0}:", i))
                                 {
-                                    fields[i].ReadXmlValue(code, "sbuilder.ToString()");
+                                    using (fields[i].XmlOptions.IgnoreEmpty ? code.WriteBlock("if (sbuilder.Length > 0)") : null)
+                                        fields[i].ReadXmlValue(code, "sbuilder.ToString()");
                                     code.WriteLine("break;");
                                 }
                             }
@@ -217,8 +218,9 @@ namespace NClassify.Generator.CodeGenerators.Types
             }
         }
 
-        protected void WriteXmlWriteMembers(CsCodeWriter code, ICollection<BaseFieldGenerator> fields)
+        protected void WriteXmlWriteMembers(CsCodeWriter code, IEnumerable<BaseFieldGenerator> rawfields)
         {
+            List<BaseFieldGenerator> fields = new List<BaseFieldGenerator>(rawfields);
             string xmlns = CsCodeWriter.Global + "System.Xml";
             using (code.WriteBlock("public void WriteXml({0}.XmlWriter writer)", xmlns))
                 code.WriteLine("WriteXml(\"{0}\", writer);", XmlName);
