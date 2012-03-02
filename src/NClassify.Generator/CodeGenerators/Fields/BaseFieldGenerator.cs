@@ -178,7 +178,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                         Field.XmlOptions.AttributeType = xdefaults.AttributeType;
                     Field.XmlOptions.IgnoreEmpty |= xdefaults.IgnoreEmpty;
 
-                    foreach (var fmt in xdefaults.Formats.SafeEnum().Where(f => f.Type == Field.Type))
+                    foreach (var fmt in xdefaults.Formats.SafeEnum().Where(f => f.Type == FieldType))
                     {
                         if (String.IsNullOrEmpty(Field.XmlOptions.Format))
                             Field.XmlOptions.Format = fmt.Format;

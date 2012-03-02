@@ -188,7 +188,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                             ComplexType request = String.IsNullOrEmpty(m.Request) ? null : FindType(m.Request);
                             using(code.WriteBlock("case {0}:", ordinal++))
                             {
-                                string call = String.Format("_dispatch.{0}({1})", m.Name, 
+                                string call = String.Format("_dispatch.{0}({1})", CodeWriter.ToPascalCase(m.Name), 
                                     request == null ? "" : ("(" + CsCodeWriter.Global + request.QualifiedName + ")(object)request"));
                                 if (response != null)
                                     call = String.Format("response.MergeFrom({0})", call);
