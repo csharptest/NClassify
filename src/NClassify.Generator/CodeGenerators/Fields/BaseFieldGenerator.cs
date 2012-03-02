@@ -151,16 +151,6 @@ namespace NClassify.Generator.CodeGenerators.Fields
             get { return false; }
         }
 
-        public virtual bool IsNumeric
-        {
-            get { return false; }
-        }
-
-        public virtual bool IsUnsigned
-        {
-            get { return false; }
-        }
-
         public virtual bool IsClsCompliant
         {
             get { return true; }

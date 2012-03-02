@@ -6,7 +6,7 @@ using NClassify.Generator.CodeWriters;
 
 namespace NClassify.Generator.CodeGenerators.Fields
 {
-    class BytesFieldGenerator : BaseFieldGenerator
+    class BytesFieldGenerator : PrimitiveFieldGenerator
     {
         public BytesFieldGenerator(FieldInfo fld)
             : base(fld)

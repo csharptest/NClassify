@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NClassify.Generator.CodeWriters;
 
 namespace NClassify.Generator.CodeGenerators.Fields
 {
-    class Int8FieldGenerator : BaseNumericFieldGenerator
+    class UnsignedFieldGenerator : PrimitiveFieldGenerator
     {
-        public Int8FieldGenerator(FieldInfo fld)
+        public UnsignedFieldGenerator(FieldInfo fld)
             : base(fld)
         {
         }
