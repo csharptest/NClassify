@@ -12,7 +12,7 @@ namespace NClassify.Library
             return xml.ToString();
         }
 
-        public static void ReadXml(this IMessage msg, string name, string xml)
+        public static void ReadXml(this IBuilder msg, string name, string xml)
         {
             using (global::System.Xml.XmlReader r = global::System.Xml.XmlReader.Create(
                 new global::System.IO.StringReader(xml), 

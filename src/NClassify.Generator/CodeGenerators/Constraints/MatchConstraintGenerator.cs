@@ -38,7 +38,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                 code.WriteLine(
                     "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
                     "{0}NClassify.Library.Resources.MustMatchFormat, TypeFields.{2}, {1}));",
-                    CsCodeWriter.Global, code.MakeConstant(FieldType.String, _rule.Pattern), _field.PascalName);
+                    CsCodeWriter.Global, code.MakeConstant(FieldType.String, _rule.Pattern), _field.PropertyName);
                 code.WriteLine("return false;");
             }
         }

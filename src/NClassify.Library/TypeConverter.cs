@@ -237,6 +237,9 @@ namespace NClassify.Library
 
         public virtual global::System.TimeSpan ParseTimeSpan(string text, string format, global::System.IFormatProvider formatProvider)
         {
+            if (string.IsNullOrEmpty(format))
+                return global::System.Xml.XmlConvert.ToTimeSpan(text);
+
             Regex pattern;
             int[] fields;
             object[] numFormat = CreateExpression(out pattern, out fields, format, formatProvider);

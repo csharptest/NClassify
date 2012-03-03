@@ -1,14 +1,18 @@
 #pragma warning disable 1591
 namespace NClassify.Library
 {
-    public sealed class EmptyMessage : IMessage
+    public sealed class EmptyMessage : IBuilder
     {
-        public static readonly EmptyMessage Default = new EmptyMessage();
-        void IMessage.Clear() { }
-        void IMessage.Initialize() { }
-        void IMessage.MergeFrom(IMessage reader) { }
-        void IMessage.ReadXml(string localName, global::System.Xml.XmlReader reader) { }
-        void IMessage.MergeFrom(global::System.Xml.XmlReader reader) { }
+        private static readonly EmptyMessage Instance = new EmptyMessage();
+        public static EmptyMessage DefaultInstance { get { return Instance; } }
+
+        bool IBuilder.IsReadOnly() { return false; }
+        void IBuilder.MakeReadOnly() { }
+        void IBuilder.Clear() { }
+        void IBuilder.AcceptDefaults() { }
+        void IBuilder.MergeFrom(IMessage reader) { }
+        void IBuilder.ReadXml(string localName, global::System.Xml.XmlReader reader) { }
+        void IBuilder.MergeFrom(global::System.Xml.XmlReader reader) { }
         void IMessage.WriteXml(string localName, global::System.Xml.XmlWriter writer) { }
         void IMessage.MergeTo(global::System.Xml.XmlWriter reader) { }
         object global::System.ICloneable.Clone() { return this; }

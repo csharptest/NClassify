@@ -24,7 +24,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                     code.WriteLine(
                         "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
                         "{0}NClassify.Library.Resources.MustBeGreaterThan, TypeFields.{2}, {1}));",
-                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MinValue), _field.PascalName);
+                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MinValue), _field.PropertyName);
                     code.WriteLine("return false;");
                 }
             }
@@ -35,7 +35,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                     code.WriteLine(
                         "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
                         "{0}NClassify.Library.Resources.MustBeLessThan, TypeFields.{2}, {1}));",
-                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MaxValue), _field.PascalName);
+                        CsCodeWriter.Global, code.MakeConstant(_field.FieldType, _rule.MaxValue), _field.PropertyName);
                     code.WriteLine("return false;");
                 }
             }

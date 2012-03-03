@@ -55,7 +55,20 @@
       </code>
     </validation>
   </value>
-
+  <message name="CircleA">
+    <fields>
+      <message ordinal="1" name="B" type="CircleB"/>
+    </fields>
+  </message>
+  <message name="CircleB">
+    <fields>
+      <message ordinal="1" name="A" type="CircleA"/>
+    </fields>
+  </message>
+  <message name="CircleC" inherits="CircleA">
+    <fields>
+    </fields>
+  </message>
   <message name="SampleMsg">
     <fields>
       <value ordinal="1" name="Id" type="SimpleInt32" default="0" />
@@ -116,6 +129,7 @@
       <value     ordinal="30" name="simple_text" type="SimpleText" use="required" default="def" />
       <value     ordinal="31" name="simple_bytes" type="SimpleBytes" default="AsdF12==" />
       <message   ordinal="32" name="sample_msg" type="SampleMsg" />
+      <message   ordinal="33" name="i_sample_msg" type="ISampleMsg" />
     </fields>
   </message>
 
@@ -144,14 +158,15 @@
       <value     ordinal="30" name="simple_text" type="SimpleText" use="required" array="true" />
       <value     ordinal="31" name="simple_bytes" type="SimpleBytes" array="true" />
       <message   ordinal="32" name="sample_msg" type="SampleMsg" array="true" />
+      <message   ordinal="33" name="i_sample_msg" type="ISampleMsg" array="true" />
     </fields>
   </message>
 
   <service name="ExampleService">
     <method name="Ping" />
-    <method name="Get" returns="SampleMsg" />
+    <method name="Get" returns="ISampleMsg" />
     <method name="Put" argument="SampleMsg" returns="SampleMsg" />
-    <method name="Delete" argument="SampleMsg" />
+    <method name="Delete" argument="ISampleMsg" />
   </service>
 
 </NClassify>

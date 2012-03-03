@@ -63,6 +63,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
             return "new " + GetStorageType(code) + "()";
         }
 
+        public override void MakeReadOnly(CsCodeWriter code, string value)
+        {
+            code.WriteLine("{0}.MakeReadOnly();", value);
+        }
+
         public override void DeclareTypes(CsCodeWriter code)
         {
             string collection = GetStorageType(code);
@@ -85,7 +90,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 }
 
                 string value = _generator.IsNullable ? "AssertNotNull(value)" : "value";
-                code.WriteLine("private readonly bool _readOnly;");
+                code.WriteLine("private bool _readOnly;");
                 code.WriteLine("private readonly {0}System.Collections.Generic.List<{1}> _contents;", CsCodeWriter.Global, itemType);
 
                 using(code.WriteBlock("public {0}()", collection))
@@ -93,18 +98,40 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     code.WriteLine("_readOnly = false;");
                     code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>();", CsCodeWriter.Global, itemType);
                 }
-                using (code.WriteBlock("public {0}({1}System.Collections.Generic.IList<{2}> contents, bool readOnly)", collection, CsCodeWriter.Global, itemType))
+                using (code.WriteBlock("public {0}({1}System.Collections.Generic.IList<{2}> contents, bool clone)", collection, CsCodeWriter.Global, itemType))
                 {
-                    code.WriteLine("_readOnly = readOnly;");
-                    if (_generator.IsNullable)
-                        code.WriteLine("foreach ({0} item in AssertNotNull(contents)) AssertNotNull(item);", _generator.GetPublicType(code));
-                    code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>(AssertNotNull(contents));", CsCodeWriter.Global, itemType);
+                    code.WriteLine("_readOnly = false;");
+                    if (!_generator.IsNullable)
+                    {
+                        code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>(AssertNotNull(contents));",
+                            CsCodeWriter.Global, itemType);
+                    }
+                    else
+                    {
+                        code.WriteLine("_contents = new {0}System.Collections.Generic.List<{1}>(AssertNotNull(contents).Count);",
+                            CsCodeWriter.Global, itemType);
+                        using (code.WriteBlock("foreach ({0} item in contents)", _generator.GetPublicType(code)))
+                        {
+                            if (_generator.IsMessage)
+                            {
+                                code.WriteLine("if (clone)");
+                                code.WriteLineIndent("_contents.Add(({0})AssertNotNull(item).Clone());", itemType);
+                                code.WriteLine("else");
+                            }
+                            code.WriteLine("_contents.Add(AssertNotNull(item));");
+                        }
+                    }
                 }
                 _generator.Constraints.ForAll(x => x.WriteMember(code));
-                using (code.WriteBlock("public {0} AsReadOnly()", collection))
+                using (code.WriteBlock("public void MakeReadOnly()"))
                 {
-                    code.WriteLine("if (IsReadOnly) return this;");
-                    code.WriteLine("return new {0}(_contents, true);", collection);
+                    code.WriteLine("if (_readOnly) return;");
+                    code.WriteLine("_readOnly = true;");
+                    if (_generator.IsMessage)
+                        using (code.WriteBlock("for (int i=0; i < _contents.Count; i++)"))
+                        {
+                            _generator.MakeReadOnly(code, "_contents[i]");
+                        }
                 }
                 using (code.WriteBlock("private {0}System.Collections.Generic.List<{1}> Modify", CsCodeWriter.Global, itemType))
                     code.WriteLine("get {{ if (!IsReadOnly) return _contents; throw new {0}System.InvalidOperationException(); }}", CsCodeWriter.Global);
@@ -132,7 +159,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 code.WriteLine("object {0}System.ICloneable.Clone() {{ return Clone(); }}", CsCodeWriter.Global);
                 using (code.WriteBlock("public {0} Clone()", collection))
                 {
-                    code.WriteLine("return new {0}(this, false);", collection);
+                    code.WriteLine("return _readOnly ? this : new {0}(this, true);", collection);
                 }
                 code.WriteLine("public {0}System.Collections.Generic.IEnumerator<{1}> GetEnumerator()", CsCodeWriter.Global, itemType);
                 code.WriteLine("{ return _contents.GetEnumerator(); }");
@@ -148,8 +175,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override void DeclareInstanceData(CsCodeWriter code)
         {
-            code.DeclareField(new CodeItem(FieldBackingName) { Access = FieldAccess.Private }, GetStorageType(code),
-                !HasDefault ? null : MakeConstant(code, Default));
+            code.DeclareField(new CodeItem(FieldBackingName) { Access = FieldAccess.Private }, GetStorageType(code), null);
         }
 
         public override void WriteMember(CsCodeWriter code)
@@ -157,7 +183,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             CodeItem prop = new CodeItem(PropertyName)
             {
                 Access = _generator.FieldAccess,
-                ClsCompliant = _generator.IsClsCompliant,
+                //ClsCompliant = _generator.IsClsCompliant,
                 Obsolete = _generator.Obsolete,
                 XmlName = _generator.Name,
             };
@@ -167,13 +193,14 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 using (code.WriteBlock(IsWriteOnly && FieldAccess != FieldAccess.Private ? "private get" : "get"))
                 {
                     if (IsReadOnly)
-                        code.WriteLine("return new {0}System.Collections.ObjectModel.ReadOnlyCollection<{1}>({2});", 
+                        code.WriteLine("if (!IsReadOnly()) return new {0}System.Collections.ObjectModel.ReadOnlyCollection<{1}>({2});", 
                             CsCodeWriter.Global, _generator.GetPublicType(code), FieldBackingName);
-                    else
-                        code.WriteLine("return {0};", FieldBackingName);
+
+                    code.WriteLine("return {0};", FieldBackingName);
                 }
                 using (code.WriteBlock(IsReadOnly && FieldAccess != FieldAccess.Private ? "private set" : "set"))
                 {
+                    code.WriteLine("if (IsReadOnly()) throw new {0}System.InvalidOperationException();", CsCodeWriter.Global);
                     code.WriteLine("{0} = new {1}(value, false);", FieldBackingName, GetStorageType(code));
                 }
             }
@@ -197,11 +224,11 @@ namespace NClassify.Generator.CodeGenerators.Fields
         {
             if(_generator.IsMessage)
             {
-                code.WriteLine("foreach ({0} item in {1}.{2})", _generator.GetPublicType(code), other, FieldBackingName);
-                code.WriteLineIndent("{0}.Add(item.Clone());", FieldBackingName);
+                code.WriteLine("foreach ({0} item in {1}.{2})", _generator.GetPublicType(code), other, PropertyName);
+                code.WriteLineIndent("{0}.Add(({1})item.Clone());", FieldBackingName, _generator.GetStorageType(code));
             }
             else
-                code.WriteLine("{0}.AddRange({1}.{0});", FieldBackingName, other);
+                code.WriteLine("{0}.AddRange({1}.{2});", FieldBackingName, other, PropertyName);
         }
 
         public override void WriteXmlOutput(CsCodeWriter code, string name)
@@ -212,8 +239,12 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public override void ReadXmlMessage(CsCodeWriter code)
         {
-            code.WriteLine("{0} child = {1};", _generator.GetPublicType(code), _generator.MakeConstant(code, null));
-            code.WriteLine("child.ReadXml(reader.LocalName, reader);");
+            if (_generator.IsMessage)
+                code.WriteLine("{0} child = new {0}();", ((ComplexFieldGenerator)_generator).GetImplementationType(code));
+            else
+                code.WriteLine("{0} child = {1};", _generator.GetPublicType(code), _generator.MakeConstant(code, null));
+
+            code.WriteLine("(({0}NClassify.Library.IBuilder)child).ReadXml(reader.LocalName, reader);", CsCodeWriter.Global);
             code.WriteLine("{0}.Add(child);", FieldBackingName);
         }
 

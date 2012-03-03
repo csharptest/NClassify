@@ -28,7 +28,11 @@ namespace NClassify.Generator.CodeGenerators.Types
                 .Select(f => FieldFactory.Create(this, f))
                 .ToArray());
 
-            Access = Type.ParentConfig.DefaultAccess;
+            Access = Type.Access;
+            if (Access == FieldAccess.Default) Access = Type.ParentConfig.DefaultAccess;
+            if (Access == FieldAccess.Default) Access = FieldAccess.Public;
+            if (Access == FieldAccess.Protected && Type.ParentType is NamespaceType)
+                Access = FieldAccess.Private;
         }
 
         public FieldAccess Access { get; set; }
@@ -37,6 +41,15 @@ namespace NClassify.Generator.CodeGenerators.Types
         public virtual string XmlName { get { return Type.Name; } }
         public string CamelName { get { return CodeWriter.ToCamelCase(Type.Name); } }
         public string PascalName { get { return CodeWriter.ToPascalCase(Type.Name); } }
+
+        public virtual bool IsSubclass { get { return false; } }
+        public virtual string VirtualApi { get { return "public"; } }
+        public bool CallBase(CsCodeWriter code, string method, params object[] args)
+        {
+            if (IsSubclass)
+                code.WriteLine(method, args);
+            return IsSubclass;
+        }
 
         protected virtual void WriteChildren<TWriter>(TWriter code, BaseType[] children) where TWriter : CodeWriter
         {
@@ -57,20 +70,18 @@ namespace NClassify.Generator.CodeGenerators.Types
 
         protected virtual void WriteMembers(CsCodeWriter code, ICollection<BaseFieldGenerator> fields)
         {
-            using (code.WriteBlock("public bool IsValid()"))
+            if (!IsSubclass)
             {
-                code.WriteLine("return 0 == GetBrokenRules(null);");
+                code.WriteLine("public bool IsValid() { return 0 == GetBrokenRules(null); }");
+                code.WriteLine("public void AssertValid() { GetBrokenRules(RaiseValidationError); }");
+                code.WriteLine("void RaiseValidationError(global::NClassify.Library.ValidationError e) { e.RaiseException(); }");
             }
-            using (code.WriteBlock("public void AssertValid()"))
-            {
-                code.WriteLine("GetBrokenRules(delegate({0}NClassify.Library.ValidationError e) " +
-                               "{{ throw new {0}System.IO.InvalidDataException(e.Message); }});", CsCodeWriter.Global);
-            }
-            using (code.WriteBlock("public int GetBrokenRules(global::System.Action<{0}NClassify.Library.ValidationError> onError)", CsCodeWriter.Global))
+            using (code.WriteBlock(VirtualApi + " int GetBrokenRules(global::System.Action<{0}NClassify.Library.ValidationError> onError)", CsCodeWriter.Global))
             {
                 code.WriteLine("int errorCount = 0;");
                 foreach (var fld in fields)
                     fld.WriteValidation(code);
+                CallBase(code, "errorCount += base.GetBrokenRules(onError);");
                 code.WriteLine("return errorCount;");
             }
         }

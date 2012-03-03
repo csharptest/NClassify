@@ -250,5 +250,7 @@ namespace NClassify.Generator.CodeWriters
         {
             return DeclareProperty(info, GetTypeName(type));
         }
+
+        public abstract IDisposable DeclareInterface(CodeItem info, string[] implements);
     }
 }

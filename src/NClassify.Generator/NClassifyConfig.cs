@@ -62,6 +62,9 @@ namespace NClassify.Generator
         [XmlAttribute("name", DataType = "NCName")]
         public virtual string Name { get; set; }
 
+        [XmlAttribute("access"), DefaultValue(FieldAccess.Default)]
+        public FieldAccess Access { get; set; }
+
         [XmlIgnore]
         internal FieldInfo[] Fields { get; set; }
         [XmlIgnore]
@@ -97,8 +100,18 @@ namespace NClassify.Generator
         public ValidationRule[] Validation { get; set; }
     }
 
-    public sealed class ComplexType : BaseType
+    public partial class ComplexType : BaseType
     {
+        [XmlAttribute("inherits", DataType = "NCName")]
+        public string BaseClass { get; set; }
+
+        [XmlAttribute("generate"), DefaultValue(CodeGeneration.Default)]
+        public CodeGeneration Generate { get; set; }
+
+        [XmlArray("implements")]
+        [XmlArrayItem("interface")]
+        public string[] Interfaces { get; set; }
+
         [XmlArray("fields")]
         [XmlArrayItem("primitive", Type = typeof(Primitive))]
         [XmlArrayItem("message", Type = typeof(ComplexTypeRef))]
@@ -312,6 +325,7 @@ namespace NClassify.Generator
 
     public enum FieldAccess
     {
+        [XmlIgnore] Default = 0,
         [XmlEnum("public")] Public = 1,
         [XmlEnum("private")] Private = 2,
         [XmlEnum("protected")] Protected = 3,
@@ -354,6 +368,13 @@ namespace NClassify.Generator
         [XmlEnum("current")] CurrentCulture,
         [XmlEnum("current-ui")] CurrentUICulture,
         [XmlEnum("installed-ui")] InstalledUICulture,
+    }
+
+    public enum CodeGeneration
+    {
+        [XmlEnum("all")] Default = 0,
+        [XmlEnum("interface-only")] InterfaceOnly = 1,
+        [XmlEnum("class-only")] ClassOnly = 2,
     }
 
     #endregion

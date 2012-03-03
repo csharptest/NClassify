@@ -19,5 +19,6 @@ namespace NClassify.Generator.CodeWriters
 
         public bool Obsolete;
         public bool ClsCompliant;
+        public bool HidesBase;
     }
 }

@@ -5,11 +5,11 @@
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="1" name="settings" type="NClassifySettings" />
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element minOccurs="0" maxOccurs="1" name="service" type="ServiceInfo" />
-        <xs:element minOccurs="0" maxOccurs="1" name="message" type="ComplexType" />
-        <xs:element minOccurs="0" maxOccurs="1" name="enum" type="EnumType" />
         <xs:element minOccurs="0" maxOccurs="1" name="value" type="SimpleType" />
         <xs:element minOccurs="0" maxOccurs="1" name="import" type="ImportFile" />
+        <xs:element minOccurs="0" maxOccurs="1" name="enum" type="EnumType" />
+        <xs:element minOccurs="0" maxOccurs="1" name="service" type="ServiceInfo" />
+        <xs:element minOccurs="0" maxOccurs="1" name="message" type="ComplexType" />
       </xs:choice>
     </xs:sequence>
   </xs:complexType>
@@ -70,12 +70,13 @@
       <xs:enumeration value="text" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:complexType name="ServiceInfo">
+  <xs:complexType name="SimpleType">
     <xs:complexContent mixed="false">
       <xs:extension base="BaseType">
         <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="unbounded" name="method" type="ServiceMethod" />
+          <xs:element minOccurs="0" maxOccurs="1" name="validation" type="ArrayOfChoice1" />
         </xs:sequence>
+        <xs:attribute name="base" type="FieldType" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -83,6 +84,7 @@
     <xs:complexContent mixed="false">
       <xs:extension base="RootItem">
         <xs:attribute name="name" type="xs:NCName" />
+        <xs:attribute name="access" type="FieldAccess" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -94,104 +96,36 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="SimpleType">
-    <xs:complexContent mixed="false">
-      <xs:extension base="BaseType">
-        <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="1" name="validation" type="ArrayOfChoice3" />
-        </xs:sequence>
-        <xs:attribute name="base" type="FieldType" use="required" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="ArrayOfChoice3">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element minOccurs="1" maxOccurs="1" name="predefined" nillable="true" type="PredefinedValue" />
-      <xs:element minOccurs="1" maxOccurs="1" name="length" nillable="true" type="LengthConstraint" />
-      <xs:element minOccurs="1" maxOccurs="1" name="range" nillable="true" type="RangeConstraint" />
-      <xs:element minOccurs="1" maxOccurs="1" name="match" nillable="true" type="MatchConstraint" />
-      <xs:element minOccurs="1" maxOccurs="1" name="code" nillable="true" type="CodedConstraint" />
-    </xs:choice>
-  </xs:complexType>
-  <xs:complexType name="PredefinedValue">
-    <xs:complexContent mixed="false">
-      <xs:extension base="ValidationRule">
-        <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="xs:string" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="ValidationRule" abstract="true" />
-  <xs:complexType name="MatchConstraint">
-    <xs:complexContent mixed="false">
-      <xs:extension base="ValidationRule">
-        <xs:attribute default=".*" name="pattern" type="xs:string" />
-        <xs:attribute default="false" name="ignoreCase" type="xs:boolean" />
-        <xs:attribute default="false" name="multiline" type="xs:boolean" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="CodedConstraint">
-    <xs:complexContent mixed="false">
-      <xs:extension base="ValidationRule">
-        <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="1" name="method" type="xs:string" />
-        </xs:sequence>
-        <xs:attribute name="language" type="GeneratorLanguage" use="required" />
-        <xs:attribute name="test" type="xs:string" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:simpleType name="GeneratorLanguage">
+  <xs:simpleType name="FieldAccess">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="C#" />
+      <xs:enumeration value="public" />
+      <xs:enumeration value="private" />
+      <xs:enumeration value="protected" />
     </xs:restriction>
   </xs:simpleType>
-  <xs:complexType name="RangeConstraint">
-    <xs:complexContent mixed="false">
-      <xs:extension base="ValidationRule">
-        <xs:attribute name="min" type="xs:string" />
-        <xs:attribute name="max" type="xs:string" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="LengthConstraint">
-    <xs:complexContent mixed="false">
-      <xs:extension base="ValidationRule">
-        <xs:attribute default="0" name="min" type="xs:unsignedInt" />
-        <xs:attribute default="4294967295" name="max" type="xs:unsignedInt" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="EnumType">
-    <xs:complexContent mixed="false">
-      <xs:extension base="BaseType">
-        <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="Item" />
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="Item">
-    <xs:attribute name="name" type="xs:NCName" />
-    <xs:attribute name="ordinal" type="xs:unsignedInt" use="required" />
-  </xs:complexType>
   <xs:complexType name="ComplexType">
     <xs:complexContent mixed="false">
       <xs:extension base="BaseType">
         <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="1" name="fields" type="ArrayOfChoice2" />
+          <xs:element minOccurs="0" maxOccurs="1" name="implements" type="ArrayOfString" />
+          <xs:element minOccurs="0" maxOccurs="1" name="fields" type="ArrayOfChoice3" />
           <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="value" type="SimpleType" />
             <xs:element minOccurs="0" maxOccurs="1" name="enum" type="EnumType" />
             <xs:element minOccurs="0" maxOccurs="1" name="message" type="ComplexType" />
-            <xs:element minOccurs="0" maxOccurs="1" name="value" type="SimpleType" />
           </xs:choice>
         </xs:sequence>
+        <xs:attribute name="inherits" type="xs:NCName" />
+        <xs:attribute default="all" name="generate" type="CodeGeneration" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="ArrayOfChoice2">
+  <xs:complexType name="ArrayOfString">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="interface" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice3">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element minOccurs="1" maxOccurs="1" name="message" nillable="true" type="ComplexTypeRef" />
       <xs:element minOccurs="1" maxOccurs="1" name="primitive" nillable="true" type="Primitive" />
@@ -227,13 +161,6 @@
     <xs:attribute name="culture" type="CultureInfo" />
     <xs:attribute default="false" name="ignore-empty" type="xs:boolean" />
   </xs:complexType>
-  <xs:simpleType name="FieldAccess">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="public" />
-      <xs:enumeration value="private" />
-      <xs:enumeration value="protected" />
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="FieldDirection">
     <xs:restriction base="xs:string">
       <xs:enumeration value="read-write" />
@@ -253,13 +180,6 @@
       </xs:simpleType>
     </xs:list>
   </xs:simpleType>
-  <xs:complexType name="EnumTypeRef">
-    <xs:complexContent mixed="false">
-      <xs:extension base="FieldInfo">
-        <xs:attribute name="type" type="xs:NCName" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
   <xs:complexType name="SimpleTypeRef">
     <xs:complexContent mixed="false">
       <xs:extension base="FieldInfo">
@@ -271,13 +191,13 @@
     <xs:complexContent mixed="false">
       <xs:extension base="FieldInfo">
         <xs:sequence>
-          <xs:element minOccurs="0" maxOccurs="1" name="validation" type="ArrayOfChoice1" />
+          <xs:element minOccurs="0" maxOccurs="1" name="validation" type="ArrayOfChoice2" />
         </xs:sequence>
         <xs:attribute name="type" type="FieldType" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="ArrayOfChoice1">
+  <xs:complexType name="ArrayOfChoice2">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:element minOccurs="1" maxOccurs="1" name="length" nillable="true" type="LengthConstraint" />
       <xs:element minOccurs="1" maxOccurs="1" name="range" nillable="true" type="RangeConstraint" />
@@ -286,9 +206,105 @@
       <xs:element minOccurs="1" maxOccurs="1" name="predefined" nillable="true" type="PredefinedValue" />
     </xs:choice>
   </xs:complexType>
+  <xs:complexType name="LengthConstraint">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValidationRule">
+        <xs:attribute default="0" name="min" type="xs:unsignedInt" />
+        <xs:attribute default="4294967295" name="max" type="xs:unsignedInt" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValidationRule" abstract="true" />
+  <xs:complexType name="CodedConstraint">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValidationRule">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="method" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="language" type="GeneratorLanguage" use="required" />
+        <xs:attribute name="test" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="GeneratorLanguage">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="C#" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PredefinedValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValidationRule">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MatchConstraint">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValidationRule">
+        <xs:attribute default=".*" name="pattern" type="xs:string" />
+        <xs:attribute default="false" name="ignoreCase" type="xs:boolean" />
+        <xs:attribute default="false" name="multiline" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RangeConstraint">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValidationRule">
+        <xs:attribute name="min" type="xs:string" />
+        <xs:attribute name="max" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EnumTypeRef">
+    <xs:complexContent mixed="false">
+      <xs:extension base="FieldInfo">
+        <xs:attribute name="type" type="xs:NCName" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EnumType">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="Item" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Item">
+    <xs:attribute name="name" type="xs:NCName" />
+    <xs:attribute name="ordinal" type="xs:unsignedInt" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="CodeGeneration">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="all" />
+      <xs:enumeration value="interface-only" />
+      <xs:enumeration value="class-only" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ServiceInfo">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="method" type="ServiceMethod" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
   <xs:complexType name="ServiceMethod">
     <xs:attribute name="name" type="xs:NCName" />
     <xs:attribute name="returns" type="xs:NCName" />
     <xs:attribute name="argument" type="xs:NCName" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="1" maxOccurs="1" name="predefined" nillable="true" type="PredefinedValue" />
+      <xs:element minOccurs="1" maxOccurs="1" name="length" nillable="true" type="LengthConstraint" />
+      <xs:element minOccurs="1" maxOccurs="1" name="range" nillable="true" type="RangeConstraint" />
+      <xs:element minOccurs="1" maxOccurs="1" name="match" nillable="true" type="MatchConstraint" />
+      <xs:element minOccurs="1" maxOccurs="1" name="code" nillable="true" type="CodedConstraint" />
+    </xs:choice>
   </xs:complexType>
 </xs:schema>

@@ -1,4 +1,4 @@
-﻿namespace NClassify.Example
+﻿namespace NClassify
 {
     class System
     {

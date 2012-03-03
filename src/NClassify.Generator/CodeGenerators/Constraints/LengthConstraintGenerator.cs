@@ -38,7 +38,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                     code.WriteLine(
                         "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
                         "{0}NClassify.Library.Resources.MustBeLongerThan, TypeFields.{2}, {1}));",
-                        CsCodeWriter.Global, _rule.MinLength, _field.PascalName);
+                        CsCodeWriter.Global, _rule.MinLength, _field.PropertyName);
                     code.WriteLine("return false;");
                 }
             }
@@ -49,7 +49,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                     code.WriteLine(
                         "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{2}, " +
                         "{0}NClassify.Library.Resources.MustBeShorterThan, TypeFields.{2}, {1}));",
-                        CsCodeWriter.Global, _rule.MaxLength, _field.PascalName);
+                        CsCodeWriter.Global, _rule.MaxLength, _field.PropertyName);
                     code.WriteLine("return false;");
                 }
             }

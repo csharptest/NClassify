@@ -13,33 +13,87 @@ namespace NClassify.Generator.CodeGenerators.Types
             : base(type)
         { }
 
+        public override bool IsSubclass { get { return Type.BaseClass != null; } }
+        public override string VirtualApi
+        {
+            get { return !IsSubclass ? "public virtual" : "public override"; }
+        }
+        
         public override void DeclareType(CsCodeWriter code)
+        {
+            if (Type.Generate != CodeGeneration.ClassOnly)
+                WriteInterface(code);
+            if (Type.Generate != CodeGeneration.InterfaceOnly)
+                WriteClass(code);
+        }
+
+        protected void WriteInterface(CsCodeWriter code)
         {
             string[] derives = new string[]
                                    {
-                                       CsCodeWriter.Global + "System.ICloneable",
-                                       CsCodeWriter.Global + "System.Xml.Serialization.IXmlSerializable",
                                        String.Format("{0}NClassify.Library.IMessage", CsCodeWriter.Global),
                                    };
-            using (code.DeclareClass(
-                new CodeItem(PascalName)
-                    {
-                        Access = Access,
-                        XmlName = Name,
-                    }, 
-                    derives))
+
+            bool cls = Fields.Count(
+                f => f.FieldAccess == FieldAccess.Public &&
+                     f.Direction != FieldDirection.WriteOnly &&
+                     f.IsClsCompliant == false) > 0;
+
+            using (code.DeclareInterface(new CodeItem("I" + PascalName) {Access = Access}, derives))
             {
-                using (code.WriteBlock("public {0}()", PascalName))
+                Fields.Where(
+                    f => f.FieldAccess == FieldAccess.Public && f.Direction != FieldDirection.WriteOnly
+                    ).ForAll(
+                    f =>
+                        {
+                            if (f.HasBackingName != null)
+                                code.WriteLine("bool Has{0} {{ get; }}", f.PropertyName);
+                            code.WriteLine("{0} {1} {{ get; }}", f.GetPublicType(code), f.PropertyName);
+                        }
+                    );
+            }
+        }
+
+        protected void WriteClass(CsCodeWriter code)
+        {
+            List<string> derives = new List<string>
+                                       {
+                                           "I" + PascalName,
+                                           String.Format("{0}NClassify.Library.IBuilder", CsCodeWriter.Global),
+                                       };
+            if (IsSubclass)
+            {
+                ComplexType type = Type.ParentConfig.ResolveName<ComplexType>(Type, Type.BaseClass);
+                derives.Insert(0, CsCodeWriter.Global + type.QualifiedName);
+            }
+
+            using (code.DeclareClass(new CodeItem(PascalName) { Access = Access, XmlName = Name, }, derives.ToArray()))
+            {
+                code.WriteLine("private static readonly {0} _defaultInstance = new {0}(false);", PascalName);
+                code.WriteLine("public static{1} {0} DefaultInstance {{ get {{ return _defaultInstance; }} }}", PascalName, IsSubclass ? " new" : "");
+
+                using (code.WriteBlock("static {0}()", PascalName))
+                {
+                    code.WriteLine("_defaultInstance.Clear();");
+                    code.WriteLine("_defaultInstance.MakeReadOnly();");
+                }
+
+                using (code.WriteBlock("protected {0}(bool initalize){1}", PascalName, IsSubclass ? " : base(initalize)" : ""))
+                {
+                    code.WriteLine("if (initalize) Initialize();");
+                }
+
+                using (code.WriteBlock("public {0}() : this(true)", PascalName))
                 { }
 
-                using (code.WriteBlock("public {0}({0} copyFrom) : this()", PascalName))
+                using (code.WriteBlock("public {0}(I{0} copyFrom) : this(true)", PascalName))
                 {
                     code.WriteLine("MergeFrom(copyFrom);");
                 }
 
                 using (code.CodeRegion("TypeFields"))
-                using (code.DeclareEnum(new CodeItem("TypeFields")))
-                    Fields.ForAll(f => code.WriteLine("{0} = {1},", f.PascalName, f.Ordinal));
+                using (code.DeclareEnum(new CodeItem("TypeFields") { HidesBase = IsSubclass }))
+                    Fields.ForAll(f => code.WriteLine("{0} = {1},", f.PropertyName, f.Ordinal));
 
                 WriteChildren(code, Type.ChildTypes);
                 Fields.ForAll(x => x.DeclareTypes(code));
@@ -47,7 +101,11 @@ namespace NClassify.Generator.CodeGenerators.Types
                 using (code.CodeRegion("Static Data"))
                     Fields.ForAll(x => x.DeclareStaticData(code));
                 using (code.CodeRegion("Instance Fields"))
+                {
+                    if(!IsSubclass)
+                        code.WriteLine("private bool _readOnly;");
                     Fields.ForAll(x => x.DeclareInstanceData(code));
+                }
                 using (code.CodeRegion("Instance Members"))
                 {
                     Fields.ForAll(x => x.WriteMember(code));
@@ -60,16 +118,56 @@ namespace NClassify.Generator.CodeGenerators.Types
         {
             base.WriteMembers(code, fields);
 
-            using (code.WriteBlock("public void Initialize()"))
+            if (!IsSubclass)
             {
-                foreach (var fld in fields)
+                using (code.WriteBlock("public I{0} AsReadOnly()", PascalName))
                 {
-                    if (fld.HasBackingName != null)
-                        code.WriteLine("{0} = true;", fld.HasBackingName);
+                    code.WriteLine("if (_readOnly) return this;");
+                    code.WriteLine("{0} copy = Clone();", PascalName);
+                    code.WriteLine("copy.MakeReadOnly();");
+                    code.WriteLine("return copy;");
+                }
+                using (code.WriteBlock("public bool IsReadOnly()"))
+                {
+                    code.WriteLine("return _readOnly;");
                 }
             }
+            using (code.WriteBlock(VirtualApi + " void MakeReadOnly()", PascalName))
+            {
+                if (IsSubclass)
+                {
+                    code.WriteLine("if (IsReadOnly()) return;");
+                    code.WriteLine("base.MakeReadOnly();");
+                }
+                else
+                {
+                    code.WriteLine("if (_readOnly) return;");
+                    code.WriteLine("_readOnly = true;");
+                }
 
-            using (code.WriteBlock("public void Clear()"))
+                fields.Where(f=>f.IsMessage == false).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
+
+                // Durring the initialization of default instance, message fields may be momentarily null.  Since
+                // the static initializer for that type will correctly initialize, we will skip marking these as
+                // read only.
+                code.WriteLine("if (object.ReferenceEquals(this, _defaultInstance)) return;");
+                fields.Where(f => f.IsMessage).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
+            }
+
+            using (code.WriteBlock(VirtualApi + " void AcceptDefaults()"))
+            {
+                CallBase(code, "base.AcceptDefaults();");
+                fields.Where(f=>f.HasBackingName != null && f.HasDefault)
+                    .ForAll(f=>code.WriteLine("{0} = true;", f.HasBackingName));
+            }
+
+            using (code.WriteBlock(VirtualApi + " void Clear()"))
+            {
+                CallBase(code, "base.Clear();");
+                code.WriteLine("Initialize();");
+            }
+
+            using (code.WriteBlock("private void Initialize()"))
             {
                 foreach (var fld in fields)
                 {
@@ -79,185 +177,49 @@ namespace NClassify.Generator.CodeGenerators.Types
                 }
             }
 
-            code.WriteLine("object {0}System.ICloneable.Clone() {{ return Clone(); }}", CsCodeWriter.Global);
-            using (code.WriteBlock("public {0} Clone()", PascalName))
+            if (!IsSubclass)
+                code.WriteLine("object {0}System.ICloneable.Clone() {{ return Clone(); }}", CsCodeWriter.Global);
+
+            using (code.WriteBlock("protected {0} object MemberwiseClone()", IsSubclass ? "override" : "new virtual"))
             {
-                code.WriteLine("{0} value = ({0})this.MemberwiseClone();", PascalName);
+                code.WriteLine("{0} value = ({0})base.MemberwiseClone();", PascalName);
                 foreach (var fld in fields)
                     fld.WriteClone(code);
                 code.WriteLine("return value;");
             }
 
-            using (code.WriteBlock("public void MergeFrom({0}NClassify.Library.IMessage other)", CsCodeWriter.Global))
+            using (code.WriteBlock("public{1} {0} Clone()", PascalName, IsSubclass ? " new" : ""))
             {
-                code.WriteLine("if (other is {0}) MergeFrom(({0})other);", PascalName);
+                code.WriteLine("return ({0})this.MemberwiseClone();", PascalName);
             }
-            
-            using (code.WriteBlock("public void MergeFrom({0} other)", PascalName))
+
+            using (code.WriteBlock(VirtualApi + " void MergeFrom({0}NClassify.Library.IMessage other)", CsCodeWriter.Global))
             {
-                foreach (var fld in fields)
+                code.WriteLine("if (other is I{0}) MergeFrom((I{0})other);", PascalName);
+                if(!CallBase(code, "base.MergeFrom(other);"))
+                {
+                    code.WriteLine("else throw new global::System.ArgumentException();");
+                }
+            }
+
+            using (code.WriteBlock("public void MergeFrom(I{0} other)", PascalName))
+            {
+                foreach (var fld in fields.Where(f => f.FieldAccess == FieldAccess.Public && !f.IsWriteOnly))
                     fld.WriteCopy(code, "other");
+                CallBase(code, "base.MergeFrom(other);");
             }
 
-            using (code.WriteBlock("{0}System.Xml.Schema.XmlSchema {0}System.Xml.Serialization.IXmlSerializable.GetSchema()", CsCodeWriter.Global))
+            if (!IsSubclass)
             {
-                code.WriteLine("return null;");
-            }
-
-            WriteXmlReadMembers(code, fields.Where(f => f.Direction != FieldDirection.WriteOnly));
-            WriteXmlWriteMembers(code, fields.Where(f => f.Direction != FieldDirection.ReadOnly));
-        }
-
-        protected void WriteXmlReadMembers(CsCodeWriter code, IEnumerable<BaseFieldGenerator> rawfields)
-        {
-            List<BaseFieldGenerator> fields = new List<BaseFieldGenerator>(rawfields);
-            fields.Sort((a, b) => StringComparer.Ordinal.Compare(a.XmlOptions.XmlName, b.XmlOptions.XmlName));
-
-            string xmlns = CsCodeWriter.Global + "System.Xml";
-            using (code.WriteBlock("public void ReadXml({0}.XmlReader reader)", xmlns))
-                code.WriteLine("ReadXml(\"{0}\", reader);", XmlName);
-
-            using (code.WriteBlock("public void ReadXml(string localName, {0}.XmlReader reader)", xmlns))
-            {
-                code.WriteLine("reader.MoveToContent();");
-                code.WriteLine("if (!reader.IsStartElement(localName))");
-                code.WriteLineIndent("throw new global::System.FormatException();");
-
-                code.WriteLine("if (reader.MoveToFirstAttribute())");
-                code.WriteLineIndent("MergeFrom(reader);");
-
-                code.WriteLine("bool empty = reader.IsEmptyElement;");
-                code.WriteLine("reader.ReadStartElement(localName);");
-                using (code.WriteBlock("if (!empty)"))
+                using (code.WriteBlock("{0}System.Xml.Schema.XmlSchema {0}System.Xml.Serialization.IXmlSerializable.GetSchema()", CsCodeWriter.Global))
                 {
-                    code.WriteLine("MergeFrom(reader);");
-                    code.WriteLine("reader.ReadEndElement();");
+                    code.WriteLine("return null;");
                 }
             }
-            using (code.WriteBlock("public void MergeFrom({0}.XmlReader reader)", xmlns))
-            {
-                code.WriteLine("int depth = reader.Depth;");
-                code.WriteLine(
-                    "global::System.Text.StringBuilder sbuilder = new global::System.Text.StringBuilder();");
 
-                code.WriteLine("string[] fields = new string[] {{ \"{0}\" }};",
-                               String.Join("\", \"", fields.Select(f => f.XmlOptions.XmlName).ToArray()));
-                bool hasMessage = fields.Exists(f => f.IsMessage);
-                if (hasMessage)
-                    code.WriteLine("bool[] isMessage = new bool[] {{ {0} }};",
-                                   String.Join(", ", fields.Select(f => f.IsMessage ? "true" : "false").ToArray()));
-
-                using (code.WriteBlock("while (!reader.EOF && reader.Depth >= depth)"))
-                {
-                    code.WriteLine("if (reader.NodeType == global::System.Xml.XmlNodeType.EndElement) break;");
-                    code.WriteLine("bool isElement = reader.NodeType == global::System.Xml.XmlNodeType.Element;");
-                    code.WriteLine("bool isAttribute = reader.NodeType == global::System.Xml.XmlNodeType.Attribute;");
-                    using (code.WriteBlock("if (!isElement && !isAttribute)"))
-                    {
-                        code.WriteLine("reader.Read();");
-                        code.WriteLine("continue;");
-                    }
-
-                    code.WriteLine("int field = global::System.Array.BinarySearch(fields, reader.LocalName, {0}System.StringComparer.Ordinal);", CsCodeWriter.Global);
-
-                    if (hasMessage)
-                    {
-                        using (code.WriteBlock("if (isElement && field >= 0 && isMessage[field])"))
-                        using (code.WriteBlock("switch(field)"))
-                        {
-                            for (int i = 0; i < fields.Count; i++)
-                            {
-                                if (!fields[i].IsMessage)
-                                    continue;
-
-                                using (code.WriteBlock("case {0}:", i))
-                                {
-                                    fields[i].ReadXmlMessage(code);
-                                    code.WriteLine("break;");
-                                }
-                            }
-                        }
-                    }
-                    using (hasMessage ? code.WriteBlock("else") : null)
-                    {
-                        code.WriteLine("sbuilder.Length = 0;");
-                        using (code.WriteBlock("if (isAttribute)"))
-                        {
-                            code.WriteLine("sbuilder.Append(reader.Value);");
-                            code.WriteLine("if (!reader.MoveToNextAttribute())");
-                            code.WriteLineIndent("reader.MoveToElement();");
-                        }
-                        code.WriteLine("else if (reader.IsEmptyElement)");
-                        code.WriteLineIndent("reader.ReadStartElement();");
-                        using (code.WriteBlock("else"))
-                        {
-                            code.WriteLine("int stop = reader.Depth;");
-                            using (code.WriteBlock("while (reader.Read() && reader.Depth > stop)"))
-                            {
-                                code.WriteLine("while (reader.IsStartElement()) reader.Skip();");
-                                code.WriteLine("if (((1 << (int)reader.NodeType) & 0x6018) != 0)");
-                                code.WriteLineIndent("sbuilder.Append(reader.Value);");
-                            }
-                            code.WriteLine("reader.ReadEndElement();");
-                        }
-
-                        //global::System.Console.WriteLine("{0} = {1}", name, sbuilder);
-                        using (code.WriteBlock("switch(field)"))
-                        {
-                            for (int i = 0; i < fields.Count; i++)
-                            {
-                                if (fields[i].IsMessage)
-                                    continue;
-
-                                using (code.WriteBlock("case {0}:", i))
-                                {
-                                    using (fields[i].XmlOptions.IgnoreEmpty ? code.WriteBlock("if (sbuilder.Length > 0)") : null)
-                                        fields[i].ReadXmlValue(code, "sbuilder.ToString()");
-                                    code.WriteLine("break;");
-                                }
-                            }
-                            using (code.WriteBlock("default:"))
-                            {
-                                code.WriteLine("break;");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        protected void WriteXmlWriteMembers(CsCodeWriter code, IEnumerable<BaseFieldGenerator> rawfields)
-        {
-            List<BaseFieldGenerator> fields = new List<BaseFieldGenerator>(rawfields);
-            string xmlns = CsCodeWriter.Global + "System.Xml";
-            using (code.WriteBlock("public void WriteXml({0}.XmlWriter writer)", xmlns))
-                code.WriteLine("WriteXml(\"{0}\", writer);", XmlName);
-            
-            using (code.WriteBlock("public void WriteXml(string localName, {0}.XmlWriter writer)", xmlns))
-            {
-                code.WriteLine("writer.WriteStartElement(localName);");
-                code.WriteLine("MergeTo(writer);");
-                code.WriteLine("writer.WriteFullEndElement();");
-            }
-
-            using (code.WriteBlock("public void MergeTo({0}.XmlWriter writer)", xmlns))
-            {
-                Action<BaseFieldGenerator> write =
-                    (fld) =>
-                    {
-                        using (fld.HasBackingName != null ? code.WriteBlock("if ({0})", fld.HasBackingName) : null)
-                            fld.WriteXmlOutput(code, fld.FieldBackingName);
-                    };
-
-                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Attribute))
-                    write(fld);
-
-                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Element))
-                    write(fld);
-
-                foreach (var fld in fields.Where(f => f.XmlOptions.AttributeType == XmlAttributeType.Text))
-                    write(fld);
-            }
+            ReaderWriterGenerator rdrwtr = new ReaderWriterGenerator(Type, XmlName, IsSubclass);
+            rdrwtr.WriteXmlReadMembers(code, fields.Where(f => f.Direction != FieldDirection.WriteOnly));
+            rdrwtr.WriteXmlWriteMembers(code, fields.Where(f => f.Direction != FieldDirection.ReadOnly));
         }
     }
 }

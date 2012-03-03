@@ -34,8 +34,7 @@ namespace NClassify.Generator.CodeGenerators.Types
 
         public void WriteInterface(CsCodeWriter code)
         {
-            code.WriteGenerated();
-            using(code.WriteBlock("{0}partial interface I{1}", Access == FieldAccess.Public ? "public " : "", PascalName))
+            using(code.DeclareInterface(new CodeItem("I" + PascalName) { Access = Access, }, new string[0]))
             {
                 foreach(ServiceMethod m in Type.Methods)
                 {
@@ -89,7 +88,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                 }
 
                 using (code.WriteBlock("protected virtual void Invoke<TRequest, TResponse>(string methodName, TRequest request, TResponse response) "
-                                       + "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IMessage"
+                                       + "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IBuilder"
                                        , CsCodeWriter.Global))
                 {
                     //code.WriteLine("if (_dispose) throw new {0}System.ObjectDisposedException(GetType().FullName);", CsCodeWriter.Global);
@@ -97,7 +96,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                 }
 
                 using (code.WriteBlock("void {0}NClassify.Library.IDispatchStub.CallMethod<TRequest, TResponse>(string methodName, TRequest request, TResponse response) "
-                    //+ "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IMessage"
+                    //+ "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IBuilder"
                                        , CsCodeWriter.Global))
                 {
                     code.WriteLine("Invoke(methodName, request, response);");
@@ -116,16 +115,16 @@ namespace NClassify.Generator.CodeGenerators.Types
                     {
                         if (response != null)
                         {
-                            code.WriteLine("{0}{1} response = new {0}{1}();", CsCodeWriter.Global, response.QualifiedName);
+                            code.WriteLine("{0}{1} response = new {0}{1}();", CsCodeWriter.Global, response.ImplementationName);
                             code.WriteLine("Invoke(\"{0}\", {1}, response);", m.Name,
-                                request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default") : CodeWriter.ToCamelCase(request.Name));
+                                request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance") : CodeWriter.ToCamelCase(request.Name));
                             code.WriteLine("return response;");
                         }
                         else
                         {
                             code.WriteLine("Invoke(\"{0}\", {1}, {2});", m.Name,
-                                request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default") : CodeWriter.ToCamelCase(request.Name),
-                                CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default");
+                                request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance") : CodeWriter.ToCamelCase(request.Name),
+                                CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance");
                         }
                     }
                 }
@@ -167,7 +166,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                 }
 
                 using (code.WriteBlock("public void CallMethod<TRequest, TResponse>(string methodName, TRequest request, TResponse response) "
-                                       + "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IMessage"
+                                       + "where TRequest : class, {0}NClassify.Library.IMessage where TResponse : class, {0}NClassify.Library.IBuilder"
                                        , CsCodeWriter.Global))
                 {
                     string[] names = Type.Methods.Select(m => m.Name).ToArray();
@@ -188,7 +187,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                             ComplexType request = String.IsNullOrEmpty(m.Request) ? null : FindType(m.Request);
                             using(code.WriteBlock("case {0}:", ordinal++))
                             {
-                                string call = String.Format("_dispatch.{0}({1})", CodeWriter.ToPascalCase(m.Name), 
+                                string call = String.Format("_dispatch.{0}({1})", CodeWriter.ToPascalCase(m.Name),
                                     request == null ? "" : ("(" + CsCodeWriter.Global + request.QualifiedName + ")(object)request"));
                                 if (response != null)
                                     call = String.Format("response.MergeFrom({0})", call);
@@ -241,7 +240,7 @@ namespace NClassify.Generator.CodeGenerators.Types
                 }
 
 
-                using (code.WriteBlock("public {0}NClassify.Library.IMessage CallMethod(string methodName, {0}System.Action<{0}NClassify.Library.IMessage> readInput)"
+                using (code.WriteBlock("public {0}NClassify.Library.IMessage CallMethod(string methodName, {0}System.Action<{0}NClassify.Library.IBuilder> readInput)"
                                        , CsCodeWriter.Global))
                 {
                     string[] names = Type.Methods.Select(m => m.Name).ToArray();
@@ -264,20 +263,20 @@ namespace NClassify.Generator.CodeGenerators.Types
                             {
                                 if (request != null)
                                 {
-                                    code.WriteLine("{0}{1} request = new {0}{1}();", CsCodeWriter.Global, request.QualifiedName);
+                                    code.WriteLine("{0}{1} request = new {0}{1}();", CsCodeWriter.Global, request.ImplementationName);
                                     code.WriteLine("readInput(request);");
                                 }
                                 if (response != null)
                                 {
-                                    code.WriteLine("{0}{1} response = new {0}{1}();", CsCodeWriter.Global, response.QualifiedName);
+                                    code.WriteLine("{0}{1} response = new {0}{1}();", CsCodeWriter.Global, response.ImplementationName);
                                 }
                                 code.WriteLine("_dispatch.CallMethod(methodName, {0}, {1});",
-                                    request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default") : "request",
-                                    response == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default") : "response"
+                                    request == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance") : "request",
+                                    response == null ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance") : "response"
                                     );
                                 code.WriteLine("return {0};",
                                                response == null
-                                                   ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.Default")
+                                                   ? (CsCodeWriter.Global + "NClassify.Library.EmptyMessage.DefaultInstance")
                                                    : "response");
                             }
                         }

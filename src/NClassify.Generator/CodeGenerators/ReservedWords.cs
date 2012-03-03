@@ -42,9 +42,10 @@ namespace NClassify.Generator.CodeGenerators
 
         public static bool IsValidFieldName(string name)
         {
-            Type type = CompiledAssembly.GetType("NClassify.Library.IMessage", true);
-            return 
+            Type type = CompiledAssembly.GetType("NClassify.Library.IBuilder", true);
+            return
                 name != "TypeFields" &&
+                name != "Initialize" &&
                 IsValidFieldName(name, type);
         }
 

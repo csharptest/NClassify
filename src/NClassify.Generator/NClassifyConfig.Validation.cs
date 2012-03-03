@@ -232,8 +232,16 @@ namespace NClassify.Generator
             {
                 if (_typeMap.ContainsKey(type.QualifiedName))
                     throw new ApplicationException("The type '" + type.QualifiedName + "' has already been defined.");
-
                 _typeMap.Add(type.QualifiedName, type);
+
+                if(type is ComplexType && ((ComplexType)type).Generate != CodeGeneration.ClassOnly)
+                {
+                    InterfaceType itype = new InterfaceType((ComplexType)type);
+
+                    if (_typeMap.ContainsKey(itype.QualifiedName))
+                        throw new ApplicationException("The type '" + itype.QualifiedName + "' has already been defined.");
+                    _typeMap.Add(itype.QualifiedName, itype);
+                }
 
                 string lname = CodeWriter.CombineNames(".", type.Namespace, type.Name);
                 if (lname != type.QualifiedName)
@@ -272,7 +280,33 @@ namespace NClassify.Generator
 
         internal virtual string Namespace { get { return ParentType.QualifiedName; } }
         internal virtual string QualifiedName { get { return CodeWriter.CombineNames(".", Namespace, PascalName); } }
+        internal virtual string ImplementationName { get { return QualifiedName; } }
         internal virtual string PascalName { get { return CodeWriter.ToPascalCase(Name); } }
+    }
+
+    class InterfaceType : ComplexType
+    {
+        private readonly ComplexType _type;
+
+        public InterfaceType (ComplexType type)
+        {
+            IsImported = true;
+            Access = type.Access;
+            Generate = type.Generate;
+            ParentConfig = type.ParentConfig;
+            ParentType = type.ParentType;
+            _type = type;
+        }
+
+        public override string Name
+        {
+            get { return _type.Name; }
+            set { throw new NotSupportedException(); }
+        }
+        internal override string Namespace { get { return _type.Namespace; } }
+        internal override string PascalName { get { return "I" + _type.PascalName; } }
+        internal override string ImplementationName { get { return _type.QualifiedName; } }
+        internal ComplexType Implementation { get { return _type; } }
     }
 
     public abstract partial class FieldInfo

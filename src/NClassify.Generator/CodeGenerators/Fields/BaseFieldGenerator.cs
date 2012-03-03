@@ -218,6 +218,9 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         #region CSharp
 
+        public virtual void MakeReadOnly(CsCodeWriter code, string value)
+        { }
+
         public virtual string MakeConstant(CsCodeWriter code, string value)
         {
             return code.MakeConstant(FieldType, value);
@@ -276,8 +279,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
         public virtual void DeclareInstanceData(CsCodeWriter code)
         {
             code.DeclareField(new CodeItem(HasBackingName) {Access = FieldAccess.Private}, FieldType.Boolean, null);
-            code.DeclareField(new CodeItem(FieldBackingName) {Access = FieldAccess.Private}, GetStorageType(code),
-                              !HasDefault ? null : MakeConstant(code, Default));
+            code.DeclareField(new CodeItem(FieldBackingName) {Access = FieldAccess.Private}, GetStorageType(code), null);
         }
 
         public virtual void WriteMember(CsCodeWriter code)
@@ -297,7 +299,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 {
                     using (code.WriteBlock("set"))
                     {
-                        code.WriteLine("if (value) throw new global::System.InvalidOperationException();");
+                        code.WriteLine("if (value || IsReadOnly()) throw new global::System.InvalidOperationException();");
                         code.WriteLine("{0} = {1};", FieldBackingName, MakeConstant(code, Default));
                         code.WriteLine("{0} = false;", HasBackingName);
                     }
@@ -307,7 +309,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
             CodeItem prop = new CodeItem(PropertyName)
                                 {
                                     Access = FieldAccess,
-                                    ClsCompliant = IsClsCompliant,
+                                    //ClsCompliant = IsClsCompliant,
                                     Obsolete = Obsolete,
                                     XmlName = Name,
                                 };
@@ -330,8 +332,10 @@ namespace NClassify.Generator.CodeGenerators.Fields
                 using (code.WriteBlock(IsReadOnly && FieldAccess != FieldAccess.Private ? "private set" : "set"))
                 {
                     if (IsNullable)
-                        code.WriteLine("if (null == value) throw new {0}System.ArgumentNullException({1});", 
+                        code.WriteLine("if (null == value) throw new {0}System.ArgumentNullException({1});",
                             CsCodeWriter.Global, code.MakeString(PropertyName));
+                    if (!IsStructure)
+                        code.WriteLine("if (IsReadOnly()) throw new {0}System.InvalidOperationException();", CsCodeWriter.Global);
 
                     code.WriteLine("{0} = {1};", FieldBackingName, ToStorageType(code, "value"));
                     code.WriteLine("{0} = true;", HasBackingName);
@@ -349,7 +353,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     {
                         code.WriteLine("if (onError != null) " +
                             "onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, {0}NClassify.Library.Resources.MissingRequiredField, TypeFields.{1}));",
-                            CsCodeWriter.Global, PascalName);
+                            CsCodeWriter.Global, PropertyName);
                         code.WriteLine("errorCount++;");
                     }
                 }
@@ -367,7 +371,8 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void WriteCopy(CsCodeWriter code, string from)
         {
-            code.WriteLine("if ({0}.{1}) {{ {1} = true; {2} = {0}.{2}{3}; }}", from, HasBackingName, FieldBackingName, IsMessage ? ".Clone()" : "");
+            code.WriteLine("if ({0}.Has{1}) {1} = " + (!IsMessage ? "{0}.{1};" : "({2}){0}.{1}.Clone();"),
+                from, PropertyName, GetStorageType(code) );
         }
 
         public virtual void WriteXmlOutput(CsCodeWriter code, string name)
@@ -404,9 +409,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
 
         public virtual void ReadXmlMessage(CsCodeWriter code)
         {
-            code.WriteLine("{0}.ReadXml(reader.LocalName, reader);", FieldBackingName);
-            if(HasBackingName != null)
-                code.WriteLine(HasBackingName + " = true;");
+            throw new NotSupportedException();
         }
 
         public virtual void ReadXmlValue(CsCodeWriter code, string value)

@@ -86,12 +86,12 @@
     <Compile Include="CodeGenerators\Fields\BaseFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\FieldFactory.cs" />
     <Compile Include="CodeGenerators\Fields\PrimitiveFieldGenerator.cs" />
-    <Compile Include="CodeGenerators\Fields\UnsignedFieldGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\ComplexFieldGenerator.cs" />
     <Compile Include="CodeGenerators\ReservedWords.cs" />
     <Compile Include="CodeGenerators\Types\BaseTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\ComplexTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\EnumTypeGenerator.cs" />
+    <Compile Include="CodeGenerators\Types\ReaderWriterGenerator.cs" />
     <Compile Include="CodeGenerators\Types\ServiceTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Types\SimpleTypeGenerator.cs" />
     <Compile Include="CodeGenerators\Fields\StringFieldGenerator.cs" />

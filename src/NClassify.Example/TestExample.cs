@@ -7,8 +7,11 @@ namespace NClassify.Example
     {
         static void Main()
         {
+            CircleA a = new CircleA();
+            a.ToString();
+
             SampleMsg child = new SampleMsg();
-            child.Initialize();
+            child.AcceptDefaults();
             child.DateModifiedList.Add(DateTime.Now.AddDays(-2));
             child.DateModifiedList.Add(DateTime.Now.AddDays(-1));
             child.DateModifiedList.Add(DateTime.Now.AddDays(0));
@@ -17,7 +20,7 @@ namespace NClassify.Example
             TestRoundTripXml(child);
 
             SingleFields msg = new SingleFields();
-            msg.Initialize();
+            msg.AcceptDefaults();
             msg.SampleMsg = child;
 
             Console.WriteLine(msg.ToXml("single"));
@@ -28,7 +31,7 @@ namespace NClassify.Example
             ary.ReadXml("sample", new SingleFields { Int16 = 2, Int32 = 2, Int64 = 2, Int8 = 2 }.ToXml("sample"));
             ary.SampleMsgList.Add(new SampleMsg());
             ary.SampleMsgList.Add(new SampleMsg());
-            ary.SampleMsgList[ary.SampleMsgList.Count - 1].Initialize();
+            ary.SampleMsgList[ary.SampleMsgList.Count - 1].AcceptDefaults();
 
             Console.WriteLine(ary.ToXml("array"));
             TestRoundTripXml(ary);
@@ -36,10 +39,10 @@ namespace NClassify.Example
             Console.ReadLine();
         }
 
-        static void TestRoundTripXml<T>(T msg) where T : IMessage
+        static void TestRoundTripXml<T>(T msg) where T : IBuilder
         {
             string xml = msg.ToXml("root");
-            IMessage copy = (IMessage)msg.Clone();
+            IBuilder copy = (IBuilder)msg.Clone();
             if (xml != copy.ToXml("root"))
                 throw new ApplicationException();
         

@@ -26,7 +26,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
                     );
                 code.WriteLine("value.GetBrokenRules(errors.Add);");
                 code.WriteLine("onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, errors));",
-                    CsCodeWriter.Global, _field.PascalName);
+                    CsCodeWriter.Global, _field.PropertyName);
                 code.WriteLine("return false;");
             }
         }
