@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace NClassify.Generator
 {

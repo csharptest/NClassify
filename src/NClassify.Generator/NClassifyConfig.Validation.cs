@@ -86,6 +86,9 @@ namespace NClassify.Generator
                         fld.DeclaringType = t;
                 }
 
+                if (t.Fields == null)
+                    t.Fields = new FieldInfo[0];
+
                 if (t.ChildTypes != null)
                     SetTypeHeirarchy(t.ChildTypes, t);
             }
@@ -135,17 +138,14 @@ namespace NClassify.Generator
 
             foreach (ComplexType type in _defineTypes.OfType<ComplexType>())
             {
-                foreach (var i in type.Fields.GroupBy(f => f.Name).Where(kv => kv.Count() > 1))
-                    throw new ApplicationException("Type " + type.QualifiedName +
-                                                   " has a duplicate field name " + i.Key);
-                foreach (var i in type.Fields.GroupBy(f => f.FieldId).Where(kv => kv.Count() > 1))
+                var fields = type.GetFields(true);
+                foreach (var i in fields.Values.GroupBy(f => f.FieldId).Where(kv => kv.Count() > 1))
                     throw new ApplicationException("Type " + type.QualifiedName +
                                                    " has a duplicate field id " + i.Key);
 
                 foreach (FieldInfo field in type.Fields)
                 {
-                    string fldName = field.PropertyName ?? CodeWriter.ToPascalCase(field.Name);
-                    if (fldName == type.PascalName)
+                    if (field.GeneratorName == type.PascalName)
                         throw new ApplicationException("The field " + field.Name +
                                                        " can not be the same name as the enclosing type " +
                                                        type.QualifiedName);
@@ -309,9 +309,33 @@ namespace NClassify.Generator
         internal ComplexType Implementation { get { return _type; } }
     }
 
+    partial class ComplexType
+    {
+        internal ComplexType BaseType { get { return BaseClass == null ? null : ParentConfig.ResolveName<ComplexType>(this, BaseClass); } }
+
+        internal IDictionary<string, FieldInfo> GetFields(bool inherit)
+        {
+            List<FieldInfo> fields = new List<FieldInfo>(Fields);
+            ComplexType parent = this;
+            while(inherit && null != (parent = parent.BaseType))
+                fields.AddRange(parent.Fields.SafeEnum());
+
+            Dictionary<string, FieldInfo> result = new Dictionary<string, FieldInfo>(StringComparer.Ordinal);
+            foreach(FieldInfo fld in fields)
+            {
+                if (result.ContainsKey(fld.GeneratorName))
+                    throw new ApplicationException("Type " + QualifiedName + " has a duplicate field name " + fld.GeneratorName);
+                result.Add(fld.GeneratorName, fld);
+            }
+            return result;
+        }
+    }
+
     public abstract partial class FieldInfo
     {
         internal BaseType DeclaringType;
+        internal string GeneratorName { get { return PropertyName ?? CodeWriter.ToPascalCase(Name); } }
+
     }
 
     public sealed class NamespaceType : BaseType

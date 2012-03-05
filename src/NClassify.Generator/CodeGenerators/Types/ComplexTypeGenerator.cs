@@ -145,13 +145,13 @@ namespace NClassify.Generator.CodeGenerators.Types
                     code.WriteLine("_readOnly = true;");
                 }
 
-                fields.Where(f=>f.IsMessage == false).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
+                fields.Where(f => !(f is ComplexFieldGenerator)).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
 
                 // Durring the initialization of default instance, message fields may be momentarily null.  Since
                 // the static initializer for that type will correctly initialize, we will skip marking these as
                 // read only.
                 code.WriteLine("if (object.ReferenceEquals(this, _defaultInstance)) return;");
-                fields.Where(f => f.IsMessage).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
+                fields.Where(f => f is ComplexFieldGenerator).ForAll(f => f.MakeReadOnly(code, f.FieldBackingName));
             }
 
             using (code.WriteBlock(VirtualApi + " void AcceptDefaults()"))
