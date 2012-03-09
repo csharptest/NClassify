@@ -9,6 +9,7 @@ SET BuildConfig=%1
 IF "%BuildConfig%" == "" SET BuildConfig=Debug
 
 depend\nuget install CSharpTest.Net.Library -Version 1.11.924.348 -ExcludeVersion -OutputDirectory depend
+depend\nuget install Google.ProtocolBuffers -Version 2.4.1.473 -ExcludeVersion -OutputDirectory depend
 
 depend\CmdTool.exe build src\*.csproj
 IF NOT "%ERRORLEVEL%" == "0" GOTO ERROR

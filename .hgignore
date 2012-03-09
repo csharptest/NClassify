@@ -23,5 +23,5 @@ Release
 *.snk
 
 
-depend/CSharpTest.Net.Library
+depend
 TestResults
