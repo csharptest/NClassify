@@ -21,7 +21,7 @@ Release
 *.zip
 *.mdf
 *.snk
-
+*.bat
 
 depend
 TestResults
