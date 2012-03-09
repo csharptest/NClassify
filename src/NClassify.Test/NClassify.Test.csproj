@@ -37,13 +37,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ResourceTest.cs" />
+    <Compile Include="Example.Generated.cs" />
+    <Compile Include="Tests\ResourceTest.cs" />
+    <Compile Include="System.cs" />
+    <Compile Include="Tests\TestConverter.cs" />
+    <Compile Include="Tests\TestExample.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NClassify.Generator\NClassify.Generator.csproj">
+      <Project>{82467B88-E230-4790-B4DC-5147368B3F99}</Project>
+      <Name>NClassify.Generator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NClassify.Library\NClassify.Library.csproj">
       <Project>{377B4A92-9BEC-473C-9A98-616FB0ED6C87}</Project>
       <Name>NClassify.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Example.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -56,4 +67,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>$(ProjectDir)..\NClassify.Generator\bin\$(ConfigurationName)\NClassify.Generator.exe Generate $(ProjectDir)Example.xml /extension=.Generated.cs
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -55,21 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\NClassify.Library\ByteArray.cs">
-      <Link>Library\ByteArray.cs</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\NClassify.Library\EmptyMessage.cs">
-      <Link>Library\EmptyMessage.cs</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\NClassify.Library\Interfaces.cs">
-      <Link>Library\Interfaces.cs</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\NClassify.Library\Resources.cs">
-      <Link>Library\Resources.cs</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\NClassify.Library\TypeConverter.cs">
-      <Link>Library\TypeConverter.cs</Link>
-    </EmbeddedResource>
     <Compile Include="CodeGenerators\BaseGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\BaseConstraintGenerator.cs" />
     <Compile Include="CodeGenerators\Constraints\ConstraintFactory.cs" />
@@ -113,16 +98,17 @@
     <Compile Include="XmlValidatingReader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\NClassify.Library\NClassify.resx">
-      <Link>Library\NClassify.resx</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="NClassifyConfig.xsd">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>NClassifyConfig.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NClassify.Library\NClassify.Library.csproj">
+      <Project>{377B4A92-9BEC-473C-9A98-616FB0ED6C87}</Project>
+      <Name>NClassify.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

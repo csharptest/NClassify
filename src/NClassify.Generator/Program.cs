@@ -7,7 +7,6 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Collections.Generic;
 using System.ComponentModel;
-using CSharpTest.Net.IO;
 
 namespace NClassify.Generator
 {
@@ -76,40 +75,24 @@ namespace NClassify.Generator
             sourceFiles = sources.ToArray();
         }
 
-        void Compile(IEnumerable<string> sourceFiles, Action<string> error)
+        void Compile(IEnumerable<string> sources, Action<string> error)
         {
-            using(TempDirectory tmpdir = new TempDirectory())
+            CodeDomProvider csc = new CSharpCodeProvider();
+            CompilerParameters args = new CompilerParameters();
+            args.GenerateInMemory = true;
+            args.GenerateExecutable = false;
+            args.IncludeDebugInformation = false;
+            args.ReferencedAssemblies.Add("System.dll");
+            args.ReferencedAssemblies.Add("System.Data.dll");
+            args.ReferencedAssemblies.Add("System.Xml.dll");
+            args.ReferencedAssemblies.Add(typeof(NClassify.Library.IMessage).Assembly.Location);
+            CompilerResults results = csc.CompileAssemblyFromFile(args, sources.ToArray());
+
+            foreach (CompilerError ce in results.Errors)
             {
-                List<string> sources = new List<string>();
-                sources.AddRange(sourceFiles);
-                string prefix = GetType().Namespace + ".Library.";
-                foreach(string res in GetType().Assembly.GetManifestResourceNames().Where(r => r.EndsWith(".cs")))
-                {
-                    if (res.StartsWith(prefix))
-                    {
-                        string path = Path.Combine(tmpdir.TempPath, res.Substring(prefix.Length));
-                        string code = new StreamReader(GetType().Assembly.GetManifestResourceStream(res) ?? Stream.Null).ReadToEnd();
-                        File.WriteAllText(path, code);
-                        sources.Add(path);
-                    }
-                }
-
-                CodeDomProvider csc = new CSharpCodeProvider();
-                CompilerParameters args = new CompilerParameters();
-                args.GenerateInMemory = true;
-                args.GenerateExecutable = false;
-                args.IncludeDebugInformation = false;
-                args.ReferencedAssemblies.Add("System.dll");
-                args.ReferencedAssemblies.Add("System.Data.dll");
-                args.ReferencedAssemblies.Add("System.Xml.dll");
-                CompilerResults results = csc.CompileAssemblyFromFile(args, sources.ToArray());
-
-                foreach (CompilerError ce in results.Errors)
-                {
-                    error(String.Format("{0}({1},{2}): {5} {3}: {4}", 
-                        ce.FileName, ce.Line, ce.Column, ce.ErrorNumber, ce.ErrorText,
-                        ce.IsWarning ? "warning" : "error"));
-                }
+                error(String.Format("{0}({1},{2}): {5} {3}: {4}", 
+                    ce.FileName, ce.Line, ce.Column, ce.ErrorNumber, ce.ErrorText,
+                    ce.IsWarning ? "warning" : "error"));
             }
         }
     }
