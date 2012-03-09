@@ -13,7 +13,7 @@ depend\nuget install CSharpTest.Net.Library -Version 1.11.924.348 -ExcludeVersio
 depend\CmdTool.exe build src\*.csproj
 IF NOT "%ERRORLEVEL%" == "0" GOTO ERROR
 
-C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe /nologo /v:m /target:Rebuild /p:Configuration=%BuildConfig% "/p:Platform=Any CPU" /toolsversion:3.5 /l:FileLogger,Microsoft.Build.Engine;logfile=MSBuild.log;append=true;verbosity=diagnostic;encoding=utf-8 nclassify.sln
+C:\Windows\Microsoft.NET\Framework\v3.5\MSBuild.exe /nologo /v:m /target:Rebuild /p:Configuration=%BuildConfig% "/p:Platform=Any CPU" /toolsversion:3.5 /l:FileLogger,Microsoft.Build.Engine;logfile=MSBuild.log;append=true;verbosity=diagnostic;encoding=utf-8 src\nclassify.sln
 IF NOT "%ERRORLEVEL%" == "0" GOTO ERROR
 
 "%VS90COMNTOOLS%\..\IDE\mstest.exe" /nologo /noisolation /noresults /testcontainer:src\NClassify.Test\bin\Debug\NClassify.Test.dll
