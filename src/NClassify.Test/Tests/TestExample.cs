@@ -27,39 +27,57 @@ namespace NClassify.Test.Tests
             child.DateModifiedList.Add(DateTime.Now.AddDays(-1));
             child.DateModifiedList.Add(DateTime.Now.AddDays(0));
 
-            Trace.TraceInformation(child.ToXml("message"));
+            Trace.TraceInformation(ToXml(child));
             TestRoundTripXml(child);
 
             SingleFields msg = new SingleFields();
             msg.AcceptDefaults();
             msg.SampleMsg = child;
 
-            Trace.TraceInformation(msg.ToXml("single"));
+            Trace.TraceInformation(ToXml(msg));
             TestRoundTripXml(msg);
 
             ArrayFields ary = new ArrayFields();
-            ary.ReadXml("sample", msg.ToXml("sample"));
-            ary.ReadXml("sample", new SingleFields { Int16 = 2, Int32 = 2, Int64 = 2, Int8 = 2 }.ToXml("sample"));
+            ReadXml(ary, ToXml(msg));
+            ReadXml(ary, ToXml(new SingleFields { Int16 = 2, Int32 = 2, Int64 = 2, Int8 = 2 }));
             ary.SampleMsgList.Add(new SampleMsg());
             ary.SampleMsgList.Add(new SampleMsg());
             ary.SampleMsgList[ary.SampleMsgList.Count - 1].AcceptDefaults();
 
-            Trace.TraceInformation(ary.ToXml("array"));
+            Trace.TraceInformation(ToXml(ary));
             TestRoundTripXml(ary);
         }
 
         static void TestRoundTripXml<T>(T msg) where T : IBuilder
         {
-            string xml = msg.ToXml("root");
+            string xml = ToXml(msg);
             IBuilder copy = (IBuilder)msg.Clone();
-            if (xml != copy.ToXml("root"))
+            if (xml != ToXml(copy))
                 throw new ApplicationException();
 
             copy.Clear();
-            copy.ReadXml("root", xml);
+            ReadXml(copy, xml);
 
-            if (xml != copy.ToXml("root"))
+            if (xml != ToXml(copy))
                 throw new ApplicationException();
+        }
+
+
+        static string ToXml(IMessage msg)
+        {
+            global::System.IO.StringWriter xml = new global::System.IO.StringWriter();
+            using (global::System.Xml.XmlWriter w = global::System.Xml.XmlWriter.Create(
+                xml, new global::System.Xml.XmlWriterSettings() { Indent = true, CloseOutput = false }))
+                msg.WriteXml("record", w);
+            return xml.ToString();
+        }
+
+        static void ReadXml(IBuilder msg, string xml)
+        {
+            using (global::System.Xml.XmlReader r = global::System.Xml.XmlReader.Create(
+                new global::System.IO.StringReader(xml),
+                new global::System.Xml.XmlReaderSettings() { CloseInput = false }))
+                msg.ReadXml("record", r);
         }
     }
 }

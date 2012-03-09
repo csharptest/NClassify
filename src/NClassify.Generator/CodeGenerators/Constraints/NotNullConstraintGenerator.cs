@@ -19,7 +19,7 @@ namespace NClassify.Generator.CodeGenerators.Constraints
             {
                 code.WriteLine(
                     "if (onError != null) onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, " +
-                    "{0}NClassify.Library.Resources.MustNotBeNull, TypeFields.{1}));",
+                    "{0}NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.{1}));",
                     CsCodeWriter.Global, _field.PropertyName);
                 code.WriteLine("return false;");
             }

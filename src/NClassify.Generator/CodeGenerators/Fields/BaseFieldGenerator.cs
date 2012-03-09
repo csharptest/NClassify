@@ -352,7 +352,7 @@ namespace NClassify.Generator.CodeGenerators.Fields
                     using(code.WriteBlock("if (!{0})", HasBackingName))
                     {
                         code.WriteLine("if (onError != null) " +
-                            "onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, {0}NClassify.Library.Resources.MissingRequiredField, TypeFields.{1}));",
+                            "onError(new {0}NClassify.Library.ValidationError(TypeFields.{1}, {0}NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.{1}));",
                             CsCodeWriter.Global, PropertyName);
                         code.WriteLine("errorCount++;");
                     }

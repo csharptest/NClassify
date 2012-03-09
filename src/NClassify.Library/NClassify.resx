@@ -118,9 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="InvalidField" xml:space="preserve">
-    <value>The field {0} is not valid.</value>
+    <value>The field {0} is invalid.</value>
+  </data>
+  <data name="InvalidFormat" xml:space="preserve">
+    <value>The value '{0}' is in an invalid format.</value>
   </data>
   <data name="MissingRequiredField" xml:space="preserve">
     <value>The field {0} is required.</value>
+  </data>
+  <data name="MustBeGreaterThan" xml:space="preserve">
+    <value>The field {0} is invalid, must be greater than {1}.</value>
+  </data>
+  <data name="MustBeLessThan" xml:space="preserve">
+    <value>The field {0} is invalid, must be less than {1}.</value>
+  </data>
+  <data name="MustBeLongerThan" xml:space="preserve">
+    <value>The field {0} is invalid, must be at least {1}.</value>
+  </data>
+  <data name="MustBeOneOf" xml:space="preserve">
+    <value>The field {0} is invalid, expected one of: {1}.</value>
+  </data>
+  <data name="MustBeShorterThan" xml:space="preserve">
+    <value>The field {0} is invalid, must be shorter than {1}.</value>
+  </data>
+  <data name="MustMatchFormat" xml:space="preserve">
+    <value>The field {0} is invalid, the value does not match expected format.</value>
+  </data>
+  <data name="MustNotBeNull" xml:space="preserve">
+    <value>The field {0} is invalid, can not be null.</value>
   </data>
 </root>

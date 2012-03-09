@@ -1,22 +1,22 @@
 ﻿#pragma warning disable 1591
 namespace NClassify.Library {
     //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    public static class Resources
+    public static class ResourceMessages
     {
         public static global::System.Globalization.CultureInfo CultureInfo;
         internal static global::System.Resources.ResourceManager ResourceManager;
 
-        static Resources()
+        static ResourceMessages()
         {
             try
             {
-                foreach (string resName in typeof (Resources).Assembly.GetManifestResourceNames())
+                foreach (string resName in typeof (ResourceMessages).Assembly.GetManifestResourceNames())
                 {
                     if (resName.EndsWith("NClassify.resources", global::System.StringComparison.Ordinal))
                     {
                         ResourceManager = new global::System.Resources.ResourceManager(
                             resName.Substring(0, resName.Length - ".resources".Length),
-                            typeof (Resources).Assembly
+                            typeof (ResourceMessages).Assembly
                             );
                         break;
                     }

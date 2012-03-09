@@ -60,7 +60,7 @@ namespace NClassify.Library
                 case 'X':
                     return global::System.Globalization.NumberStyles.AllowHexSpecifier;
                 default:
-                    throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+                    throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
             }
         }
 
@@ -85,9 +85,9 @@ namespace NClassify.Library
                     if (values.Length == 2 && global::System.StringComparer.OrdinalIgnoreCase.Equals(values[1], text))
                         return false;
                 }
-                throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
+                throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, text));
             }
-            throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+            throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
         }
 
         [global::System.CLSCompliant(false)]
@@ -97,7 +97,7 @@ namespace NClassify.Library
             {
                 int value = global::System.Xml.XmlConvert.ToInt16(text);
                 if (value < sbyte.MinValue || value > sbyte.MaxValue)
-                    throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+                    throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
                 return (sbyte) value;
             }
             return sbyte.Parse(text, NumberFormatToStyle(format), formatProvider);
@@ -109,7 +109,7 @@ namespace NClassify.Library
             {
                 ushort value = global::System.Xml.XmlConvert.ToUInt16(text);
                 if (value > byte.MaxValue)
-                    throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+                    throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
                 return (byte)value;
             }
             return byte.Parse(text, NumberFormatToStyle(format), formatProvider);
@@ -213,7 +213,7 @@ namespace NClassify.Library
                         pos = m.Index + m.Length;
                         int fld = int.Parse(m.Groups["field"].Value);
                         if (fld < 0 || fld > 12)
-                            throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+                            throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
                         if (fld == 2) //neg sign
                             sb.AppendFormat("(?<f{0}>{1})?", fld, Regex.Escape(nfi.NegativeSign));
                         else if(pos+1 < format.Length)
@@ -245,7 +245,7 @@ namespace NClassify.Library
             object[] numFormat = CreateExpression(out pattern, out fields, format, formatProvider);
             Match match = pattern.Match(text);
             if(!match.Success)
-                throw new global::System.FormatException(string.Format(Resources.InvalidFormat, text));
+                throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, text));
             
             bool negate = false;
             global::System.TimeSpan value = global::System.TimeSpan.Zero;
@@ -301,7 +301,7 @@ namespace NClassify.Library
             //allows: "1|0", "yes|no", "TRUE|FALSE", or combiniations "1|0;yes|no;true|false"
             if (format.IndexOf('|') > 0) 
                 return format.Split('|', ';', ',')[value ? 0 : 1];
-            throw new global::System.FormatException(string.Format(Resources.InvalidFormat, format));
+            throw new global::System.FormatException(string.Format(ResourceMessages.InvalidFormat, format));
         }
 
         [global::System.CLSCompliant(false)]

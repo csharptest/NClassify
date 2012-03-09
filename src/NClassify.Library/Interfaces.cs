@@ -27,7 +27,7 @@ namespace NClassify.Library
         [global::System.CLSCompliant(false)]
         public uint FieldId { get { return global::System.Convert.ToUInt32(_field); } }
         public string FieldName { get { return global::System.Convert.ToString(_field); } }
-        public string Message { get { return _message ?? (_errors == null || _errors.Length == 0 ? string.Empty : string.Format(Resources.InvalidField, FieldName)); } }
+        public string Message { get { return _message ?? (_errors == null || _errors.Length == 0 ? string.Empty : string.Format(ResourceMessages.InvalidField, FieldName)); } }
         public bool HasError { get { return _message != null || _errors != null; } }
 
         public void RaiseException()

@@ -106,7 +106,7 @@ namespace NClassify.Generator.CodeWriters
 
         public void WriteNonUserCode()
         {
-            //WriteLine("[" + Global + "System.Diagnostics.DebuggerNonUserCodeAttribute()]");
+            WriteLine("[" + Global + "System.Diagnostics.DebuggerNonUserCodeAttribute()]");
             WriteGenerated();
         }
 

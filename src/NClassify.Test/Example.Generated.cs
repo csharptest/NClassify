@@ -28,6 +28,7 @@ namespace NClassify.Example
     #endregion
     #region SimpleInt32
     [global::System.Xml.Serialization.XmlType("SimpleInt32")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial struct SimpleInt32 : global::System.IEquatable<SimpleInt32>, global::System.IComparable<SimpleInt32>, global::NClassify.Library.IValidate
@@ -45,7 +46,7 @@ namespace NClassify.Example
         {
             if (value.CompareTo(1) < 0)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeGreaterThan, TypeFields.Value, 1));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeGreaterThan, TypeFields.Value, 1));
                 return false;
             }
             return true;
@@ -81,7 +82,7 @@ namespace NClassify.Example
             int errorCount = 0;
             if (!__has_value)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.Value));
                 errorCount++;
             }
             return errorCount;
@@ -129,6 +130,7 @@ namespace NClassify.Example
     #endregion
     #region SimpleBytes
     [global::System.Xml.Serialization.XmlType("SimpleBytes")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial struct SimpleBytes : global::System.IEquatable<SimpleBytes>, global::System.IComparable<SimpleBytes>, global::NClassify.Library.IValidate
@@ -146,12 +148,12 @@ namespace NClassify.Example
         {
             if (value.Length < 1)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeLongerThan, TypeFields.Value, 1));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeLongerThan, TypeFields.Value, 1));
                 return false;
             }
             if (value.Length > 255)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeShorterThan, TypeFields.Value, 255));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeShorterThan, TypeFields.Value, 255));
                 return false;
             }
             return true;
@@ -187,7 +189,7 @@ namespace NClassify.Example
             int errorCount = 0;
             if (!__has_value)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.Value));
                 errorCount++;
             }
             return errorCount;
@@ -235,6 +237,7 @@ namespace NClassify.Example
     #endregion
     #region SimpleText
     [global::System.Xml.Serialization.XmlType("SimpleText")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial struct SimpleText : global::System.IEquatable<SimpleText>, global::System.IComparable<SimpleText>, global::NClassify.Library.IValidate
@@ -253,12 +256,12 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.Value));
                 return false;
             }
             if (global::System.Array.BinarySearch(__in_value, value) < 0)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeOneOf, TypeFields.Value, string.Join(", ", __in_value)));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeOneOf, TypeFields.Value, string.Join(", ", __in_value)));
                 return false;
             }
             return true;
@@ -295,7 +298,7 @@ namespace NClassify.Example
             int errorCount = 0;
             if (!__has_value)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.Value));
                 errorCount++;
             }
             return errorCount;
@@ -343,6 +346,7 @@ namespace NClassify.Example
     #endregion
     #region simple_uri
     [global::System.Xml.Serialization.XmlType("simple_uri")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial struct SimpleUri : global::System.IEquatable<SimpleUri>, global::System.IComparable<SimpleUri>, global::NClassify.Library.IValidate
@@ -366,27 +370,27 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.Value));
                 return false;
             }
             if (value.Length < 8)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeLongerThan, TypeFields.Value, 8));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeLongerThan, TypeFields.Value, 8));
                 return false;
             }
             if (value.Length > 2048)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustBeShorterThan, TypeFields.Value, 2048));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustBeShorterThan, TypeFields.Value, 2048));
                 return false;
             }
             if (!__valid_value.IsMatch(value.ToString()))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MustMatchFormat, TypeFields.Value, "^https?\\://.+"));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MustMatchFormat, TypeFields.Value, "^https?\\://.+"));
                 return false;
             }
             if (!(IsValidUri(value)))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.InvalidField, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.InvalidField, TypeFields.Value));
                 return false;
             }
             return true;
@@ -423,7 +427,7 @@ namespace NClassify.Example
             int errorCount = 0;
             if (!__has_value)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.Value));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.Value, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.Value));
                 errorCount++;
             }
             return errorCount;
@@ -478,6 +482,7 @@ namespace NClassify.Example
         global::NClassify.Example.CircleB B { get; }
     }
     [global::System.Xml.Serialization.XmlType("CircleA")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class CircleA : ICircleA, global::NClassify.Library.IBuilder
@@ -513,7 +518,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.B, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.B));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.B, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.B));
                 return false;
             }
             if (!value.IsValid())
@@ -748,6 +753,7 @@ namespace NClassify.Example
         global::NClassify.Example.CircleA A { get; }
     }
     [global::System.Xml.Serialization.XmlType("CircleB")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class CircleB : ICircleB, global::NClassify.Library.IBuilder
@@ -783,7 +789,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.A, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.A));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.A, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.A));
                 return false;
             }
             if (!value.IsValid())
@@ -1016,6 +1022,7 @@ namespace NClassify.Example
     {
     }
     [global::System.Xml.Serialization.XmlType("CircleC")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class CircleC : global::NClassify.Example.CircleA, ICircleC, global::NClassify.Library.IBuilder
@@ -1182,6 +1189,7 @@ namespace NClassify.Example
         bool TypeFields_ { get; }
     }
     [global::System.Xml.Serialization.XmlType("SampleMsg")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class SampleMsg : ISampleMsg, global::NClassify.Library.IBuilder
@@ -1231,6 +1239,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _ReadErrors
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _ReadErrors : global::System.Collections.Generic.IList<string>, global::System.ICloneable
@@ -1297,6 +1306,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _ChildrenList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _ChildrenList : global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg>, global::System.ICloneable
@@ -1370,6 +1380,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _DateModifiedList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _DateModifiedList : global::System.Collections.Generic.IList<global::System.DateTime>, global::System.ICloneable
@@ -1487,12 +1498,12 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ReadErrors, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.ReadErrors));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ReadErrors, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.ReadErrors));
                 return false;
             }
             if (value.Length > 0)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ReadErrors, global::NClassify.Library.Resources.MustBeShorterThan, TypeFields.ReadErrors, 0));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ReadErrors, global::NClassify.Library.ResourceMessages.MustBeShorterThan, TypeFields.ReadErrors, 0));
                 return false;
             }
             return true;
@@ -1501,7 +1512,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ChildrenList, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.ChildrenList));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ChildrenList, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.ChildrenList));
                 return false;
             }
             if (!value.IsValid())
@@ -1981,7 +1992,7 @@ namespace NClassify.Example
             if (__has_uri && !IsValidUri(__fld_uri, onError)) errorCount++;
             if (!__has_alphaGroup)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.AlphaGroup, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.AlphaGroup));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.AlphaGroup, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.AlphaGroup));
                 errorCount++;
             }
             if (__has_bytes && !IsValidBytes(__fld_bytes, onError)) errorCount++;
@@ -2449,6 +2460,7 @@ namespace NClassify.Example
         global::NClassify.Example.ISampleMsg ISampleMsg { get; }
     }
     [global::System.Xml.Serialization.XmlType("SingleFields")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class SingleFields : ISingleFields, global::NClassify.Library.IBuilder
@@ -2506,7 +2518,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.String, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.String));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.String, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.String));
                 return false;
             }
             return true;
@@ -2567,7 +2579,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SampleMsg, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.SampleMsg));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SampleMsg, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.SampleMsg));
                 return false;
             }
             if (!value.IsValid())
@@ -2585,7 +2597,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ISampleMsg, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.ISampleMsg));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ISampleMsg, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.ISampleMsg));
                 return false;
             }
             if (!value.IsValid())
@@ -3204,7 +3216,7 @@ namespace NClassify.Example
             if (__has_simpleUri && !IsValidSimpleUri(__fld_simpleUri, onError)) errorCount++;
             if (!__has_simpleText)
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SimpleText, global::NClassify.Library.Resources.MissingRequiredField, TypeFields.SimpleText));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SimpleText, global::NClassify.Library.ResourceMessages.MissingRequiredField, TypeFields.SimpleText));
                 errorCount++;
             }
             if (__has_simpleBytes && !IsValidSimpleBytes(__fld_simpleBytes, onError)) errorCount++;
@@ -3729,6 +3741,7 @@ namespace NClassify.Example
         global::System.Collections.Generic.IList<global::NClassify.Example.ISampleMsg> ISampleMsgList { get; }
     }
     [global::System.Xml.Serialization.XmlType("ArrayFields")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class ArrayFields : IArrayFields, global::NClassify.Library.IBuilder
@@ -3782,6 +3795,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _BoolList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _BoolList : global::System.Collections.Generic.IList<bool>, global::System.ICloneable
@@ -3843,6 +3857,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _BytesList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _BytesList : global::System.Collections.Generic.IList<global::NClassify.Library.ByteArray>, global::System.ICloneable
@@ -3904,6 +3919,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Int8List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Int8List : global::System.Collections.Generic.IList<sbyte>, global::System.ICloneable
@@ -3965,6 +3981,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Uint8List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Uint8List : global::System.Collections.Generic.IList<byte>, global::System.ICloneable
@@ -4026,6 +4043,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Int16List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Int16List : global::System.Collections.Generic.IList<short>, global::System.ICloneable
@@ -4087,6 +4105,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Uint16List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Uint16List : global::System.Collections.Generic.IList<ushort>, global::System.ICloneable
@@ -4148,6 +4167,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Int32List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Int32List : global::System.Collections.Generic.IList<int>, global::System.ICloneable
@@ -4209,6 +4229,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Uint32List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Uint32List : global::System.Collections.Generic.IList<uint>, global::System.ICloneable
@@ -4270,6 +4291,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Int64List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Int64List : global::System.Collections.Generic.IList<long>, global::System.ICloneable
@@ -4331,6 +4353,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _Uint64List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _Uint64List : global::System.Collections.Generic.IList<ulong>, global::System.ICloneable
@@ -4392,6 +4415,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _FloatList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _FloatList : global::System.Collections.Generic.IList<float>, global::System.ICloneable
@@ -4453,6 +4477,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _DoubleList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _DoubleList : global::System.Collections.Generic.IList<double>, global::System.ICloneable
@@ -4514,6 +4539,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _GuidList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _GuidList : global::System.Collections.Generic.IList<global::System.Guid>, global::System.ICloneable
@@ -4575,6 +4601,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _DateTimeList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _DateTimeList : global::System.Collections.Generic.IList<global::System.DateTime>, global::System.ICloneable
@@ -4636,6 +4663,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _TimeSpanList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _TimeSpanList : global::System.Collections.Generic.IList<global::System.TimeSpan>, global::System.ICloneable
@@ -4697,6 +4725,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _StringList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _StringList : global::System.Collections.Generic.IList<string>, global::System.ICloneable
@@ -4763,6 +4792,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _EnumList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _EnumList : global::System.Collections.Generic.IList<global::NClassify.Example.SampleEnum>, global::System.ICloneable
@@ -4824,6 +4854,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _SimpleInt32List
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _SimpleInt32List : global::System.Collections.Generic.IList<global::NClassify.Example.SimpleInt32>, global::System.ICloneable
@@ -4885,6 +4916,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _SimpleUriList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _SimpleUriList : global::System.Collections.Generic.IList<global::NClassify.Example.SimpleUri>, global::System.ICloneable
@@ -4946,6 +4978,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _SimpleTextList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _SimpleTextList : global::System.Collections.Generic.IList<global::NClassify.Example.SimpleText>, global::System.ICloneable
@@ -5007,6 +5040,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _SimpleBytesList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _SimpleBytesList : global::System.Collections.Generic.IList<global::NClassify.Example.SimpleBytes>, global::System.ICloneable
@@ -5068,6 +5102,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _SampleMsgList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _SampleMsgList : global::System.Collections.Generic.IList<global::NClassify.Example.SampleMsg>, global::System.ICloneable
@@ -5141,6 +5176,7 @@ namespace NClassify.Example
         }
         #endregion
         #region _ISampleMsgList
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         partial class _ISampleMsgList : global::System.Collections.Generic.IList<global::NClassify.Example.ISampleMsg>, global::System.ICloneable
@@ -5219,7 +5255,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.StringList, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.StringList));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.StringList, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.StringList));
                 return false;
             }
             return true;
@@ -5280,7 +5316,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SampleMsgList, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.SampleMsgList));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.SampleMsgList, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.SampleMsgList));
                 return false;
             }
             if (!value.IsValid())
@@ -5298,7 +5334,7 @@ namespace NClassify.Example
         {
             if (object.ReferenceEquals(null, value))
             {
-                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ISampleMsgList, global::NClassify.Library.Resources.MustNotBeNull, TypeFields.ISampleMsgList));
+                if (onError != null) onError(new global::NClassify.Library.ValidationError(TypeFields.ISampleMsgList, global::NClassify.Library.ResourceMessages.MustNotBeNull, TypeFields.ISampleMsgList));
                 return false;
             }
             if (!value.IsValid())
@@ -6120,6 +6156,7 @@ namespace NClassify.Example
         void Delete(global::NClassify.Example.ISampleMsg sampleMsg);
     }
     [global::System.Xml.Serialization.XmlType("ExampleService")]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
     public partial class ExampleService : IExampleService, global::NClassify.Library.IDispatchStub
@@ -6170,6 +6207,7 @@ namespace NClassify.Example
         {
             Invoke("Delete", sampleMsg, global::NClassify.Library.EmptyMessage.DefaultInstance);
         }
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         public partial class Dispatch : global::NClassify.Library.IDispatchStub
@@ -6224,6 +6262,7 @@ namespace NClassify.Example
                 }
             }
         }
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("NClassify.Generator", "0.1")]
         public partial class ServerStub : global::NClassify.Library.IServerStub

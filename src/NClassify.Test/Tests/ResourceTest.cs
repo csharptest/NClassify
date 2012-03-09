@@ -10,7 +10,7 @@ namespace NClassify.Test.Tests
         [TestMethod]
         public void TestResources()
         {
-            Assert.AreEqual("The field {0} is not valid.", Resources.InvalidField);
+            Assert.AreEqual("The field {0} is invalid.", ResourceMessages.InvalidField);
         }
     }
 }
